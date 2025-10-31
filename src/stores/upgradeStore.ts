@@ -73,9 +73,10 @@ export const useUpgradeStore = create<UpgradeState>()(
             case 'upgrade_purchased':
               return state.purchasedUpgrades.has(requirement.target as string);
 
-            case 'carrot_total':
+            case 'carrot_total': {
               const gameState = useGameStore.getState();
               return gameState.lifetimeCarrots >= (requirement.target as number);
+            }
 
             // Add more requirement types as needed
             default:
