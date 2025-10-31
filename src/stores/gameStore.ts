@@ -47,9 +47,13 @@ export const useGameStore = create<GameState>()(
       // Actions
       /**
        * Add carrots to the player's balance
-       * @param amount - Number of carrots to add
+       * @param amount - Number of carrots to add (must be positive and finite)
        */
       addCarrots: (amount: number) => {
+        if (!Number.isFinite(amount) || amount < 0) {
+          console.error('Invalid amount for addCarrots:', amount);
+          return;
+        }
         set((state) => ({
           carrots: state.carrots + amount,
           lifetimeCarrots: state.lifetimeCarrots + amount,
@@ -58,10 +62,14 @@ export const useGameStore = create<GameState>()(
 
       /**
        * Spend carrots if the player has enough
-       * @param amount - Number of carrots to spend
-       * @returns true if successful, false if insufficient funds
+       * @param amount - Number of carrots to spend (must be positive and finite)
+       * @returns true if successful, false if insufficient funds or invalid amount
        */
       spendCarrots: (amount: number) => {
+        if (!Number.isFinite(amount) || amount < 0) {
+          console.error('Invalid amount for spendCarrots:', amount);
+          return false;
+        }
         const state = get();
         if (state.carrots >= amount) {
           set({ carrots: state.carrots - amount });
@@ -85,12 +93,19 @@ export const useGameStore = create<GameState>()(
       /**
        * Game tick for idle production
        * Called every frame to update production and time-based mechanics
-       * @param deltaTime - Time elapsed since last tick in seconds
+       * @param deltaTime - Time elapsed since last tick in seconds (must be positive and finite)
        */
       tick: (deltaTime: number) => {
+        if (!Number.isFinite(deltaTime) || deltaTime < 0) {
+          console.error('Invalid deltaTime for tick:', deltaTime);
+          return;
+        }
+        // Cap deltaTime to prevent huge idle gains (max 1 hour)
+        const cappedDeltaTime = Math.min(deltaTime, 3600);
+
         set((state) => {
           // Calculate idle production based on CPS
-          const idleProduction = state.carrotsPerSecond * deltaTime;
+          const idleProduction = state.carrotsPerSecond * cappedDeltaTime;
 
           return {
             carrots: state.carrots + idleProduction,
