@@ -1,0 +1,124 @@
+/**
+ * Theme color variables and configurations
+ */
+
+:root {
+  /* Game colors */
+  --color-carrot: #ff6b35;
+  --color-carrot-light: #ff8c61;
+  --color-carrot-dark: #e85a28;
+
+  --color-golden: #ffd700;
+  --color-golden-light: #ffe033;
+  --color-golden-dark: #ccac00;
+
+  /* Rarity colors */
+  --color-rarity-common: #9ca3af;
+  --color-rarity-uncommon: #10b981;
+  --color-rarity-rare: #3b82f6;
+  --color-rarity-epic: #a855f7;
+  --color-rarity-legendary: #f59e0b;
+  --color-rarity-mythical: #ec4899;
+
+  /* UI colors */
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-border: #e5e7eb;
+  --color-hover: #f3f4f6;
+
+  /* Status colors */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}
+
+/* Dark theme (optional, for future implementation) */
+[data-theme='dark'] {
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-border: #374151;
+  --color-hover: #374151;
+}
+
+/* Rarity gradient backgrounds */
+.rarity-gradient-common {
+  background: linear-gradient(135deg, var(--color-rarity-common), #6b7280);
+}
+
+.rarity-gradient-uncommon {
+  background: linear-gradient(135deg, var(--color-rarity-uncommon), #059669);
+}
+
+.rarity-gradient-rare {
+  background: linear-gradient(135deg, var(--color-rarity-rare), #2563eb);
+}
+
+.rarity-gradient-epic {
+  background: linear-gradient(135deg, var(--color-rarity-epic), #9333ea);
+}
+
+.rarity-gradient-legendary {
+  background: linear-gradient(135deg, var(--color-rarity-legendary), #d97706);
+}
+
+.rarity-gradient-mythical {
+  background: linear-gradient(135deg, var(--color-rarity-mythical), #db2777);
+}
+
+/* Rarity text colors */
+.text-rarity-common {
+  color: var(--color-rarity-common);
+}
+
+.text-rarity-uncommon {
+  color: var(--color-rarity-uncommon);
+}
+
+.text-rarity-rare {
+  color: var(--color-rarity-rare);
+}
+
+.text-rarity-epic {
+  color: var(--color-rarity-epic);
+}
+
+.text-rarity-legendary {
+  color: var(--color-rarity-legendary);
+}
+
+.text-rarity-mythical {
+  color: var(--color-rarity-mythical);
+}
