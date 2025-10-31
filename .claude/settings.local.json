@@ -12,7 +12,11 @@
       "mcp__linear-server__create_comment",
       "mcp__linear-server__update_issue",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm run lint)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nRAB-13: Configure TypeScript and ESLint\n\n- Add path aliases to tsconfig.app.json (@/, @/components, @/stores, etc.)\n- Configure Vite resolve.alias for runtime path resolution\n- Install @types/node for path module support\n- Verify ESLint configuration (already properly set up)\n- Confirm no linting errors in codebase\n- Confirm TypeScript strict mode enabled and working\n\nAll acceptance criteria met:\n- TypeScript strict mode configured\n- Path aliases working in both TS and Vite\n- ESLint running without errors\n- Build succeeds with no issues\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
