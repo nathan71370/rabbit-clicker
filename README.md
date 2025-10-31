@@ -46,6 +46,42 @@ This repository contains comprehensive documentation organized into focused guid
 3. Follow the development roadmap to build features in priority order
 4. Refer to the file structure guide when creating new components
 
+## Project Structure
+
+The codebase follows a feature-based organization with clear separation of concerns:
+
+```
+/src
+├── /components          # React UI components
+│   ├── /clicker        # Clicking mechanics UI
+│   ├── /rabbits        # Rabbit collection & team management
+│   ├── /shop           # Shop and upgrade components
+│   ├── /crates         # Crate opening system
+│   ├── /ui             # Reusable UI components
+│   ├── /prestige       # Prestige system UI
+│   └── /achievements   # Achievement tracking UI
+├── /stores             # Zustand state management
+├── /game               # Framework-agnostic game logic
+│   ├── /mechanics      # Core game mechanics
+│   ├── /systems        # Game systems (crates, gacha)
+│   ├── /balancing      # Cost formulas and scaling
+│   └── /data           # Game content definitions
+├── /utils              # Utility functions
+├── /hooks              # Custom React hooks
+├── /services           # External services & APIs
+├── /types              # TypeScript type definitions
+└── /styles             # Global styles
+
+/public/assets
+├── /images             # Game images and icons
+│   ├── /rabbits       # Rabbit character art
+│   ├── /icons         # UI icons
+│   └── /backgrounds   # Warren backgrounds
+└── /sounds             # Sound effects and music
+```
+
+See [FILE_STRUCTURE.md](FILE_STRUCTURE.md) for detailed documentation on the project organization.
+
 ## Key Design Decisions
 
 **Premium Currency**: Golden Carrots (chosen for thematic consistency and immediate recognition)
