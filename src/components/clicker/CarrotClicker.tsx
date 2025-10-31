@@ -1,8 +1,10 @@
+import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
 
 /**
  * CarrotClicker Component
  * Main clicker button that increments carrot count when clicked
+ * Features smooth animations using Framer Motion
  */
 export function CarrotClicker() {
   const { carrots, clickPower, click } = useGameStore();
@@ -17,17 +19,24 @@ export function CarrotClicker() {
         <div className="text-xl text-gray-600 mt-2">Carrots</div>
       </div>
 
-      {/* Click Button */}
-      <button
+      {/* Click Button with Framer Motion animations */}
+      <motion.button
         onClick={click}
         className="relative group"
         aria-label="Click to earn carrots"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{
+          type: 'spring',
+          stiffness: 400,
+          damping: 17,
+        }}
       >
-        {/* Placeholder carrot button - will be replaced with actual image in MVP-023 */}
-        <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center">
+        {/* Placeholder carrot button - will be replaced with actual image in RAB-40 */}
+        <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center">
           <span className="text-6xl">🥕</span>
         </div>
-      </button>
+      </motion.button>
 
       {/* Click Power Display */}
       <div className="text-center">
