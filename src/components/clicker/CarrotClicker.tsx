@@ -1,13 +1,25 @@
 import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
+import { playSound } from '@/utils/sounds';
 
 /**
  * CarrotClicker Component
  * Main clicker button that increments carrot count when clicked
- * Features smooth animations using Framer Motion
+ * Features smooth animations using Framer Motion and click sound effects
  */
 export function CarrotClicker() {
   const { carrots, clickPower, click } = useGameStore();
+
+  /**
+   * Handle click with sound effect
+   */
+  const handleClick = () => {
+    // Play click sound (non-blocking)
+    playSound('/assets/sounds/click.mp3', { volume: 0.3 });
+
+    // Update game state
+    click();
+  };
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 p-8">
@@ -21,7 +33,7 @@ export function CarrotClicker() {
 
       {/* Click Button with Framer Motion animations */}
       <motion.button
-        onClick={click}
+        onClick={handleClick}
         className="relative group"
         aria-label="Click to earn carrots"
         whileHover={{ scale: 1.05 }}
