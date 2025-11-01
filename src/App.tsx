@@ -1,11 +1,15 @@
 import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
+import { useGameLoop } from '@/hooks';
 
 /**
  * Main App Component
  * Root component with basic layout for the clicker game MVP
  */
 function App() {
+  // Initialize game loop for idle production
+  useGameLoop();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Main Content */}
