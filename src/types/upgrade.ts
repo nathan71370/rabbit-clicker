@@ -5,7 +5,7 @@
 /**
  * Upgrade category types
  */
-export type UpgradeType = 'click_power' | 'cps_multiplier' | 'building' | 'automation' | 'quality_of_life' | 'special';
+export type UpgradeType = 'click_power' | 'auto_clicker' | 'cps_multiplier' | 'building' | 'automation' | 'quality_of_life' | 'special';
 
 /**
  * Upgrade definition
