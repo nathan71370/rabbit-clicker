@@ -7,6 +7,7 @@ import {
   LoadingScreen,
   Settings,
   TabNavigation,
+  Header,
 } from '@/components/ui';
 import { useGameLoop, useAutoSave } from '@/hooks';
 import { loadGame } from '@/services';
@@ -56,24 +57,14 @@ function App() {
       {/* Saving Indicator */}
       <SavingIndicator isSaving={isSaving} />
 
+      {/* Header */}
+      <Header onSettingsClick={() => setIsSettingsOpen(true)} />
+
       {/* Settings Modal */}
       <Settings isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
-      {/* Settings Button */}
-      <button
-        onClick={() => setIsSettingsOpen(true)}
-        aria-label="Open settings"
-        className="fixed top-4 right-4 z-30 bg-white text-gray-700 px-4 py-2 rounded-lg shadow-lg hover:bg-gray-100 transition-colors font-semibold"
-      >
-        ⚙️ Settings
-      </button>
-
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 pb-20 md:pb-8">
-        {/* Game Title */}
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
-          Rabbit Clicker
-        </h1>
+      <main className="container mx-auto px-4 pt-24 pb-20 md:pb-8">
 
         {/* Mobile: Tab-based Layout */}
         <div className="md:hidden">
