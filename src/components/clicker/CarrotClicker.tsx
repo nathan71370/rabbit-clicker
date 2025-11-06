@@ -1,7 +1,9 @@
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
 import { playSound } from '@/utils/sounds';
 import { formatNumber } from '@/utils';
+import { ClickParticles, type Particle } from './ClickParticles';
 
 /**
  * CarrotClicker Component
@@ -10,16 +12,46 @@ import { formatNumber } from '@/utils';
  */
 export function CarrotClicker() {
   const { carrots, clickPower, carrotsPerSecond, click } = useGameStore();
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   /**
-   * Handle click with sound effect
+   * Handle click with sound effect and particle spawning
    */
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     // Play click sound (non-blocking)
     playSound('/assets/sounds/click.mp3', { volume: 0.3 });
 
     // Update game state
     click();
+
+    // Spawn particles at click position
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Spawn 3-5 particles
+      const particleCount = 3 + Math.floor(Math.random() * 3);
+      const newParticles: Particle[] = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        newParticles.push({
+          id: Date.now() + Math.random(), // Ensure unique IDs
+          x: x + (Math.random() - 0.5) * 40, // Random spread
+          y: y + (Math.random() - 0.5) * 40,
+        });
+      }
+
+      setParticles((prev) => [...prev, ...newParticles]);
+    }
+  };
+
+  /**
+   * Remove particle after animation completes
+   */
+  const handleParticleComplete = (id: number) => {
+    setParticles((prev) => prev.filter((p) => p.id !== id));
   };
 
   return (
@@ -34,6 +66,7 @@ export function CarrotClicker() {
 
       {/* Click Button with Framer Motion animations */}
       <motion.button
+        ref={buttonRef}
         onClick={handleClick}
         className="relative group"
         aria-label="Click to earn carrots"
@@ -45,6 +78,9 @@ export function CarrotClicker() {
           damping: 17,
         }}
       >
+        {/* Click Particles Overlay */}
+        <ClickParticles particles={particles} onParticleComplete={handleParticleComplete} />
+
         {/* Placeholder carrot button - will be replaced with actual image in RAB-40 */}
         <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center">
           <span className="text-6xl">🥕</span>
