@@ -37,7 +37,7 @@ export function CarrotClicker() {
 
       for (let i = 0; i < particleCount; i++) {
         newParticles.push({
-          id: Date.now() + Math.random(), // Ensure unique IDs
+          id: performance.now() + i, // Microsecond precision + index for guaranteed uniqueness
           x: x + (Math.random() - 0.5) * 40, // Random spread
           y: y + (Math.random() - 0.5) * 40,
         });
@@ -65,27 +65,29 @@ export function CarrotClicker() {
       </div>
 
       {/* Click Button with Framer Motion animations */}
-      <motion.button
-        ref={buttonRef}
-        onClick={handleClick}
-        className="relative group"
-        aria-label="Click to earn carrots"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{
-          type: 'spring',
-          stiffness: 400,
-          damping: 17,
-        }}
-      >
-        {/* Click Particles Overlay */}
-        <ClickParticles particles={particles} onParticleComplete={handleParticleComplete} />
+      <div className="relative">
+        <motion.button
+          ref={buttonRef}
+          onClick={handleClick}
+          className="group"
+          aria-label="Click to earn carrots"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 17,
+          }}
+        >
+          {/* Placeholder carrot button - will be replaced with actual image in RAB-40 */}
+          <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center">
+            <span className="text-6xl">🥕</span>
+          </div>
+        </motion.button>
 
-        {/* Placeholder carrot button - will be replaced with actual image in RAB-40 */}
-        <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center">
-          <span className="text-6xl">🥕</span>
-        </div>
-      </motion.button>
+        {/* Click Particles Overlay - outside button to prevent scaling */}
+        <ClickParticles particles={particles} onParticleComplete={handleParticleComplete} />
+      </div>
 
       {/* Production Stats Display */}
       <div className="flex gap-8">
