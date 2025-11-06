@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
 import { playSound } from '@/utils/sounds';
+import { formatNumber } from '@/utils';
 
 /**
  * CarrotClicker Component
@@ -26,7 +27,7 @@ export function CarrotClicker() {
       {/* Carrot Count Display */}
       <div className="text-center">
         <div className="text-6xl font-bold text-carrot">
-          {Math.floor(carrots).toLocaleString()}
+          {formatNumber(Math.floor(carrots))}
         </div>
         <div className="text-xl text-gray-600 mt-2">Carrots</div>
       </div>
@@ -58,7 +59,7 @@ export function CarrotClicker() {
             Per Click
           </div>
           <div className="text-2xl font-semibold text-carrot">
-            +{clickPower.toLocaleString()}
+            +{formatNumber(clickPower)}
           </div>
         </div>
 
@@ -68,7 +69,7 @@ export function CarrotClicker() {
             Per Second
           </div>
           <div className="text-2xl font-semibold text-carrot">
-            +{carrotsPerSecond.toLocaleString()}
+            +{formatNumber(carrotsPerSecond)}
           </div>
         </div>
       </div>

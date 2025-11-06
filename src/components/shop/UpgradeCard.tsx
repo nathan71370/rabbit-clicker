@@ -1,4 +1,5 @@
 import type { Upgrade } from '@/types/upgrade';
+import { formatNumber } from '@/utils';
 
 interface UpgradeCardProps {
   upgrade: Upgrade;
@@ -68,7 +69,7 @@ export function UpgradeCard({
                 isAffordable ? 'text-carrot' : 'text-gray-400'
               }`}
             >
-              {upgrade.currentCost.toLocaleString()}
+              {formatNumber(upgrade.currentCost)}
             </div>
           </div>
 
