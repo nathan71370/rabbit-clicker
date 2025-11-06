@@ -14,7 +14,7 @@ export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
   const { carrots } = useGameStore();
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-20 shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Left: Game Title (hidden on mobile) */}
         <div className="hidden md:block">
