@@ -108,6 +108,9 @@ export function loadGame(): boolean {
     };
     useUpgradeStore.setState(upgradeState);
 
+    // Recalculate derived game values based on loaded upgrades
+    useUpgradeStore.getState().recalculateMultipliers();
+
     return true;
   } catch (error) {
     console.error('Failed to load game:', error);
@@ -190,6 +193,9 @@ export function importSave(encoded: string): boolean {
       ),
     };
     useUpgradeStore.setState(upgradeState);
+
+    // Recalculate derived game values based on imported upgrades
+    useUpgradeStore.getState().recalculateMultipliers();
 
     return true;
   } catch (error) {
