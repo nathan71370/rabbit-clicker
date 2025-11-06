@@ -18,7 +18,12 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nRAB-13: Configure TypeScript and ESLint\n\n- Add path aliases to tsconfig.app.json (@/, @/components, @/stores, etc.)\n- Configure Vite resolve.alias for runtime path resolution\n- Install @types/node for path module support\n- Verify ESLint configuration (already properly set up)\n- Confirm no linting errors in codebase\n- Confirm TypeScript strict mode enabled and working\n\nAll acceptance criteria met:\n- TypeScript strict mode configured\n- Path aliases working in both TS and Vite\n- ESLint running without errors\n- Build succeeds with no issues\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit -m \"$(cat <<''EOF''\nCloses RAB-14: Create complete folder structure\n\n- Create all source directories:\n  - components (clicker, rabbits, shop, crates, ui, prestige, achievements)\n  - stores, game (mechanics, systems, balancing, data)\n  - utils, hooks, services, types, styles\n- Create public/assets directories:\n  - images (rabbits, icons, backgrounds)\n  - sounds\n- Add index.ts files to component, store, and type directories\n- Add .gitkeep files to other directories for git tracking\n- Update README.md with project structure overview\n\nAll acceptance criteria met:\n- All directories created as specified in FILE_STRUCTURE.md\n- Each directory has index.ts or .gitkeep\n- Structure matches FILE_STRUCTURE.md\n- README.md updated with structure overview\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "mcp__github__create_pull_request",
+      "Bash(git restore:*)",
+      "mcp__github__pull_request_read"
     ],
     "deny": [],
     "ask": []

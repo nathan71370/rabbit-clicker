@@ -1,7 +1,7 @@
 import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
-import { ProductionDisplay } from '@/components/ui';
-import { useGameLoop } from '@/hooks';
+import { ProductionDisplay, SavingIndicator } from '@/components/ui';
+import { useGameLoop, useAutoSave } from '@/hooks';
 
 /**
  * Main App Component
@@ -11,8 +11,14 @@ function App() {
   // Initialize game loop for idle production
   useGameLoop();
 
+  // Initialize auto-save system
+  const { isSaving, triggerSave } = useAutoSave();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* Saving Indicator */}
+      <SavingIndicator isSaving={isSaving} />
+
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Game Title */}
@@ -34,7 +40,7 @@ function App() {
 
           {/* Right Column: Shop */}
           <div className="flex flex-col">
-            <ShopPanel />
+            <ShopPanel onPurchase={triggerSave} />
           </div>
         </div>
       </main>
