@@ -15,25 +15,30 @@ import { useGameStore } from '@/stores/gameStore';
  * - Proper cleanup on unmount to prevent memory leaks
  *
  * @param isPaused - Whether the game loop should be paused (default: false)
+ * @param isLoading - Whether the game is still loading (prevents race conditions)
  */
-export function useGameLoop(isPaused?: boolean) {
+export function useGameLoop(isPaused?: boolean, isLoading?: boolean) {
   const tick = useGameStore((state) => state.tick);
   const calculateOfflineProgress = useGameStore((state) => state.calculateOfflineProgress);
   const animationFrameId = useRef<number | undefined>(undefined);
   const lastTimeRef = useRef<number>(performance.now());
   const hasCalculatedOfflineProgress = useRef<boolean>(false);
 
-  // Calculate offline progress on mount (only once)
+  // Calculate offline progress on mount (only once) - skip if loading
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     if (!hasCalculatedOfflineProgress.current) {
       calculateOfflineProgress();
       hasCalculatedOfflineProgress.current = true;
     }
-  }, [calculateOfflineProgress]);
+  }, [calculateOfflineProgress, isLoading]);
 
   useEffect(() => {
-    // Don't start loop if paused
-    if (isPaused === true) {
+    // Don't start loop if loading or paused
+    if (isLoading || isPaused === true) {
       return;
     }
 
@@ -62,23 +67,27 @@ export function useGameLoop(isPaused?: boolean) {
     // Start the game loop
     animationFrameId.current = requestAnimationFrame(gameLoop);
 
-    // Cleanup: cancel animation frame on unmount or when paused changes
+    // Cleanup: cancel animation frame on unmount or when paused/loading changes
     return () => {
       if (animationFrameId.current !== undefined) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isPaused, tick]);
+  }, [isLoading, isPaused, tick]);
 
-  // Reset lastTime when unpausing to prevent large delta time spike
+  // Reset lastTime when unpausing or finishing load to prevent large delta time spike
   useEffect(() => {
-    if (isPaused !== true) {
+    if (!isLoading && isPaused !== true) {
       lastTimeRef.current = performance.now();
     }
-  }, [isPaused]);
+  }, [isLoading, isPaused]);
 
-  // Handle tab visibility changes for offline progress
+  // Handle tab visibility changes for offline progress - skip if loading
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         // Tab became visible - calculate offline progress
@@ -93,5 +102,5 @@ export function useGameLoop(isPaused?: boolean) {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [calculateOfflineProgress]);
+  }, [calculateOfflineProgress, isLoading]);
 }

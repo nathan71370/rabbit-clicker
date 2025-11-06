@@ -1,18 +1,51 @@
+import { useState, useEffect } from 'react';
 import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
-import { ProductionDisplay, SavingIndicator } from '@/components/ui';
+import {
+  ProductionDisplay,
+  SavingIndicator,
+  LoadingScreen,
+} from '@/components/ui';
 import { useGameLoop, useAutoSave } from '@/hooks';
+import { loadGame } from '@/services';
 
 /**
  * Main App Component
  * Root component with basic layout for the clicker game MVP
  */
 function App() {
-  // Initialize game loop for idle production
-  useGameLoop();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize auto-save system
-  const { isSaving, triggerSave } = useAutoSave();
+  // Load saved game on initialization
+  useEffect(() => {
+    try {
+      // Attempt to load saved game
+      const loaded = loadGame();
+
+      if (loaded) {
+        // Successfully loaded existing save
+      } else {
+        // First-time player - no save exists, start fresh
+      }
+    } catch (error) {
+      // Handle corrupted save gracefully
+      console.error('Failed to load save, starting fresh:', error);
+    } finally {
+      // Always finish loading, even if errors occurred
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Initialize game loop for idle production (waits for loading to complete)
+  useGameLoop(false, isLoading);
+
+  // Initialize auto-save system (waits for loading to complete)
+  const { isSaving, triggerSave } = useAutoSave(isLoading);
+
+  // Show loading screen while restoring save data
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
