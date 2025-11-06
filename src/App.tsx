@@ -6,6 +6,7 @@ import {
   SavingIndicator,
   LoadingScreen,
   Settings,
+  TabNavigation,
 } from '@/components/ui';
 import { useGameLoop, useAutoSave } from '@/hooks';
 import { loadGame } from '@/services';
@@ -17,6 +18,7 @@ import { loadGame } from '@/services';
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('clicker');
 
   // Load saved game on initialization
   useEffect(() => {
@@ -67,30 +69,78 @@ function App() {
       </button>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 pb-20 md:pb-8">
         {/* Game Title */}
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Rabbit Clicker
         </h1>
 
-        {/* Production Display - Prominent CPS indicator */}
-        <div className="max-w-md mx-auto mb-6">
-          <ProductionDisplay />
+        {/* Mobile: Tab-based Layout */}
+        <div className="md:hidden">
+          {activeTab === 'clicker' && (
+            <div className="card">
+              <CarrotClicker />
+            </div>
+          )}
+          {activeTab === 'shop' && (
+            <div className="flex flex-col">
+              <ShopPanel onPurchase={triggerSave} />
+            </div>
+          )}
+          {activeTab === 'stats' && (
+            <div className="card">
+              <ProductionDisplay />
+            </div>
+          )}
         </div>
 
-        {/* Game Layout - Responsive Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-          {/* Left Column: Clicker */}
+        {/* Tablet: 2-Column Layout (clicker+shop | stats) */}
+        <div className="hidden md:grid lg:hidden grid-cols-2 gap-6 max-w-7xl mx-auto">
+          {/* Left Column: Clicker and Shop stacked */}
+          <div className="flex flex-col gap-6">
+            <div className="card">
+              <CarrotClicker />
+            </div>
+            <div className="flex flex-col">
+              <ShopPanel onPurchase={triggerSave} />
+            </div>
+          </div>
+
+          {/* Right Column: Stats */}
+          <div className="card">
+            <ProductionDisplay />
+          </div>
+        </div>
+
+        {/* Desktop: 3-Column Layout (shop | clicker | stats) */}
+        <div className="hidden lg:grid grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {/* Left Column: Shop */}
+          <div className="flex flex-col">
+            <ShopPanel onPurchase={triggerSave} />
+          </div>
+
+          {/* Center Column: Clicker */}
           <div className="card">
             <CarrotClicker />
           </div>
 
-          {/* Right Column: Shop */}
-          <div className="flex flex-col">
-            <ShopPanel onPurchase={triggerSave} />
+          {/* Right Column: Stats */}
+          <div className="card">
+            <ProductionDisplay />
           </div>
         </div>
       </main>
+
+      {/* Mobile Bottom Tab Navigation */}
+      <TabNavigation
+        tabs={[
+          { id: 'clicker', label: 'Clicker', icon: '🥕' },
+          { id: 'shop', label: 'Shop', icon: '🛒' },
+          { id: 'stats', label: 'Stats', icon: '📊' },
+        ]}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
     </div>
   );
 }
