@@ -25,24 +25,29 @@ export function useAutoSave() {
    * Perform save operation with indicator
    */
   const performSave = () => {
-    const success = saveGame();
+    try {
+      const success = saveGame();
 
-    if (success) {
-      // Show saving indicator
-      setIsSaving(true);
+      if (success) {
+        // Show saving indicator
+        setIsSaving(true);
 
-      // Clear existing timeout if any
-      if (savingTimeoutRef.current) {
-        clearTimeout(savingTimeoutRef.current);
+        // Clear existing timeout if any
+        if (savingTimeoutRef.current) {
+          clearTimeout(savingTimeoutRef.current);
+        }
+
+        // Hide indicator after duration
+        savingTimeoutRef.current = window.setTimeout(() => {
+          setIsSaving(false);
+        }, SAVING_INDICATOR_DURATION);
       }
 
-      // Hide indicator after duration
-      savingTimeoutRef.current = window.setTimeout(() => {
-        setIsSaving(false);
-      }, SAVING_INDICATOR_DURATION);
+      return success;
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+      return false;
     }
-
-    return success;
   };
 
   /**
