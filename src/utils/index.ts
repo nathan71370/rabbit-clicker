@@ -1,2 +1,2 @@
-export { formatNumber } from './formatNumber';
+export { formatNumber, formatNumberPrecise } from './formatNumber';
 export { playSound } from './sounds';
