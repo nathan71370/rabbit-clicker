@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { exportSave, importSave } from '@/services';
 
@@ -6,6 +6,8 @@ interface SettingsProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const SAVE_KEY = 'rabbit-clicker-save';
 
 /**
  * Settings Component
@@ -19,12 +21,21 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
     type: 'success' | 'error';
   } | null>(null);
 
+  const notificationTimerRef = useRef<number | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
   /**
    * Show temporary notification
    */
   const showNotification = (message: string, type: 'success' | 'error') => {
+    if (notificationTimerRef.current) {
+      clearTimeout(notificationTimerRef.current);
+    }
     setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
+    notificationTimerRef.current = window.setTimeout(() => {
+      setNotification(null);
+      notificationTimerRef.current = null;
+    }, 3000);
   };
 
   /**
@@ -76,7 +87,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
    */
   const handleReset = () => {
     try {
-      localStorage.removeItem('rabbit-clicker-save');
+      localStorage.removeItem(SAVE_KEY);
       showNotification('Progress reset successfully!', 'success');
       setShowResetConfirm(false);
       // Reload page to start fresh
@@ -86,6 +97,37 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
       showNotification('Failed to reset progress', 'error');
     }
   };
+
+  // Cleanup notification timer on unmount
+  useEffect(() => {
+    return () => {
+      if (notificationTimerRef.current) {
+        clearTimeout(notificationTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  // Focus management
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      const previouslyFocused = document.activeElement as HTMLElement;
+      modalRef.current.focus();
+
+      return () => previouslyFocused?.focus();
+    }
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -102,16 +144,24 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
 
           {/* Modal */}
           <motion.div
+            ref={modalRef}
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            role="dialog"
+            aria-labelledby="settings-title"
+            aria-modal="true"
+            tabIndex={-1}
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-2xl z-50 w-full max-w-md p-6"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Settings</h2>
+              <h2 id="settings-title" className="text-2xl font-bold text-gray-800">
+                Settings
+              </h2>
               <button
                 onClick={onClose}
+                aria-label="Close settings"
                 className="text-gray-500 hover:text-gray-700 text-2xl"
               >
                 ×
