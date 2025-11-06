@@ -5,11 +5,15 @@ import { UpgradeCard } from './UpgradeCard';
 import { playSound } from '@/utils/sounds';
 import { formatNumber } from '@/utils';
 
+interface ShopPanelProps {
+  onPurchase?: () => void;
+}
+
 /**
  * ShopPanel Component
  * Displays available upgrades and handles purchases
  */
-export function ShopPanel() {
+export function ShopPanel({ onPurchase }: ShopPanelProps) {
   const { carrots } = useGameStore();
   const { purchaseUpgrade, canAfford, isPurchased, checkRequirements } =
     useUpgradeStore();
@@ -21,6 +25,9 @@ export function ShopPanel() {
     if (success) {
       // Play purchase sound
       playSound('/assets/sounds/purchase.mp3', { volume: 0.4 });
+
+      // Trigger save after successful purchase
+      onPurchase?.();
     }
   };
 
