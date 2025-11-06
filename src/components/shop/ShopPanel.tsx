@@ -3,6 +3,7 @@ import { useUpgradeStore } from '@/stores/upgradeStore';
 import { getClickUpgrades } from '@/game/data/upgrades';
 import { UpgradeCard } from './UpgradeCard';
 import { playSound } from '@/utils/sounds';
+import { formatNumber } from '@/utils';
 
 /**
  * ShopPanel Component
@@ -31,7 +32,7 @@ export function ShopPanel() {
         <div className="flex items-baseline gap-2">
           <span className="text-sm opacity-90">Your Carrots:</span>
           <span className="text-3xl font-bold">
-            {Math.floor(carrots).toLocaleString()}
+            {formatNumber(Math.floor(carrots))}
           </span>
         </div>
       </div>
