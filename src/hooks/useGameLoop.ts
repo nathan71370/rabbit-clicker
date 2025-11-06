@@ -18,8 +18,18 @@ import { useGameStore } from '@/stores/gameStore';
  */
 export function useGameLoop(isPaused?: boolean) {
   const tick = useGameStore((state) => state.tick);
+  const calculateOfflineProgress = useGameStore((state) => state.calculateOfflineProgress);
   const animationFrameId = useRef<number | undefined>(undefined);
   const lastTimeRef = useRef<number>(performance.now());
+  const hasCalculatedOfflineProgress = useRef<boolean>(false);
+
+  // Calculate offline progress on mount (only once)
+  useEffect(() => {
+    if (!hasCalculatedOfflineProgress.current) {
+      calculateOfflineProgress();
+      hasCalculatedOfflineProgress.current = true;
+    }
+  }, [calculateOfflineProgress]);
 
   useEffect(() => {
     // Don't start loop if paused
@@ -66,4 +76,22 @@ export function useGameLoop(isPaused?: boolean) {
       lastTimeRef.current = performance.now();
     }
   }, [isPaused]);
+
+  // Handle tab visibility changes for offline progress
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Tab became visible - calculate offline progress
+        calculateOfflineProgress();
+        // Reset lastTime to prevent delta spike
+        lastTimeRef.current = performance.now();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [calculateOfflineProgress]);
 }

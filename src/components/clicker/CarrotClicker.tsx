@@ -8,7 +8,7 @@ import { playSound } from '@/utils/sounds';
  * Features smooth animations using Framer Motion and click sound effects
  */
 export function CarrotClicker() {
-  const { carrots, clickPower, click } = useGameStore();
+  const { carrots, clickPower, carrotsPerSecond, click } = useGameStore();
 
   /**
    * Handle click with sound effect
@@ -50,13 +50,26 @@ export function CarrotClicker() {
         </div>
       </motion.button>
 
-      {/* Click Power Display */}
-      <div className="text-center">
-        <div className="text-sm text-gray-500 uppercase tracking-wide">
-          Per Click
+      {/* Production Stats Display */}
+      <div className="flex gap-8">
+        {/* Click Power Display */}
+        <div className="text-center">
+          <div className="text-sm text-gray-500 uppercase tracking-wide">
+            Per Click
+          </div>
+          <div className="text-2xl font-semibold text-carrot">
+            +{clickPower.toLocaleString()}
+          </div>
         </div>
-        <div className="text-2xl font-semibold text-carrot">
-          +{clickPower.toLocaleString()}
+
+        {/* CPS Display */}
+        <div className="text-center">
+          <div className="text-sm text-gray-500 uppercase tracking-wide">
+            Per Second
+          </div>
+          <div className="text-2xl font-semibold text-carrot">
+            +{carrotsPerSecond.toLocaleString()}
+          </div>
         </div>
       </div>
     </div>

@@ -25,6 +25,7 @@ interface GameState {
   spendCarrots: (amount: number) => boolean;
   click: () => void;
   tick: (deltaTime: number) => void;
+  calculateOfflineProgress: () => void;
 }
 
 /**
@@ -113,6 +114,44 @@ export const useGameStore = create<GameState>()(
             lastPlayTime: Date.now(),
           };
         });
+      },
+
+      /**
+       * Calculate and apply offline progress
+       * Called when the player returns to the game after being away
+       * Grants production based on time away (capped at 1 hour)
+       */
+      calculateOfflineProgress: () => {
+        const state = get();
+        const now = Date.now();
+        const timeAwayMs = now - state.lastPlayTime;
+        const timeAwaySec = timeAwayMs / 1000;
+
+        // Only apply offline progress if away for more than 1 second
+        if (timeAwaySec < 1) {
+          return;
+        }
+
+        // Cap offline time at 1 hour (3600 seconds)
+        const cappedTimeAway = Math.min(timeAwaySec, 3600);
+
+        // Calculate offline production
+        const offlineProduction = state.carrotsPerSecond * cappedTimeAway;
+
+        if (offlineProduction > 0) {
+          set({
+            carrots: state.carrots + offlineProduction,
+            lifetimeCarrots: state.lifetimeCarrots + offlineProduction,
+            lastPlayTime: now,
+          });
+
+          console.log(
+            `Offline progress: +${offlineProduction.toFixed(2)} carrots from ${cappedTimeAway.toFixed(1)}s away`
+          );
+        } else {
+          // Update lastPlayTime even if no production
+          set({ lastPlayTime: now });
+        }
       },
     }),
     {
