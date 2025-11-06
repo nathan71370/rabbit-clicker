@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useGameStore } from './gameStore';
-import { CLICK_UPGRADES, getUpgradeById } from '@/game/data/upgrades';
+import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES, getUpgradeById } from '@/game/data/upgrades';
 
 /**
  * Upgrade Store State Interface
@@ -149,17 +149,25 @@ export const useUpgradeStore = create<UpgradeState>()(
 
       /**
        * Recalculate multipliers based on purchased upgrades
-       * Updates both click and production multipliers
+       * Updates both click and production multipliers, and CPS
        */
       recalculateMultipliers: () => {
         const state = get();
         let clickMultiplier = 1;
-        let productionMultiplier = 1;
+        const productionMultiplier = 1;
+        let autoClicksPerSecond = 0;
 
         // Calculate click multiplier from purchased click upgrades
         CLICK_UPGRADES.forEach((upgrade) => {
           if (state.purchasedUpgrades.has(upgrade.id)) {
             clickMultiplier *= upgrade.effect;
+          }
+        });
+
+        // Calculate total auto-clicks per second from auto-clicker upgrades
+        AUTO_CLICKER_UPGRADES.forEach((upgrade) => {
+          if (state.purchasedUpgrades.has(upgrade.id)) {
+            autoClicksPerSecond += upgrade.effect;
           }
         });
 
@@ -173,8 +181,14 @@ export const useUpgradeStore = create<UpgradeState>()(
         // Base click power is 1, multiplied by all click upgrades
         const newClickPower = 1 * clickMultiplier;
 
+        // Calculate CPS: auto-clicks per second × click power
+        const newCarrotsPerSecond = autoClicksPerSecond * newClickPower;
+
         // Update gameStore using setState
-        useGameStore.setState({ clickPower: newClickPower });
+        useGameStore.setState({
+          clickPower: newClickPower,
+          carrotsPerSecond: newCarrotsPerSecond,
+        });
       },
     }),
     {
@@ -187,10 +201,12 @@ export const useUpgradeStore = create<UpgradeState>()(
         productionMultiplier: state.productionMultiplier,
       }),
       // Custom deserialization for Set
-      merge: (persistedState: any, currentState) => ({
+      merge: (persistedState: unknown, currentState) => ({
         ...currentState,
-        ...persistedState,
-        purchasedUpgrades: new Set(persistedState.purchasedUpgrades || []),
+        ...(persistedState as object),
+        purchasedUpgrades: new Set(
+          (persistedState as { purchasedUpgrades?: string[] }).purchasedUpgrades || []
+        ),
       }),
     }
   )
