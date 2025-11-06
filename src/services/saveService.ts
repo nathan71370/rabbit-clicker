@@ -9,13 +9,31 @@ import { useUpgradeStore } from '@/stores/upgradeStore';
 const SAVE_VERSION = 1;
 
 /**
+ * Serializable game state (excludes methods)
+ */
+type SerializableGameState = Omit<
+  ReturnType<typeof useGameStore.getState>,
+  'addCarrots' | 'spendCarrots' | 'click' | 'tick' | 'calculateOfflineProgress'
+>;
+
+/**
+ * Serializable upgrade state (excludes methods, Set converted to Array)
+ */
+type SerializableUpgradeState = Omit<
+  ReturnType<typeof useUpgradeStore.getState>,
+  'canAfford' | 'isPurchased' | 'checkRequirements' | 'purchaseUpgrade' | 'recalculateMultipliers' | 'purchasedUpgrades'
+> & {
+  purchasedUpgrades: string[];
+};
+
+/**
  * Save data structure
  */
 interface SaveData {
   version: number;
   timestamp: number;
-  game: ReturnType<typeof useGameStore.getState>;
-  upgrades: ReturnType<typeof useUpgradeStore.getState>;
+  game: SerializableGameState;
+  upgrades: SerializableUpgradeState;
 }
 
 /**
@@ -28,11 +46,17 @@ export function saveGame(): boolean {
     const gameState = useGameStore.getState();
     const upgradeState = useUpgradeStore.getState();
 
+    // Convert Set to Array for serialization
+    const serializableUpgradeState = {
+      ...upgradeState,
+      purchasedUpgrades: Array.from(upgradeState.purchasedUpgrades),
+    };
+
     const saveData: SaveData = {
       version: SAVE_VERSION,
       timestamp: Date.now(),
-      game: gameState,
-      upgrades: upgradeState,
+      game: gameState as SerializableGameState,
+      upgrades: serializableUpgradeState as SerializableUpgradeState,
     };
 
     const serialized = JSON.stringify(saveData);
@@ -101,11 +125,17 @@ export function exportSave(): string {
     const gameState = useGameStore.getState();
     const upgradeState = useUpgradeStore.getState();
 
+    // Convert Set to Array for serialization
+    const serializableUpgradeState = {
+      ...upgradeState,
+      purchasedUpgrades: Array.from(upgradeState.purchasedUpgrades),
+    };
+
     const saveData: SaveData = {
       version: SAVE_VERSION,
       timestamp: Date.now(),
-      game: gameState,
-      upgrades: upgradeState,
+      game: gameState as SerializableGameState,
+      upgrades: serializableUpgradeState as SerializableUpgradeState,
     };
 
     const serialized = JSON.stringify(saveData);
@@ -138,7 +168,7 @@ export function importSave(encoded: string): boolean {
     const saveData: SaveData = JSON.parse(decompressed);
 
     // Validate save structure
-    if (!saveData.version || !saveData.game || !saveData.upgrades) {
+    if (saveData.version === undefined || saveData.version === null || !saveData.game || !saveData.upgrades) {
       throw new Error('Invalid save data structure');
     }
 
@@ -160,9 +190,6 @@ export function importSave(encoded: string): boolean {
       ),
     };
     useUpgradeStore.setState(upgradeState);
-
-    // Save to localStorage after successful import
-    saveGame();
 
     return true;
   } catch (error) {
