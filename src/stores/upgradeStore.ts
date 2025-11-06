@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useGameStore } from './gameStore';
 import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES, getUpgradeById } from '@/game/data/upgrades';
+import { playSound } from '@/utils/sounds';
 
 /**
  * Upgrade Store State Interface
@@ -143,6 +144,9 @@ export const useUpgradeStore = create<UpgradeState>()(
 
         // Recalculate multipliers
         get().recalculateMultipliers();
+
+        // Play purchase sound effect
+        playSound('/assets/sounds/purchase.mp3', { volume: 0.5 });
 
         return true;
       },
