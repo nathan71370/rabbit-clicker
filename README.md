@@ -113,6 +113,14 @@ This gets a playable prototype running quickly, which can be tested and iterated
 
 This is a single-developer project currently in planning. As development progresses, contribution guidelines will be added if the project opens to collaborators.
 
+## Reviewers
+
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/nathan71370/rabbit-clicker?utm_source=oss&utm_medium=github&utm_campaign=nathan71370%2Frabbit-clicker&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
+## Donation
+
+[![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-yellow.svg)](https://www.buymeacoffee.com/AzRoDoRzA)
+
 ## License
 
 [To be determined]
