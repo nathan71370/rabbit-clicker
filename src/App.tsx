@@ -5,6 +5,7 @@ import {
   ProductionDisplay,
   SavingIndicator,
   LoadingScreen,
+  Settings,
 } from '@/components/ui';
 import { useGameLoop, useAutoSave } from '@/hooks';
 import { loadGame } from '@/services';
@@ -15,6 +16,7 @@ import { loadGame } from '@/services';
  */
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Load saved game on initialization
   useEffect(() => {
@@ -51,6 +53,18 @@ function App() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Saving Indicator */}
       <SavingIndicator isSaving={isSaving} />
+
+      {/* Settings Modal */}
+      <Settings isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+
+      {/* Settings Button */}
+      <button
+        onClick={() => setIsSettingsOpen(true)}
+        aria-label="Open settings"
+        className="fixed top-4 right-4 z-30 bg-white text-gray-700 px-4 py-2 rounded-lg shadow-lg hover:bg-gray-100 transition-colors font-semibold"
+      >
+        ⚙️ Settings
+      </button>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
