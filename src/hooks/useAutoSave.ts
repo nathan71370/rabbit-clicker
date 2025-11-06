@@ -15,9 +15,10 @@ const SAVING_INDICATOR_DURATION = 1000;
  * useAutoSave Hook
  * Automatically saves game state periodically and on page unload
  *
+ * @param isLoading - Whether the game is still loading (prevents race conditions)
  * @returns Object containing saving state and manual save trigger function
  */
-export function useAutoSave() {
+export function useAutoSave(isLoading?: boolean) {
   const [isSaving, setIsSaving] = useState(false);
   const savingTimeoutRef = useRef<number | null>(null);
 
@@ -58,6 +59,11 @@ export function useAutoSave() {
   };
 
   useEffect(() => {
+    // Skip auto-save initialization while loading
+    if (isLoading) {
+      return;
+    }
+
     // Set up auto-save timer (every 30 seconds)
     const intervalId = setInterval(() => {
       performSave();
@@ -80,7 +86,7 @@ export function useAutoSave() {
         clearTimeout(savingTimeoutRef.current);
       }
     };
-  }, []);
+  }, [isLoading]);
 
   return {
     isSaving,

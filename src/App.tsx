@@ -36,11 +36,11 @@ function App() {
     }
   }, []);
 
-  // Initialize game loop for idle production
-  useGameLoop();
+  // Initialize game loop for idle production (waits for loading to complete)
+  useGameLoop(false, isLoading);
 
-  // Initialize auto-save system
-  const { isSaving, triggerSave } = useAutoSave();
+  // Initialize auto-save system (waits for loading to complete)
+  const { isSaving, triggerSave } = useAutoSave(isLoading);
 
   // Show loading screen while restoring save data
   if (isLoading) {
