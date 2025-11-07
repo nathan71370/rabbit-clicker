@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
-import { playSound } from '@/utils/sounds';
+// import { playSound } from '@/utils/sounds'; // TODO: Re-enable when click sound is fixed
 import { formatNumber } from '@/utils';
 import { ClickParticles, type Particle } from './ClickParticles';
 
@@ -19,8 +19,9 @@ export function CarrotClicker() {
    * Handle click with sound effect and particle spawning
    */
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // Play click sound (non-blocking, throttled to prevent lag on spam clicking)
-    playSound('/assets/sounds/click.mp3', { volume: 0.3, throttle: 150 });
+    // TODO: Re-enable click sound with better audio pooling/limiting system
+    // Current issue: Even with throttling, rapid clicking causes freeze and audio playback queue
+    // playSound('/assets/sounds/click.mp3', { volume: 0.3, throttle: 150 });
 
     // Update game state
     click();
