@@ -8,7 +8,7 @@ const soundCache = new Map<string, HTMLAudioElement>();
 
 // Sound throttling: track last play time for each sound path
 const soundThrottleMap = new Map<string, number>();
-const DEFAULT_THROTTLE_MS = 50; // Minimum time between plays of the same sound
+const DEFAULT_THROTTLE_MS = 100; // Minimum time between plays of the same sound
 
 // Global volume settings (0.0 to 1.0)
 let masterVolume = 0.5;

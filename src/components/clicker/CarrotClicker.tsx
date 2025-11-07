@@ -19,8 +19,8 @@ export function CarrotClicker() {
    * Handle click with sound effect and particle spawning
    */
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // Play click sound (non-blocking)
-    playSound('/assets/sounds/click.mp3', { volume: 0.3 });
+    // Play click sound (non-blocking, throttled to prevent lag on spam clicking)
+    playSound('/assets/sounds/click.mp3', { volume: 0.3, throttle: 150 });
 
     // Update game state
     click();
