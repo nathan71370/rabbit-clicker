@@ -110,18 +110,34 @@ export const useRabbitStore = create<RabbitState>()(
        * @param updates - Partial rabbit data to merge
        */
       updateRabbit: (rabbitId: string, updates: Partial<Rabbit>) => {
-        set((state) => {
-          const rabbit = state.ownedRabbits.get(rabbitId);
-          if (!rabbit) {
-            console.error(`Rabbit ${rabbitId} not found`);
-            return state;
-          }
+        const state = get();
+        const rabbit = state.ownedRabbits.get(rabbitId);
 
-          const newOwned = new Map(state.ownedRabbits);
-          newOwned.set(rabbitId, { ...rabbit, ...updates });
+        if (!rabbit) {
+          console.error(`Rabbit ${rabbitId} not found`);
+          return;
+        }
 
-          return { ownedRabbits: newOwned };
-        });
+        // Check if production-affecting fields are being updated
+        const productionFieldsChanged =
+          updates.level !== undefined ||
+          updates.baseCPS !== undefined ||
+          updates.ability !== undefined;
+
+        // Check if this rabbit is in the active team
+        const isInActiveTeam = state.activeTeam.includes(rabbitId);
+
+        // Apply updates
+        const newOwned = new Map(state.ownedRabbits);
+        newOwned.set(rabbitId, { ...rabbit, ...updates });
+
+        set({ ownedRabbits: newOwned });
+
+        // Update production if necessary
+        // Only recalculate if production-affecting fields changed AND rabbit is active
+        if (productionFieldsChanged && isInActiveTeam) {
+          updateProductionValues();
+        }
       },
 
       /**
