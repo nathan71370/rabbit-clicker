@@ -32,20 +32,37 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6 h-full">
       {/* Shop Header */}
-      <div className="card bg-gradient-to-r from-carrot to-carrot-dark text-white">
-        <h2 className="text-2xl font-bold mb-2">Upgrade Shop</h2>
-        <div className="flex items-baseline gap-2">
-          <span className="text-sm opacity-90">Your Carrots:</span>
-          <span className="text-3xl font-bold">
-            {formatNumber(Math.floor(carrots))}
-          </span>
+      <div className="card bg-gradient-to-br from-carrot via-carrot to-carrot-dark text-white shadow-lg border-none">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-4xl">🏪</span>
+          <h2 className="text-3xl font-bold">Upgrade Shop</h2>
+        </div>
+        <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-3 backdrop-blur-sm">
+          <span className="text-2xl">🥕</span>
+          <div className="flex-1">
+            <div className="text-xs opacity-90 uppercase tracking-wide font-semibold">
+              Your Carrots
+            </div>
+            <div className="text-2xl font-bold">
+              {formatNumber(Math.floor(carrots))}
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Section Header */}
+      <div className="flex items-center gap-2">
+        <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
+        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+          Click Power Upgrades
+        </h3>
+        <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
+      </div>
+
       {/* Upgrades List */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 overflow-y-auto flex-1 pr-2 -mr-2">
         {upgrades.map((upgrade) => {
           const affordable = canAfford(upgrade.currentCost);
           const purchased = isPurchased(upgrade.id);
@@ -66,8 +83,10 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
       {/* Empty State (if no upgrades available) */}
       {upgrades.length === 0 && (
-        <div className="card text-center py-8 text-gray-500">
-          <p>No upgrades available</p>
+        <div className="card text-center py-12 text-gray-500 bg-gray-50">
+          <div className="text-6xl mb-4 opacity-50">🛒</div>
+          <p className="text-lg font-semibold">No upgrades available</p>
+          <p className="text-sm mt-1">Check back later!</p>
         </div>
       )}
     </div>
