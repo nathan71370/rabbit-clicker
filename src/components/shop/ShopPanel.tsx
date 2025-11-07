@@ -33,7 +33,7 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-full">
+    <div className="flex flex-col gap-6">
       {/* Shop Header */}
       <div className="card bg-gradient-to-br from-carrot via-carrot to-carrot-dark text-white shadow-lg border-none">
         <div className="flex items-center gap-3 mb-3">
@@ -53,8 +53,8 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
         </div>
       </div>
 
-      {/* Scrollable Upgrades Container */}
-      <div className="flex flex-col gap-6 overflow-y-auto flex-1 pr-2 -mr-2">
+      {/* Upgrades Container */}
+      <div className="flex flex-col gap-6">
         {/* Click Power Upgrades Section */}
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
