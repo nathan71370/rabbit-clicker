@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Rabbit } from '@/types/rabbit';
+import { updateProductionValues } from '@/game/mechanics/production';
 
 /**
  * Rabbit Store State Interface
@@ -167,6 +168,9 @@ export const useRabbitStore = create<RabbitState>()(
           activeTeam: [...rabbitIds],
           ownedRabbits: newOwned,
         });
+
+        // Update production values to reflect new team composition
+        updateProductionValues();
 
         return true;
       },

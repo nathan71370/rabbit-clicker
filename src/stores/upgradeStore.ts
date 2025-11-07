@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useGameStore } from './gameStore';
-import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES, getUpgradeById } from '@/game/data/upgrades';
+import { getUpgradeById } from '@/game/data/upgrades';
 import { playSound } from '@/utils/sounds';
+import { updateProductionValues } from '@/game/mechanics/production';
 
 /**
  * Upgrade Store State Interface
@@ -154,45 +155,22 @@ export const useUpgradeStore = create<UpgradeState>()(
       /**
        * Recalculate multipliers based on purchased upgrades
        * Updates both click and production multipliers, and CPS
+       * Now delegates to production.ts for comprehensive calculation including rabbits
        */
       recalculateMultipliers: () => {
-        const state = get();
-        let clickMultiplier = 1;
+        // Note: clickMultiplier and productionMultiplier are kept for backwards compatibility
+        // but actual calculations are now done in production.ts
         const productionMultiplier = 1;
-        let autoClicksPerSecond = 0;
 
-        // Calculate click multiplier from purchased click upgrades
-        CLICK_UPGRADES.forEach((upgrade) => {
-          if (state.purchasedUpgrades.has(upgrade.id)) {
-            clickMultiplier *= upgrade.effect;
-          }
-        });
-
-        // Calculate total auto-clicks per second from auto-clicker upgrades
-        AUTO_CLICKER_UPGRADES.forEach((upgrade) => {
-          if (state.purchasedUpgrades.has(upgrade.id)) {
-            autoClicksPerSecond += upgrade.effect;
-          }
-        });
-
-        // Update state
+        // Update state (multipliers kept for reference but not used in calculations)
         set({
-          clickMultiplier,
+          clickMultiplier: 1, // Now calculated in production.ts
           productionMultiplier,
         });
 
-        // Update gameStore clickPower
-        // Base click power is 1, multiplied by all click upgrades
-        const newClickPower = 1 * clickMultiplier;
-
-        // Calculate CPS: auto-clicks per second × click power
-        const newCarrotsPerSecond = autoClicksPerSecond * newClickPower;
-
-        // Update gameStore using setState
-        useGameStore.setState({
-          clickPower: newClickPower,
-          carrotsPerSecond: newCarrotsPerSecond,
-        });
+        // Update all production values using centralized calculation
+        // This now includes: auto-clickers, rabbits, click power, and total CPS
+        updateProductionValues();
       },
     }),
     {
