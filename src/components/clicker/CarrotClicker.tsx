@@ -79,9 +79,13 @@ export function CarrotClicker() {
             damping: 17,
           }}
         >
-          {/* Placeholder carrot button - will be replaced with actual image in RAB-40 */}
-          <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center">
-            <span className="text-6xl">🥕</span>
+          {/* Carrot button with SVG icon */}
+          <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center p-8">
+            <img
+              src="/assets/images/icons/carrot.svg"
+              alt="Carrot"
+              className="w-full h-full object-contain drop-shadow-lg"
+            />
           </div>
         </motion.button>
 
