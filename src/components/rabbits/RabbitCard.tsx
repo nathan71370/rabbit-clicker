@@ -166,8 +166,13 @@ export function RabbitCard({
             {rabbit.ability && (
               <div
                 className="mt-3 p-2 bg-gray-100 rounded relative"
+                tabIndex={0}
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
+                onFocus={() => setShowTooltip(true)}
+                onBlur={() => setShowTooltip(false)}
+                role="button"
+                aria-label={`Ability: ${rabbit.ability.name}`}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-purple-600">
@@ -177,7 +182,10 @@ export function RabbitCard({
 
                 {/* Tooltip */}
                 {showTooltip && (
-                  <div className="absolute bottom-full left-0 right-0 mb-2 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                  <div
+                    className="absolute bottom-full left-0 right-0 mb-2 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10"
+                    role="tooltip"
+                  >
                     <div className="font-semibold mb-1">{rabbit.ability.name}</div>
                     <div className="text-gray-300">{rabbit.ability.description}</div>
                     <div className="mt-1 text-purple-300">
