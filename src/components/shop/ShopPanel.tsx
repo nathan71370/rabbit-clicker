@@ -80,15 +80,6 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
           );
         })}
       </div>
-
-      {/* Empty State (if no upgrades available) */}
-      {upgrades.length === 0 && (
-        <div className="card text-center py-12 text-gray-500 bg-gray-50">
-          <div className="text-6xl mb-4 opacity-50">🛒</div>
-          <p className="text-lg font-semibold">No upgrades available</p>
-          <p className="text-sm mt-1">Check back later!</p>
-        </div>
-      )}
     </div>
   );
 }

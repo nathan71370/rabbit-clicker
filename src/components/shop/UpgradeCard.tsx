@@ -22,6 +22,22 @@ export function UpgradeCard({
 }: UpgradeCardProps) {
   const canPurchase = isAffordable && !isPurchased && requirementsMet;
 
+  // Get effect label based on upgrade type
+  const getEffectLabel = () => {
+    switch (upgrade.type) {
+      case 'click_power':
+        return `${upgrade.effect}× Click Power`;
+      case 'auto_clicker':
+        return `${upgrade.effect} clicks/sec`;
+      case 'cps_multiplier':
+        return `${upgrade.effect}× Production`;
+      case 'building':
+        return `${upgrade.effect}× Building Power`;
+      default:
+        return `${upgrade.effect}× Effect`;
+    }
+  };
+
   return (
     <div
       className={`card transition-all duration-200 ${
@@ -30,7 +46,7 @@ export function UpgradeCard({
           : !requirementsMet
           ? 'opacity-50 bg-gray-50'
           : isAffordable
-          ? 'hover:shadow-lg hover:border-carrot-light hover:-translate-y-0.5 cursor-pointer border-2 border-transparent'
+          ? 'hover:shadow-lg hover:border-carrot-light hover:-translate-y-0.5 border-2 border-transparent'
           : 'border-2 border-transparent'
       }`}
     >
@@ -55,7 +71,7 @@ export function UpgradeCard({
           <div className="mt-3">
             <span className="inline-flex items-center gap-1 bg-gradient-to-r from-carrot-light to-carrot text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
               <span>⚡</span>
-              <span>{upgrade.effect}× Click Power</span>
+              <span>{getEffectLabel()}</span>
             </span>
           </div>
 
