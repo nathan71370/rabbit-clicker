@@ -6,6 +6,10 @@
 // Sound cache to avoid reloading audio files
 const soundCache = new Map<string, HTMLAudioElement>();
 
+// Sound throttling: track last play time for each sound path
+const soundThrottleMap = new Map<string, number>();
+const DEFAULT_THROTTLE_MS = 100; // Minimum time between plays of the same sound
+
 // Global volume settings (0.0 to 1.0)
 let masterVolume = 0.5;
 let soundEnabled = true;
@@ -50,12 +54,25 @@ export async function playSound(
     volume?: number;
     loop?: boolean;
     playbackRate?: number;
+    throttle?: number; // Custom throttle time in ms (default: 50ms)
   } = {}
 ): Promise<void> {
   // Skip if sound is disabled
   if (!soundEnabled) {
     return;
   }
+
+  // Check throttle - prevent playing the same sound too frequently
+  const throttleMs = options.throttle ?? DEFAULT_THROTTLE_MS;
+  const now = Date.now();
+  const lastPlayTime = soundThrottleMap.get(soundPath) || 0;
+
+  if (now - lastPlayTime < throttleMs) {
+    return; // Skip this play - too soon since last play
+  }
+
+  // Update last play time
+  soundThrottleMap.set(soundPath, now);
 
   try {
     // Load sound if not cached

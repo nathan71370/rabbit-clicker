@@ -74,7 +74,7 @@ function App() {
             </div>
           )}
           {activeTab === 'shop' && (
-            <div className="flex flex-col">
+            <div className="flex flex-col max-h-[calc(100vh-13rem)] overflow-y-auto">
               <ShopPanel onPurchase={triggerSave} />
             </div>
           )}

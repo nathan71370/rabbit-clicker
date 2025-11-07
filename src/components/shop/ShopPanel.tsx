@@ -1,6 +1,6 @@
 import { useGameStore } from '@/stores/gameStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
-import { getClickUpgrades } from '@/game/data/upgrades';
+import { getClickUpgrades, getAutoClickerUpgrades } from '@/game/data/upgrades';
 import { UpgradeCard } from './UpgradeCard';
 import { playSound } from '@/utils/sounds';
 import { formatNumber } from '@/utils';
@@ -18,7 +18,8 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
   const { purchaseUpgrade, canAfford, isPurchased, checkRequirements } =
     useUpgradeStore();
 
-  const upgrades = getClickUpgrades();
+  const clickUpgrades = getClickUpgrades();
+  const autoClickerUpgrades = getAutoClickerUpgrades();
 
   const handlePurchase = (upgradeId: string) => {
     const success = purchaseUpgrade(upgradeId);
@@ -32,7 +33,7 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-full">
+    <div className="flex flex-col gap-6">
       {/* Shop Header */}
       <div className="card bg-gradient-to-br from-carrot via-carrot to-carrot-dark text-white shadow-lg border-none">
         <div className="flex items-center gap-3 mb-3">
@@ -52,33 +53,63 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
         </div>
       </div>
 
-      {/* Section Header */}
-      <div className="flex items-center gap-2">
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
-        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
-          Click Power Upgrades
-        </h3>
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
-      </div>
+      {/* Upgrades Container */}
+      <div className="flex flex-col gap-6">
+        {/* Click Power Upgrades Section */}
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
+            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+              Click Power Upgrades
+            </h3>
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
+          </div>
 
-      {/* Upgrades List */}
-      <div className="flex flex-col gap-3 overflow-y-auto flex-1 pr-2 -mr-2">
-        {upgrades.map((upgrade) => {
-          const affordable = canAfford(upgrade.currentCost);
-          const purchased = isPurchased(upgrade.id);
-          const requirementsMet = checkRequirements(upgrade.id);
+          {clickUpgrades.map((upgrade) => {
+            const affordable = canAfford(upgrade.currentCost);
+            const purchased = isPurchased(upgrade.id);
+            const requirementsMet = checkRequirements(upgrade.id);
 
-          return (
-            <UpgradeCard
-              key={upgrade.id}
-              upgrade={upgrade}
-              isAffordable={affordable}
-              isPurchased={purchased}
-              onPurchase={handlePurchase}
-              requirementsMet={requirementsMet}
-            />
-          );
-        })}
+            return (
+              <UpgradeCard
+                key={upgrade.id}
+                upgrade={upgrade}
+                isAffordable={affordable}
+                isPurchased={purchased}
+                onPurchase={handlePurchase}
+                requirementsMet={requirementsMet}
+              />
+            );
+          })}
+        </div>
+
+        {/* Auto-Clicker Upgrades Section */}
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+              Auto-Clicker Upgrades
+            </h3>
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+          </div>
+
+          {autoClickerUpgrades.map((upgrade) => {
+            const affordable = canAfford(upgrade.currentCost);
+            const purchased = isPurchased(upgrade.id);
+            const requirementsMet = checkRequirements(upgrade.id);
+
+            return (
+              <UpgradeCard
+                key={upgrade.id}
+                upgrade={upgrade}
+                isAffordable={affordable}
+                isPurchased={purchased}
+                onPurchase={handlePurchase}
+                requirementsMet={requirementsMet}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
