@@ -1,0 +1,126 @@
+import { useGameStore } from '@/stores/gameStore';
+import { useUpgradeStore } from '@/stores/upgradeStore';
+import { useRabbitStore } from '@/stores/rabbitStore';
+import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES } from '@/game/data/upgrades';
+
+/**
+ * Production breakdown by source
+ */
+export interface ProductionBreakdown {
+  /** CPS from auto-clicker upgrades × click power */
+  autoClickers: number;
+  /** CPS from active rabbits in team */
+  rabbits: number;
+  /** CPS from buildings (future) */
+  buildings: number;
+  /** Total CPS from all sources */
+  total: number;
+}
+
+/**
+ * Calculate total carrots per second from all production sources
+ *
+ * Sources:
+ * - Auto-clicker upgrades (multiplied by click power)
+ * - Active rabbits in team (with level scaling and abilities)
+ * - Buildings (future expansion)
+ *
+ * @returns Total CPS
+ */
+export function calculateTotalCPS(): number {
+  const breakdown = calculateProductionBreakdown();
+  return breakdown.total;
+}
+
+/**
+ * Calculate detailed production breakdown by source
+ * Useful for UI to show where CPS comes from
+ *
+ * @returns ProductionBreakdown object with all sources
+ */
+export function calculateProductionBreakdown(): ProductionBreakdown {
+  const upgradeState = useUpgradeStore.getState();
+  const rabbitState = useRabbitStore.getState();
+
+  // 1. Calculate auto-clicker CPS
+  let autoClicksPerSecond = 0;
+  AUTO_CLICKER_UPGRADES.forEach((upgrade) => {
+    if (upgradeState.purchasedUpgrades.has(upgrade.id)) {
+      autoClicksPerSecond += upgrade.effect;
+    }
+  });
+
+  // Auto-clickers are affected by click power
+  const clickPower = calculateClickPower();
+  const autoClickerCPS = autoClicksPerSecond * clickPower;
+
+  // 2. Calculate rabbit CPS
+  const rabbitCPS = rabbitState.getTeamCPS();
+
+  // 3. Buildings (not yet implemented)
+  const buildingCPS = 0;
+
+  // 4. Total
+  const totalCPS = autoClickerCPS + rabbitCPS + buildingCPS;
+
+  return {
+    autoClickers: autoClickerCPS,
+    rabbits: rabbitCPS,
+    buildings: buildingCPS,
+    total: totalCPS,
+  };
+}
+
+/**
+ * Calculate click power from all multiplier sources
+ *
+ * Sources:
+ * - Click power upgrades
+ * - Rabbit abilities (if they affect click power)
+ * - Other bonuses (future)
+ *
+ * @returns Total click power multiplier
+ */
+export function calculateClickPower(): number {
+  const upgradeState = useUpgradeStore.getState();
+  const rabbitState = useRabbitStore.getState();
+
+  // Base click power
+  let clickPower = 1;
+
+  // 1. Click power upgrades (multiplicative)
+  CLICK_UPGRADES.forEach((upgrade) => {
+    if (upgradeState.purchasedUpgrades.has(upgrade.id)) {
+      clickPower *= upgrade.effect;
+    }
+  });
+
+  // 2. Rabbit abilities that affect click power
+  const activeRabbits = rabbitState.getActiveRabbits();
+  activeRabbits.forEach((rabbit) => {
+    if (rabbit.ability && rabbit.ability.target === 'click_power') {
+      clickPower *= (1 + rabbit.ability.value / 100);
+    }
+  });
+
+  return clickPower;
+}
+
+/**
+ * Update all production values in game store
+ * Should be called whenever:
+ * - An upgrade is purchased
+ * - A rabbit is added/removed from team
+ * - Rabbit levels up
+ * - Any production-affecting change occurs
+ */
+export function updateProductionValues(): void {
+  const breakdown = calculateProductionBreakdown();
+  const clickPower = calculateClickPower();
+
+  // Update gameStore with new values
+  useGameStore.setState({
+    carrotsPerSecond: breakdown.total,
+    clickPower: clickPower,
+  });
+}
