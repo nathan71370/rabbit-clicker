@@ -23,11 +23,11 @@ export const CLICK_UPGRADES: Upgrade[] = [
   {
     id: 'sharp_claws',
     name: 'Sharp Claws',
-    description: 'Incredibly sharp claws that dig deeper into carrots. 5× click power.',
+    description: 'Incredibly sharp claws that dig deeper into carrots. Doubles click power.',
     type: 'click_power',
     baseCost: 500,
     currentCost: 500,
-    effect: 5, // 5× multiplier
+    effect: 2, // 2× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -46,11 +46,11 @@ export const CLICK_UPGRADES: Upgrade[] = [
   {
     id: 'diamond_claws',
     name: 'Diamond Claws',
-    description: 'Diamond-hard claws that never dull. 10× click power.',
+    description: 'Diamond-hard claws that never dull. Doubles click power.',
     type: 'click_power',
     baseCost: 2500,
     currentCost: 2500,
-    effect: 10, // 10× multiplier
+    effect: 2, // 2× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -69,11 +69,11 @@ export const CLICK_UPGRADES: Upgrade[] = [
   {
     id: 'cosmic_claws',
     name: 'Cosmic Claws',
-    description: 'Claws infused with cosmic energy. 25× click power.',
+    description: 'Claws infused with cosmic energy. Doubles click power.',
     type: 'click_power',
-    baseCost: 10000,
-    currentCost: 10000,
-    effect: 25, // 25× multiplier
+    baseCost: 12500,
+    currentCost: 12500,
+    effect: 2, // 2× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -92,11 +92,11 @@ export const CLICK_UPGRADES: Upgrade[] = [
   {
     id: 'godly_claws',
     name: 'Godly Claws',
-    description: 'Divine claws blessed by the carrot gods. 100× click power.',
+    description: 'Divine claws blessed by the carrot gods. Doubles click power.',
     type: 'click_power',
-    baseCost: 50000,
-    currentCost: 50000,
-    effect: 100, // 100× multiplier
+    baseCost: 62500,
+    currentCost: 62500,
+    effect: 2, // 2× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -137,11 +137,11 @@ export const AUTO_CLICKER_UPGRADES: Upgrade[] = [
   {
     id: 'upgraded_clicker',
     name: 'Upgraded Clicker',
-    description: 'An enhanced clicker robot with better efficiency. Generates 5 auto-clicks per second.',
+    description: 'An enhanced clicker robot with better efficiency. Generates 4 auto-clicks per second.',
     type: 'auto_clicker',
-    baseCost: 2000,
-    currentCost: 2000,
-    effect: 5, // 5 clicks per second
+    baseCost: 2500,
+    currentCost: 2500,
+    effect: 4, // 4 clicks per second (total: 5 cps with robot)
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -162,9 +162,9 @@ export const AUTO_CLICKER_UPGRADES: Upgrade[] = [
     name: 'Quantum Clicker',
     description: 'A quantum-powered clicker that exists in multiple states. Generates 20 auto-clicks per second.',
     type: 'auto_clicker',
-    baseCost: 10000,
-    currentCost: 10000,
-    effect: 20, // 20 clicks per second
+    baseCost: 12500,
+    currentCost: 12500,
+    effect: 20, // 20 clicks per second (total: 25 cps with previous upgrades)
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -185,9 +185,9 @@ export const AUTO_CLICKER_UPGRADES: Upgrade[] = [
     name: 'Infinite Clicker',
     description: 'A reality-bending device that clicks across all timelines. Generates 100 auto-clicks per second.',
     type: 'auto_clicker',
-    baseCost: 100000,
-    currentCost: 100000,
-    effect: 100, // 100 clicks per second
+    baseCost: 62500,
+    currentCost: 62500,
+    effect: 100, // 100 clicks per second (total: 125 cps with previous upgrades)
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
