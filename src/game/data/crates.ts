@@ -40,7 +40,7 @@ export const BASIC_CRATE: Crate = {
 export const SILVER_CRATE: Crate = {
   id: 'silver_crate',
   name: 'Silver Crate',
-  type: 'premium' as CrateType,
+  type: 'silver' as CrateType,
   description: 'A premium crate with better odds. Increased chance for rare rabbits!',
   cost: {
     carrots: 5000,
@@ -66,7 +66,7 @@ export const SILVER_CRATE: Crate = {
 export const GOLD_CRATE: Crate = {
   id: 'gold_crate',
   name: 'Gold Crate',
-  type: 'golden' as CrateType,
+  type: 'gold' as CrateType,
   description: 'The ultimate crate with the best odds! No common rabbits guaranteed!',
   cost: {
     carrots: 25000,
