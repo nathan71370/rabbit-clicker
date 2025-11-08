@@ -95,6 +95,9 @@ export const useCrateStore = create<CrateState>()(
           const xpCompensation = calculateDuplicateCompensation(rarity);
           useRabbitStore.getState().addRabbitXP(xpCompensation);
           console.log(`Duplicate ${rabbit.name}! Awarded ${xpCompensation} XP`);
+        } else {
+          // Add new rabbit to collection
+          useRabbitStore.getState().addRabbit(rabbit);
         }
 
         // Update pity counters
