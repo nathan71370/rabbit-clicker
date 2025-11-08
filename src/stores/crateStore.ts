@@ -175,12 +175,12 @@ function rollRarity(dropRates: Record<Rarity, number>): Rarity {
   const rarities: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythical'];
 
   for (const rarity of rarities) {
-    cumulative += dropRates[rarity];
-    if (roll < cumulative) {
+    const rate = dropRates[rarity] ?? 0;
+    cumulative += rate;
+    if (rate > 0 && roll < cumulative) {
       return rarity;
     }
   }
-
   // Fallback to common (should never happen if drop rates sum to 1.0)
   return 'common';
 }
