@@ -17,7 +17,7 @@ export function RabbitTeam() {
     ownedRabbits,
     getActiveRabbits,
     getTeamCPS,
-    addToTeam,
+    setActiveTeam,
     removeFromTeam,
   } = useRabbitStore();
 
@@ -44,13 +44,21 @@ export function RabbitTeam() {
   const handleRabbitSelect = (rabbit: Rabbit) => {
     if (selectingSlot === null) return;
 
-    // Remove current rabbit in this slot if exists
-    if (activeRabbits[selectingSlot]) {
-      removeFromTeam(activeRabbits[selectingSlot].id);
+    // Build new team array with in-place replacement
+    const newTeam = [...activeTeam];
+
+    // If slot is filled, replace the ID at that index
+    // If slot is empty, we need to fill gaps first
+    if (selectingSlot < newTeam.length) {
+      // Replace existing rabbit at this slot
+      newTeam[selectingSlot] = rabbit.id;
+    } else {
+      // Filling an empty slot - append to end
+      newTeam.push(rabbit.id);
     }
 
-    // Add selected rabbit
-    addToTeam(rabbit.id);
+    // Update team using setActiveTeam for in-place replacement
+    setActiveTeam(newTeam);
     setSelectingSlot(null);
   };
 

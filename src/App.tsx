@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
+import { RabbitTeam } from '@/components/rabbits';
 import {
   ProductionDisplay,
   SavingIndicator,
@@ -78,6 +79,11 @@ function App() {
               <ShopPanel onPurchase={triggerSave} />
             </div>
           )}
+          {activeTab === 'rabbits' && (
+            <div className="flex flex-col max-h-[calc(100vh-13rem)] overflow-y-auto">
+              <RabbitTeam />
+            </div>
+          )}
           {activeTab === 'stats' && (
             <div className="card">
               <ProductionDisplay />
@@ -85,7 +91,7 @@ function App() {
           )}
         </div>
 
-        {/* Tablet: 2-Column Layout (clicker+shop | stats) */}
+        {/* Tablet: 2-Column Layout (clicker+shop | rabbits+stats) */}
         <div className="hidden md:grid lg:hidden grid-cols-2 gap-6 max-w-7xl mx-auto">
           {/* Left Column: Clicker and Shop stacked */}
           <div className="flex flex-col gap-6">
@@ -97,25 +103,33 @@ function App() {
             </div>
           </div>
 
-          {/* Right Column: Stats */}
-          <div className="card">
-            <ProductionDisplay />
+          {/* Right Column: Rabbits and Stats stacked */}
+          <div className="flex flex-col gap-6">
+            <RabbitTeam />
+            <div className="card">
+              <ProductionDisplay />
+            </div>
           </div>
         </div>
 
-        {/* Desktop: 3-Column Layout (shop | clicker | stats) */}
-        <div className="hidden lg:grid grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {/* Left Column: Shop */}
+        {/* Desktop: 4-Column Layout (shop | clicker | rabbits | stats) */}
+        <div className="hidden lg:grid grid-cols-4 gap-6 max-w-[1600px] mx-auto">
+          {/* Column 1: Shop */}
           <div className="flex flex-col">
             <ShopPanel onPurchase={triggerSave} />
           </div>
 
-          {/* Center Column: Clicker */}
+          {/* Column 2: Clicker */}
           <div className="card">
             <CarrotClicker />
           </div>
 
-          {/* Right Column: Stats */}
+          {/* Column 3: Rabbits */}
+          <div className="flex flex-col">
+            <RabbitTeam />
+          </div>
+
+          {/* Column 4: Stats */}
           <div className="card">
             <ProductionDisplay />
           </div>
@@ -127,6 +141,7 @@ function App() {
         tabs={[
           { id: 'clicker', label: 'Clicker', icon: '🥕' },
           { id: 'shop', label: 'Shop', icon: '🛒' },
+          { id: 'rabbits', label: 'Rabbits', icon: '🐰' },
           { id: 'stats', label: 'Stats', icon: '📊' },
         ]}
         activeTab={activeTab}
