@@ -18,7 +18,7 @@ export interface PityCounters {
  */
 export const PITY_THRESHOLDS = {
   epic: 50,
-  legendary: 100,
+  legendary: 200,
   mythical: 200,
 } as const;
 
@@ -67,7 +67,8 @@ export function rollRarity(crateType: CrateType, pityCounters: PityCounters): Ra
   const rarities: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythical'];
 
   for (const rarity of rarities) {
-    cumulative += crate.dropRates[rarity];
+    const rate = crate.dropRates[rarity] ?? 0;
+    cumulative += rate;
     if (roll < cumulative) {
       return rarity;
     }

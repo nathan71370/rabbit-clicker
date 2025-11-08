@@ -90,12 +90,11 @@ export const useCrateStore = create<CrateState>()(
         // Create rabbit instance
         const rabbit = createRabbitInstance(rabbitData, isRabbitDuplicate);
 
-        // If duplicate, calculate XP compensation
-        // (This will be handled by the UI/integration layer when adding to collection)
+        // If duplicate, award XP compensation
         if (isRabbitDuplicate) {
           const xpCompensation = calculateDuplicateCompensation(rarity);
-          console.log(`Duplicate ${rabbit.name}! Awarding ${xpCompensation} XP`);
-          // TODO: Add XP to player's rabbitXP via rabbitStore or gameStore
+          useRabbitStore.getState().addRabbitXP(xpCompensation);
+          console.log(`Duplicate ${rabbit.name}! Awarded ${xpCompensation} XP`);
         }
 
         // Update pity counters
