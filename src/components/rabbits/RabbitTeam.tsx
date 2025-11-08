@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRabbitStore } from '@/stores/rabbitStore';
 import { RabbitCard } from './RabbitCard';
 import { formatNumber } from '@/utils';
@@ -33,8 +33,13 @@ export function RabbitTeam() {
 
   /**
    * Handle clicking a team slot (empty or filled)
+   * Only allow clicking filled slots or the first empty slot to prevent gaps
    */
   const handleSlotClick = (slotIndex: number) => {
+    // Only allow clicking filled slots (for replacement) or the first empty slot
+    if (slotIndex > activeTeam.length) {
+      return; // Can't fill gaps - team is compact
+    }
     setSelectingSlot(slotIndex);
   };
 
@@ -117,17 +122,29 @@ export function RabbitTeam() {
                   </div>
                 ) : (
                   // Empty slot
-                  <motion.button
-                    onClick={() => handleSlotClick(slotIndex)}
-                    className="w-full h-full min-h-[280px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all flex flex-col items-center justify-center gap-3"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="text-6xl text-gray-300">+</div>
-                    <div className="text-gray-500 font-semibold">
-                      Click to Add Rabbit
-                    </div>
-                  </motion.button>
+                  (() => {
+                    const isGapSlot = slotIndex > activeTeam.length;
+                    return (
+                      <motion.button
+                        onClick={() => handleSlotClick(slotIndex)}
+                        disabled={isGapSlot}
+                        className={`w-full h-full min-h-[280px] border-2 border-dashed rounded-lg transition-all flex flex-col items-center justify-center gap-3 ${
+                          isGapSlot
+                            ? 'border-gray-200 bg-gray-100 opacity-50 cursor-not-allowed'
+                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400 cursor-pointer'
+                        }`}
+                        whileHover={isGapSlot ? {} : { scale: 1.02 }}
+                        whileTap={isGapSlot ? {} : { scale: 0.98 }}
+                        aria-disabled={isGapSlot}
+                        title={isGapSlot ? 'Fill previous slots first' : 'Click to Add Rabbit'}
+                      >
+                        <div className="text-6xl text-gray-300">+</div>
+                        <div className="text-gray-500 font-semibold text-sm text-center px-2">
+                          {isGapSlot ? 'Fill previous slots first' : 'Click to Add Rabbit'}
+                        </div>
+                      </motion.button>
+                    );
+                  })()
                 )}
               </div>
             );
@@ -136,18 +153,20 @@ export function RabbitTeam() {
       </div>
 
       {/* Rabbit Selector Modal */}
-      {selectingSlot !== null && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-          onClick={() => setSelectingSlot(null)}
-        >
-          <motion.div
-            className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+      <AnimatePresence>
+        {selectingSlot !== null && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={() => setSelectingSlot(null)}
           >
+            <motion.div
+              key="rabbit-selector"
+              className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+            >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-2xl font-bold text-gray-800">Select a Rabbit</h3>
               <button
@@ -183,6 +202,7 @@ export function RabbitTeam() {
           </motion.div>
         </div>
       )}
+      </AnimatePresence>
     </div>
   );
 }
