@@ -2,7 +2,16 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { CrateType } from '@/types/crate';
 import type { Rabbit, Rarity } from '@/types/rabbit';
-import { getCrateByType } from '@/game/data/crates';
+import {
+  rollRarity,
+  selectRabbit,
+  isDuplicate,
+  calculateDuplicateCompensation,
+  createRabbitInstance,
+  PITY_THRESHOLDS,
+  type PityCounters,
+} from '@/game/systems/gacha';
+import { useRabbitStore } from './rabbitStore';
 
 /**
  * Crate Store State Interface
@@ -42,10 +51,10 @@ export const useCrateStore = create<CrateState>()(
       cratesSinceMythical: 0,
       recentDrops: [],
 
-      // Pity thresholds (guaranteed drops after X attempts without that rarity)
-      epicPityThreshold: 50, // Guaranteed epic every 50 crates without epic
-      legendaryPityThreshold: 100, // Guaranteed legendary every 100 crates without legendary
-      mythicalPityThreshold: 200, // Guaranteed mythical every 200 crates without mythical
+      // Pity thresholds (from gacha system constants)
+      epicPityThreshold: PITY_THRESHOLDS.epic,
+      legendaryPityThreshold: PITY_THRESHOLDS.legendary,
+      mythicalPityThreshold: PITY_THRESHOLDS.mythical,
 
       /**
        * Open a crate and get a random rabbit
@@ -53,48 +62,43 @@ export const useCrateStore = create<CrateState>()(
        * @returns Promise resolving to the rabbit obtained
        */
       openCrate: async (crateType: CrateType): Promise<Rabbit> => {
-        const crate = getCrateByType(crateType);
-        if (!crate) {
-          throw new Error(`Crate type ${crateType} not found`);
-        }
-
         const state = get();
 
-        // Check pity system first
-        let guaranteedRarity: Rarity | null = null;
+        // Get owned rabbits from rabbit store
+        const ownedRabbits = useRabbitStore.getState().ownedRabbits;
 
-        if (state.cratesSinceMythical >= state.mythicalPityThreshold) {
-          guaranteedRarity = 'mythical';
-        } else if (state.cratesSinceLegendary >= state.legendaryPityThreshold) {
-          guaranteedRarity = 'legendary';
-        } else if (state.cratesSinceEpic >= state.epicPityThreshold) {
-          guaranteedRarity = 'epic';
-        }
-
-        // Determine rarity
-        let rarity: Rarity;
-        if (guaranteedRarity) {
-          rarity = guaranteedRarity;
-        } else {
-          // Roll for rarity based on crate drop rates
-          rarity = rollRarity(crate.dropRates);
-        }
-
-        // TODO: Once rabbit pool is implemented, select a random rabbit of the rolled rarity
-        // For now, create a placeholder rabbit
-        const rabbit: Rabbit = {
-          id: `rabbit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          name: `${rarity.charAt(0).toUpperCase() + rarity.slice(1)} Rabbit`,
-          rarity,
-          description: `A ${rarity} rabbit from ${crate.name}`,
-          baseCPS: getRarityBaseCPS(rarity),
-          level: 1,
-          experience: 0,
-          isActive: false,
-          obtainedAt: Date.now(),
-          favoriteFood: 'Carrots',
-          image: '🐰',
+        // Build pity counters object
+        const pityCounters: PityCounters = {
+          cratesSinceEpic: state.cratesSinceEpic,
+          cratesSinceLegendary: state.cratesSinceLegendary,
+          cratesSinceMythical: state.cratesSinceMythical,
         };
+
+        // Roll for rarity using gacha system (includes pity check)
+        const rarity = rollRarity(crateType, pityCounters);
+
+        // Select rabbit from pool (favors unowned)
+        const rabbitData = selectRabbit(rarity, ownedRabbits);
+
+        if (!rabbitData) {
+          throw new Error(`No rabbits available for rarity: ${rarity}`);
+        }
+
+        // Check if this is a duplicate
+        const isRabbitDuplicate = isDuplicate(rabbitData.id, ownedRabbits);
+
+        // Create rabbit instance
+        const rabbit = createRabbitInstance(rabbitData, isRabbitDuplicate);
+
+        // If duplicate, award XP compensation
+        if (isRabbitDuplicate) {
+          const xpCompensation = calculateDuplicateCompensation(rarity);
+          useRabbitStore.getState().addRabbitXP(xpCompensation);
+          console.log(`Duplicate ${rabbit.name}! Awarded ${xpCompensation} XP`);
+        } else {
+          // Add new rabbit to collection
+          useRabbitStore.getState().addRabbit(rabbit);
+        }
 
         // Update pity counters
         get().updatePity(rarity);
@@ -162,43 +166,3 @@ export const useCrateStore = create<CrateState>()(
     }
   )
 );
-
-/**
- * Helper: Roll for rarity based on drop rate probabilities
- * @param dropRates - Drop rate table from crate
- * @returns Rolled rarity
- */
-function rollRarity(dropRates: Record<Rarity, number>): Rarity {
-  const roll = Math.random();
-  let cumulative = 0;
-
-  const rarities: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythical'];
-
-  for (const rarity of rarities) {
-    const rate = dropRates[rarity] ?? 0;
-    cumulative += rate;
-    if (rate > 0 && roll < cumulative) {
-      return rarity;
-    }
-  }
-  // Fallback to common (should never happen if drop rates sum to 1.0)
-  return 'common';
-}
-
-/**
- * Helper: Get base CPS for a rarity tier
- * @param rarity - Rabbit rarity
- * @returns Base CPS value
- */
-function getRarityBaseCPS(rarity: Rarity): number {
-  const rarityBaseCPS: Record<Rarity, number> = {
-    common: 1,
-    uncommon: 3,
-    rare: 10,
-    epic: 30,
-    legendary: 100,
-    mythical: 500,
-  };
-
-  return rarityBaseCPS[rarity];
-}

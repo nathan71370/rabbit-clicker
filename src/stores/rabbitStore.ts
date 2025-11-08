@@ -19,6 +19,7 @@ interface RabbitState {
   rabbitXP: number; // Global XP for unlocking team slots
 
   // Actions
+  addRabbitXP: (amount: number) => void;
   addRabbit: (rabbit: Rabbit) => void;
   removeRabbit: (rabbitId: string) => void;
   updateRabbit: (rabbitId: string, updates: Partial<Rabbit>) => void;
@@ -55,6 +56,17 @@ export const useRabbitStore = create<RabbitState>()(
       activeTeam: [],
       maxTeamSize: 3,
       rabbitXP: 0,
+
+      // Experience & Progression
+      /**
+       * Add XP to the global rabbit XP pool
+       * @param amount - XP amount to add
+       */
+      addRabbitXP: (amount: number) => {
+        set((state) => ({
+          rabbitXP: state.rabbitXP + amount,
+        }));
+      },
 
       // CRUD Operations
       /**
