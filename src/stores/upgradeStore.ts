@@ -2,27 +2,37 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useGameStore } from './gameStore';
 import { getUpgradeById } from '@/game/data/upgrades';
+import { getBuildingById, calculateBuildingCost } from '@/game/data/buildings';
 import { playSound } from '@/utils/sounds';
 import { updateProductionValues } from '@/game/mechanics/production';
 
 /**
  * Upgrade Store State Interface
- * Manages upgrade purchases and multiplier calculations
+ * Manages upgrade purchases, building purchases, and multiplier calculations
  */
 interface UpgradeState {
   // Purchased upgrades
   purchasedUpgrades: Set<string>;
 
+  // Buildings (buildingId → count owned)
+  buildings: Map<string, number>;
+
   // Multipliers
   clickMultiplier: number;
   productionMultiplier: number;
 
-  // Actions
+  // Upgrade Actions
   purchaseUpgrade: (upgradeId: string) => boolean;
   canAfford: (cost: number) => boolean;
   recalculateMultipliers: () => void;
   isPurchased: (upgradeId: string) => boolean;
   checkRequirements: (upgradeId: string) => boolean;
+
+  // Building Actions
+  purchaseBuilding: (buildingId: string) => boolean;
+  getBuildingCount: (buildingId: string) => number;
+  calculateBuildingCPS: () => number;
+  getTotalBuildingCount: () => number;
 }
 
 /**
@@ -34,6 +44,7 @@ export const useUpgradeStore = create<UpgradeState>()(
     (set, get) => ({
       // Initial state
       purchasedUpgrades: new Set<string>(),
+      buildings: new Map<string, number>(),
       clickMultiplier: 1,
       productionMultiplier: 1,
 
@@ -172,22 +183,119 @@ export const useUpgradeStore = create<UpgradeState>()(
         // This now includes: auto-clickers, rabbits, click power, and total CPS
         updateProductionValues();
       },
+
+      /**
+       * Get building count by ID
+       * @param buildingId - Building identifier
+       * @returns Number of buildings owned (0 if none)
+       */
+      getBuildingCount: (buildingId: string) => {
+        return get().buildings.get(buildingId) || 0;
+      },
+
+      /**
+       * Get total count of all buildings owned
+       * @returns Total building count across all types
+       */
+      getTotalBuildingCount: () => {
+        const state = get();
+        return Array.from(state.buildings.values()).reduce((sum, count) => sum + count, 0);
+      },
+
+      /**
+       * Calculate total CPS from all buildings
+       * @returns Total carrots per second from buildings
+       */
+      calculateBuildingCPS: () => {
+        const state = get();
+        let totalCPS = 0;
+
+        // Iterate through all owned buildings
+        state.buildings.forEach((count, buildingId) => {
+          const buildingData = getBuildingById(buildingId);
+          if (!buildingData) return;
+
+          // Base CPS: baseCPS * count
+          totalCPS += buildingData.baseCPS * count;
+        });
+
+        return totalCPS;
+      },
+
+      /**
+       * Purchase a building
+       * @param buildingId - Building identifier
+       * @returns true if purchase successful, false otherwise
+       */
+      purchaseBuilding: (buildingId: string) => {
+        const state = get();
+        const buildingData = getBuildingById(buildingId);
+
+        // Validate building exists
+        if (!buildingData) {
+          console.error(`Building not found: ${buildingId}`);
+          return false;
+        }
+
+        // Get current count
+        const currentCount = state.getBuildingCount(buildingId);
+
+        // Calculate cost for next purchase
+        const cost = calculateBuildingCost(buildingData, currentCount);
+
+        // Check if affordable
+        if (!state.canAfford(cost)) {
+          console.warn(`Cannot afford building: ${buildingId} (cost: ${cost})`);
+          return false;
+        }
+
+        // Spend carrots
+        const gameState = useGameStore.getState();
+        const purchaseSuccess = gameState.spendCarrots(cost);
+
+        if (!purchaseSuccess) {
+          console.error(`Failed to spend carrots for building: ${buildingId}`);
+          return false;
+        }
+
+        // Update building count
+        const newBuildings = new Map(state.buildings);
+        newBuildings.set(buildingId, currentCount + 1);
+
+        set({
+          buildings: newBuildings,
+        });
+
+        // Update production values (buildings affect CPS)
+        updateProductionValues();
+
+        // Play purchase sound effect
+        playSound('/assets/sounds/purchase.mp3', { volume: 0.5 });
+
+        return true;
+      },
     }),
     {
       name: 'rabbit-clicker-upgrade-storage',
       version: 1,
-      // Custom serialization for Set
+      // Custom serialization for Set and Map
       partialize: (state) => ({
         purchasedUpgrades: Array.from(state.purchasedUpgrades),
+        buildings: Object.fromEntries(state.buildings),
         clickMultiplier: state.clickMultiplier,
         productionMultiplier: state.productionMultiplier,
       }),
-      // Custom deserialization for Set
+      // Custom deserialization for Set and Map
       merge: (persistedState: unknown, currentState) => ({
         ...currentState,
         ...(persistedState as object),
         purchasedUpgrades: new Set(
           (persistedState as { purchasedUpgrades?: string[] }).purchasedUpgrades || []
+        ),
+        buildings: new Map(
+          Object.entries(
+            (persistedState as { buildings?: Record<string, number> }).buildings || {}
+          )
         ),
       }),
     }
