@@ -35,19 +35,28 @@ export function CrateShop() {
       return;
     }
 
-    // Deduct cost
-    spendCarrots(crate.cost.carrots);
-
-    // Open crate animation
     setIsOpening(true);
+    try {
+      // Deduct cost (returns false if failed)
+      const didSpend = spendCarrots(crate.cost.carrots);
+      if (didSpend === false) {
+        return;
+      }
 
-    // Simulate opening delay for anticipation
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Simulate opening delay for anticipation
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Open the crate
-    const rabbit = await openCrate(crate.type);
-    setOpenedRabbit(rabbit);
-    setIsOpening(false);
+      // Open the crate
+      const rabbit = await openCrate(crate.type);
+      setOpenedRabbit(rabbit);
+    } catch (error) {
+      // Handle crate opening failure
+      console.error('Failed to open crate:', error);
+      // TODO: Refund carrots via addCarrots when error handling is implemented
+    } finally {
+      // Always reset opening state
+      setIsOpening(false);
+    }
   };
 
   /**
