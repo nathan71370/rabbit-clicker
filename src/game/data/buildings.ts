@@ -163,12 +163,14 @@ export function getUnlockedBuildings(
         return prestigeLevel >= req.value;
 
       case 'building_count':
-        // Total buildings owned across all types
-        const totalBuildings = Array.from(buildingCounts.values()).reduce(
-          (sum, count) => sum + count,
-          0
-        );
-        return totalBuildings >= req.value;
+        {
+          // Total buildings owned across all types
+          const totalBuildings = Array.from(buildingCounts.values()).reduce(
+            (sum, count) => sum + count,
+            0
+          );
+          return totalBuildings >= req.value;
+        }
 
       default:
         // Unknown requirement type - defensive: don't unlock
