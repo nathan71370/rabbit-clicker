@@ -88,7 +88,12 @@ export function BuildingCard({
             <div className="mt-2 flex items-center gap-1 text-xs text-red-600 font-semibold">
               <span>🔒</span>
               <span>
-                Requires {formatNumber(building.unlockRequirement.value)} lifetime carrots
+                Requires{' '}
+                {building.unlockRequirement.type === 'lifetime_carrots'
+                  ? `${formatNumber(building.unlockRequirement.value)} lifetime carrots`
+                  : building.unlockRequirement.type === 'prestige_level'
+                  ? `prestige level ${building.unlockRequirement.value}`
+                  : `${formatNumber(building.unlockRequirement.value)} buildings`}
               </span>
             </div>
           )}
