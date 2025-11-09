@@ -1,7 +1,11 @@
 import { useGameStore } from '@/stores/gameStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
+import { useRabbitStore } from '@/stores/rabbitStore';
 import { getClickUpgrades, getAutoClickerUpgrades } from '@/game/data/upgrades';
+import { getCommonRabbits } from '@/game/data/rabbits';
+import { RABBIT_PURCHASE_COST } from '@/game/data/constants';
 import { UpgradeCard } from './UpgradeCard';
+import { RabbitCard } from './RabbitCard';
 import { playSound } from '@/utils/sounds';
 import { formatNumber } from '@/utils';
 
@@ -14,12 +18,14 @@ interface ShopPanelProps {
  * Displays available upgrades and handles purchases
  */
 export function ShopPanel({ onPurchase }: ShopPanelProps) {
-  const { carrots } = useGameStore();
+  const { carrots, spendCarrots } = useGameStore();
   const { purchaseUpgrade, canAfford, isPurchased, checkRequirements } =
     useUpgradeStore();
+  const { addRabbit, ownedRabbits } = useRabbitStore();
 
   const clickUpgrades = getClickUpgrades();
   const autoClickerUpgrades = getAutoClickerUpgrades();
+  const commonRabbits = getCommonRabbits();
 
   const handlePurchase = (upgradeId: string) => {
     const success = purchaseUpgrade(upgradeId);
@@ -30,6 +36,51 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
       // Trigger save after successful purchase
       onPurchase?.();
     }
+  };
+
+  /**
+   * Handle rabbit purchase
+   */
+  const handleRabbitPurchase = (rabbitId: string) => {
+    // Look up rabbit data
+    const rabbitData = commonRabbits.find((r) => r.id === rabbitId);
+    if (!rabbitData) {
+      return;
+    }
+
+    // Check if already owned
+    if (ownedRabbits.has(rabbitId)) {
+      return;
+    }
+
+    // Check if can afford
+    if (carrots < RABBIT_PURCHASE_COST) {
+      return;
+    }
+
+    // Deduct carrots
+    const success = spendCarrots(RABBIT_PURCHASE_COST);
+    if (!success) {
+      return;
+    }
+
+    // Create rabbit instance from data
+    const newRabbit = {
+      ...rabbitData,
+      level: 1,
+      experience: 0,
+      isActive: false,
+      obtainedAt: Date.now(),
+    };
+
+    // Add rabbit to collection
+    addRabbit(newRabbit);
+
+    // Play purchase sound
+    playSound('/assets/sounds/purchase.mp3', { volume: 0.4 });
+
+    // Trigger save after successful purchase
+    onPurchase?.();
   };
 
   return (
@@ -51,6 +102,35 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Common Rabbits Section */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+          <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+            Common Rabbits
+          </h3>
+          <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+        </div>
+        <p className="text-xs text-gray-500 text-center mb-2">
+          Purchase common rabbits directly! An alternative to crates for getting started.
+        </p>
+
+        {commonRabbits.map((rabbitData) => {
+          const affordable = carrots >= RABBIT_PURCHASE_COST;
+          const owned = ownedRabbits.has(rabbitData.id);
+
+          return (
+            <RabbitCard
+              key={rabbitData.id}
+              rabbit={rabbitData}
+              isAffordable={affordable}
+              isOwned={owned}
+              onPurchase={handleRabbitPurchase}
+            />
+          );
+        })}
       </div>
 
       {/* Upgrades Container */}
