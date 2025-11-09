@@ -29,6 +29,54 @@ A short, satisfying click sound that plays when the player clicks the carrot but
 
 A satisfying sound for purchasing upgrades (different from click sound).
 
+### Crate Opening Sound (`crate-open.mp3`)
+**Status:** 🔴 Required - Placeholder added (RAB-56)
+
+Sound that plays when a crate is opened.
+
+**Requirements:**
+- Format: MP3
+- Duration: ~500-1000ms
+- Volume: Medium
+- Tone: Exciting, anticipation building
+
+**Suggestions:**
+- Box opening sound
+- Chest unlocking sound
+- Gift unwrapping sound
+
+### Rare Drop Sound (`rare-drop.mp3`)
+**Status:** 🔴 Required - Placeholder added (RAB-56)
+
+Celebratory fanfare for high-rarity rabbits (Rare, Epic, Legendary, Mythical).
+
+**Requirements:**
+- Format: MP3
+- Duration: ~1000-2000ms
+- Volume: Medium-High
+- Tone: Celebratory, exciting
+
+**Suggestions:**
+- Victory fanfare
+- Achievement unlock sound
+- Sparkle/magical sound
+
+### Duplicate Sound (`duplicate.mp3`)
+**Status:** 🔴 Required - Placeholder added (RAB-56)
+
+Sound notification for duplicate rabbits.
+
+**Requirements:**
+- Format: MP3
+- Duration: ~300-500ms
+- Volume: Medium
+- Tone: Neutral notification, not negative
+
+**Suggestions:**
+- Notification beep
+- Gentle chime
+- "Already have" sound
+
 ## Temporary Workaround
 
 Until actual sound files are added, the sound system will:

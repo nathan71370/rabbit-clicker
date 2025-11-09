@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { Crate } from '@/types/crate';
 import type { Rabbit } from '@/types/rabbit';
 import { formatNumber } from '@/utils';
+import { playCrateOpenSound, playCrateRevealSounds, preloadCrateSounds } from '@/utils/crateSounds';
 
 interface CrateOpeningProps {
   crate: Crate;
@@ -20,6 +21,11 @@ type AnimationStage = 'closed' | 'shaking' | 'opening' | 'revealing' | 'complete
 export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOpeningProps) {
   const [stage, setStage] = useState<AnimationStage>('closed');
   const timeoutsRef = useRef<number[]>([]);
+
+  // Preload crate sounds on mount
+  useEffect(() => {
+    preloadCrateSounds();
+  }, []);
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -48,6 +54,9 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
       // Stage 1: Shake animation
       setStage('shaking');
 
+      // Play crate opening sound
+      playCrateOpenSound();
+
       // Stage 2: Opening burst after shake
       timeoutsRef.current.push(
         window.setTimeout(() => {
@@ -59,6 +68,9 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
       timeoutsRef.current.push(
         window.setTimeout(() => {
           setStage('revealing');
+
+          // Play reveal sounds (rare drop + duplicate if applicable)
+          playCrateRevealSounds(rabbit.rarity, isDuplicate);
         }, 1800)
       );
 
