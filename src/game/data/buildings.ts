@@ -141,16 +141,39 @@ export function getBuildingById(buildingId: string): BuildingData | undefined {
 }
 
 /**
- * Get unlocked buildings based on lifetime carrots
+ * Get unlocked buildings based on game progression
  * @param lifetimeCarrots - Total carrots earned
+ * @param prestigeLevel - Current prestige level (default: 0)
+ * @param buildingCounts - Map of building IDs to owned counts (default: empty)
  * @returns Array of unlocked building data
  */
-export function getUnlockedBuildings(lifetimeCarrots: number): BuildingData[] {
+export function getUnlockedBuildings(
+  lifetimeCarrots: number,
+  prestigeLevel: number = 0,
+  buildingCounts: Map<string, number> = new Map()
+): BuildingData[] {
   return BUILDINGS.filter((building) => {
-    if (building.unlockRequirement.type === 'lifetime_carrots') {
-      return lifetimeCarrots >= building.unlockRequirement.value;
+    const req = building.unlockRequirement;
+
+    switch (req.type) {
+      case 'lifetime_carrots':
+        return lifetimeCarrots >= req.value;
+
+      case 'prestige_level':
+        return prestigeLevel >= req.value;
+
+      case 'building_count':
+        // Total buildings owned across all types
+        const totalBuildings = Array.from(buildingCounts.values()).reduce(
+          (sum, count) => sum + count,
+          0
+        );
+        return totalBuildings >= req.value;
+
+      default:
+        // Unknown requirement type - defensive: don't unlock
+        return false;
     }
-    return true;
   });
 }
 
