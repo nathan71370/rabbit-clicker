@@ -3,11 +3,11 @@ import { useUpgradeStore } from '@/stores/upgradeStore';
 import { useRabbitStore } from '@/stores/rabbitStore';
 import { getClickUpgrades, getAutoClickerUpgrades } from '@/game/data/upgrades';
 import { getCommonRabbits } from '@/game/data/rabbits';
+import { RABBIT_PURCHASE_COST } from '@/game/data/constants';
 import { UpgradeCard } from './UpgradeCard';
 import { RabbitCard } from './RabbitCard';
 import { playSound } from '@/utils/sounds';
 import { formatNumber } from '@/utils';
-import type { RabbitData } from '@/game/data/rabbits';
 
 interface ShopPanelProps {
   onPurchase?: () => void;
@@ -17,8 +17,6 @@ interface ShopPanelProps {
  * ShopPanel Component
  * Displays available upgrades and handles purchases
  */
-const RABBIT_PURCHASE_COST = 1000;
-
 export function ShopPanel({ onPurchase }: ShopPanelProps) {
   const { carrots, spendCarrots } = useGameStore();
   const { purchaseUpgrade, canAfford, isPurchased, checkRequirements } =
@@ -43,9 +41,15 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
   /**
    * Handle rabbit purchase
    */
-  const handleRabbitPurchase = (rabbitData: RabbitData) => {
+  const handleRabbitPurchase = (rabbitId: string) => {
+    // Look up rabbit data
+    const rabbitData = commonRabbits.find((r) => r.id === rabbitId);
+    if (!rabbitData) {
+      return;
+    }
+
     // Check if already owned
-    if (ownedRabbits.has(rabbitData.id)) {
+    if (ownedRabbits.has(rabbitId)) {
       return;
     }
 
@@ -123,7 +127,7 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
               rabbit={rabbitData}
               isAffordable={affordable}
               isOwned={owned}
-              onPurchase={() => handleRabbitPurchase(rabbitData)}
+              onPurchase={handleRabbitPurchase}
             />
           );
         })}

@@ -1,5 +1,6 @@
 import type { RabbitData } from '@/game/data/rabbits';
 import { formatNumber } from '@/utils';
+import { RABBIT_PURCHASE_COST } from '@/game/data/constants';
 
 interface RabbitCardProps {
   rabbit: RabbitData;
@@ -7,8 +8,6 @@ interface RabbitCardProps {
   isOwned: boolean;
   onPurchase: (rabbitId: string) => void;
 }
-
-const RABBIT_PURCHASE_COST = 1000;
 
 /**
  * RabbitCard Component
