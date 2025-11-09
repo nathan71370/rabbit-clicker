@@ -75,7 +75,7 @@ function shouldPlayRareSound(rarity: Rarity): boolean {
  * @param rarity - Rabbit rarity
  * @param isDuplicate - Whether the rabbit is a duplicate
  */
-export function playCrateRevealSounds(rarity: Rarity, isDuplicate: boolean): void {
+export function playCrateRevealSounds(rarity: Rarity, isDuplicate: boolean): number | undefined {
   // Always play rare drop sound first if applicable (at reveal time)
   if (shouldPlayRareSound(rarity)) {
     playRareDropSound(rarity);
@@ -83,8 +83,9 @@ export function playCrateRevealSounds(rarity: Rarity, isDuplicate: boolean): voi
 
   // Play duplicate sound slightly delayed if needed
   if (isDuplicate) {
-    setTimeout(() => {
+    return setTimeout(() => {
       playDuplicateSound();
     }, 300); // Small delay to not overlap with rare sound
   }
+  return undefined;
 }
