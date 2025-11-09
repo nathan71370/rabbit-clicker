@@ -1,5 +1,6 @@
 import { useGameStore } from '@/stores/gameStore';
 import { formatNumber } from '@/utils';
+import { XPDisplay } from './XPDisplay';
 
 interface HeaderProps {
   onSettingsClick: () => void;
@@ -42,6 +43,9 @@ export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
               <span className="font-bold text-yellow-600">0</span>
             </div>
           </div>
+
+          {/* Rabbit XP */}
+          <XPDisplay />
         </div>
 
         {/* Right: Action Buttons */}

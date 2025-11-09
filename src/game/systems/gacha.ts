@@ -134,12 +134,12 @@ export function isDuplicate(rabbitId: string, ownedRabbits: Map<string, Rabbit>)
  */
 export function calculateDuplicateCompensation(rarity: Rarity): number {
   const compensationTable: Record<Rarity, number> = {
-    common: 50,
-    uncommon: 150,
-    rare: 500,
-    epic: 2000,
-    legendary: 10000,
-    mythical: 50000,
+    common: 500,
+    uncommon: 1500,
+    rare: 5000,
+    epic: 15000,
+    legendary: 50000,
+    mythical: 150000,
   };
 
   return compensationTable[rarity];

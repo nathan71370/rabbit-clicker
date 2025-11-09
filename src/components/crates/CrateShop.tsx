@@ -3,6 +3,7 @@ import { useGameStore } from '@/stores/gameStore';
 import { useCrateStore } from '@/stores/crateStore';
 import { useRabbitStore } from '@/stores/rabbitStore';
 import { CRATE_TYPES } from '@/game/data/crates';
+import { calculateDuplicateCompensation } from '@/game/systems/gacha';
 import type { Crate } from '@/types/crate';
 import type { Rabbit } from '@/types/rabbit';
 import { formatNumber } from '@/utils';
@@ -29,6 +30,7 @@ export function CrateShop() {
   const [openedRabbit, setOpenedRabbit] = useState<Rabbit | null>(null);
   const [openedCrate, setOpenedCrate] = useState<Crate | null>(null);
   const [isDuplicate, setIsDuplicate] = useState(false);
+  const [xpAmount, setXpAmount] = useState<number>(0);
 
   /**
    * Handle crate purchase and opening
@@ -59,9 +61,13 @@ export function CrateShop() {
       // Check if this is a duplicate (rabbit was already owned before opening)
       const wasDuplicate = rabbitsBefore.has(rabbit.id);
 
+      // Calculate XP amount for duplicates
+      const duplicateXP = wasDuplicate ? calculateDuplicateCompensation(rabbit.rarity) : 0;
+
       setOpenedRabbit(rabbit);
       setOpenedCrate(crate);
       setIsDuplicate(wasDuplicate);
+      setXpAmount(duplicateXP);
     } catch (error) {
       // Handle crate opening failure
       console.error('Failed to open crate:', error);
@@ -87,6 +93,7 @@ export function CrateShop() {
     setOpenedRabbit(null);
     setOpenedCrate(null);
     setIsDuplicate(false);
+    setXpAmount(0);
   };
 
   /**
@@ -279,6 +286,7 @@ export function CrateShop() {
           crate={openedCrate}
           rabbit={openedRabbit}
           isDuplicate={isDuplicate}
+          xpAmount={xpAmount}
           onComplete={closeResult}
         />
       )}
