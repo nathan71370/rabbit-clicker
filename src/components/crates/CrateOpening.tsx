@@ -21,9 +21,6 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
   const [stage, setStage] = useState<AnimationStage>('closed');
   const timeoutsRef = useRef<number[]>([]);
 
-  // Early return if no rabbit
-  if (!rabbit) return null;
-
   // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
@@ -42,40 +39,44 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
     return () => window.removeEventListener('keydown', handleEscape);
   }, [stage, onComplete]);
 
-  /**
-   * Start the opening sequence
-   */
-  const handleClick = () => {
-    if (stage !== 'closed') return;
+  // Auto-start animation on mount
+  useEffect(() => {
+    if (!rabbit || stage !== 'closed') return;
 
-    // Clear any existing timeouts
-    timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
+    // Small delay before starting to ensure component is mounted
+    const startTimer = window.setTimeout(() => {
+      // Stage 1: Shake animation
+      setStage('shaking');
 
-    // Stage 1: Shake animation
-    setStage('shaking');
+      // Stage 2: Opening burst after shake
+      timeoutsRef.current.push(
+        window.setTimeout(() => {
+          setStage('opening');
+        }, 800)
+      );
 
-    // Stage 2: Opening burst after shake
-    timeoutsRef.current.push(
-      setTimeout(() => {
-        setStage('opening');
-      }, 800)
-    );
+      // Stage 3: Reveal rabbit after burst
+      timeoutsRef.current.push(
+        window.setTimeout(() => {
+          setStage('revealing');
+        }, 1800)
+      );
 
-    // Stage 3: Reveal rabbit after burst
-    timeoutsRef.current.push(
-      setTimeout(() => {
-        setStage('revealing');
-      }, 1800)
-    );
+      // Stage 4: Complete state
+      timeoutsRef.current.push(
+        window.setTimeout(() => {
+          setStage('complete');
+        }, 2500)
+      );
+    }, 100);
 
-    // Stage 4: Complete state
-    timeoutsRef.current.push(
-      setTimeout(() => {
-        setStage('complete');
-      }, 2500)
-    );
-  };
+    return () => {
+      clearTimeout(startTimer);
+    };
+  }, [rabbit, stage]);
+
+  // Early return if no rabbit (after all hooks to avoid Rules of Hooks violation)
+  if (!rabbit) return null;
 
   return (
     <div
@@ -105,30 +106,14 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
                 },
               }}
             >
-              {/* Clickable Crate */}
-              <button
-                onClick={handleClick}
-                disabled={stage === 'shaking'}
-                className={`text-9xl mb-6 transition-transform ${
-                  stage === 'closed' ? 'hover:scale-110 cursor-pointer' : 'cursor-wait'
-                }`}
-              >
+              {/* Crate (animation starts automatically) */}
+              <div className="text-9xl mb-6">
                 {crate.icon}
-              </button>
+              </div>
 
-              {stage === 'closed' && (
-                <motion.p
-                  className="text-white text-2xl font-bold"
-                  animate={{ opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  Click to open!
-                </motion.p>
-              )}
-
-              {stage === 'shaking' && (
-                <p className="text-white text-2xl font-bold animate-pulse">Opening...</p>
-              )}
+              <p className="text-white text-2xl font-bold animate-pulse">
+                {stage === 'closed' ? 'Preparing...' : 'Opening...'}
+              </p>
             </motion.div>
           )}
 
