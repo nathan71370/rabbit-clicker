@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
 import { RabbitTeam } from '@/components/rabbits';
+import { CrateShop } from '@/components/crates';
 import {
   ProductionDisplay,
   SavingIndicator,
@@ -79,6 +80,11 @@ function App() {
               <ShopPanel onPurchase={triggerSave} />
             </div>
           )}
+          {activeTab === 'crates' && (
+            <div className="flex flex-col max-h-[calc(100vh-13rem)] overflow-y-auto">
+              <CrateShop />
+            </div>
+          )}
           {activeTab === 'rabbits' && (
             <div className="flex flex-col max-h-[calc(100vh-13rem)] overflow-y-auto">
               <RabbitTeam />
@@ -91,15 +97,18 @@ function App() {
           )}
         </div>
 
-        {/* Tablet: 2-Column Layout (clicker+shop | rabbits+stats) */}
+        {/* Tablet: 2-Column Layout (clicker+shop+crates | rabbits+stats) */}
         <div className="hidden md:grid lg:hidden grid-cols-2 gap-6 max-w-7xl mx-auto">
-          {/* Left Column: Clicker and Shop stacked */}
+          {/* Left Column: Clicker, Shop, and Crates stacked */}
           <div className="flex flex-col gap-6">
             <div className="card">
               <CarrotClicker />
             </div>
             <div className="flex flex-col">
               <ShopPanel onPurchase={triggerSave} />
+            </div>
+            <div className="flex flex-col">
+              <CrateShop />
             </div>
           </div>
 
@@ -112,11 +121,12 @@ function App() {
           </div>
         </div>
 
-        {/* Desktop: 4-Column Layout (shop | clicker | rabbits | stats) */}
+        {/* Desktop: 4-Column Layout (shop+crates | clicker | rabbits | stats) */}
         <div className="hidden lg:grid grid-cols-4 gap-6 max-w-[1600px] mx-auto">
-          {/* Column 1: Shop */}
-          <div className="flex flex-col">
+          {/* Column 1: Shop and Crates */}
+          <div className="flex flex-col gap-6">
             <ShopPanel onPurchase={triggerSave} />
+            <CrateShop />
           </div>
 
           {/* Column 2: Clicker */}
@@ -141,6 +151,7 @@ function App() {
         tabs={[
           { id: 'clicker', label: 'Clicker', icon: '🥕' },
           { id: 'shop', label: 'Shop', icon: '🛒' },
+          { id: 'crates', label: 'Crates', icon: '🎁' },
           { id: 'rabbits', label: 'Rabbits', icon: '🐰' },
           { id: 'stats', label: 'Stats', icon: '📊' },
         ]}
