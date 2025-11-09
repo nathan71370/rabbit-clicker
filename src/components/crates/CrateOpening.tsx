@@ -9,6 +9,7 @@ interface CrateOpeningProps {
   crate: Crate;
   rabbit: Rabbit | null;
   isDuplicate: boolean;
+  xpAmount?: number;
   onComplete: () => void;
 }
 
@@ -18,7 +19,7 @@ type AnimationStage = 'closed' | 'shaking' | 'opening' | 'revealing' | 'complete
  * CrateOpening Component
  * Animated crate opening experience with suspenseful sequence
  */
-export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOpeningProps) {
+export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete }: CrateOpeningProps) {
   const [stage, setStage] = useState<AnimationStage>('closed');
   const timeoutsRef = useRef<number[]>([]);
 
@@ -85,7 +86,7 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
     return () => {
       clearTimeout(startTimer);
     };
-  }, [rabbit, stage]);
+  }, [rabbit, stage, isDuplicate]);
 
   // Early return if no rabbit (after all hooks to avoid Rules of Hooks violation)
   if (!rabbit) return null;
@@ -261,7 +262,7 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
                   {isDuplicate ? (
                     <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-3 mb-4">
                       <p className="text-yellow-800 font-bold text-center">
-                        ⚠️ Duplicate! Converted to XP
+                        ⚠️ Duplicate! +{xpAmount ? formatNumber(xpAmount) : '0'} XP
                       </p>
                     </div>
                   ) : (
