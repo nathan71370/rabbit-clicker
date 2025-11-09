@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useGameStore } from '@/stores/gameStore';
 import { useCrateStore } from '@/stores/crateStore';
+import { useRabbitStore } from '@/stores/rabbitStore';
 import { CRATE_TYPES } from '@/game/data/crates';
 import type { Crate } from '@/types/crate';
 import type { Rabbit } from '@/types/rabbit';
 import { formatNumber } from '@/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { CrateOpening } from './CrateOpening';
 
 /**
  * CrateShop Component
@@ -13,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  */
 export function CrateShop() {
   const { carrots, spendCarrots } = useGameStore();
+  const { ownedRabbits } = useRabbitStore();
   const {
     openCrate,
     cratesSinceEpic,
@@ -25,6 +27,8 @@ export function CrateShop() {
 
   const [isOpening, setIsOpening] = useState(false);
   const [openedRabbit, setOpenedRabbit] = useState<Rabbit | null>(null);
+  const [openedCrate, setOpenedCrate] = useState<Crate | null>(null);
+  const [isDuplicate, setIsDuplicate] = useState(false);
 
   /**
    * Handle crate purchase and opening
@@ -43,12 +47,21 @@ export function CrateShop() {
         return;
       }
 
+      // Check if rabbit was already owned before opening
+      const rabbitsBefore = new Set(ownedRabbits.keys());
+
       // Simulate opening delay for anticipation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Open the crate
       const rabbit = await openCrate(crate.type);
+
+      // Check if this is a duplicate (rabbit was already owned before opening)
+      const wasDuplicate = rabbitsBefore.has(rabbit.id);
+
       setOpenedRabbit(rabbit);
+      setOpenedCrate(crate);
+      setIsDuplicate(wasDuplicate);
     } catch (error) {
       // Handle crate opening failure
       console.error('Failed to open crate:', error);
@@ -68,10 +81,12 @@ export function CrateShop() {
   };
 
   /**
-   * Close the result modal
+   * Close the animation modal
    */
   const closeResult = () => {
     setOpenedRabbit(null);
+    setOpenedCrate(null);
+    setIsDuplicate(false);
   };
 
   /**
@@ -258,63 +273,15 @@ export function CrateShop() {
         })}
       </div>
 
-      {/* Result Modal */}
-      <AnimatePresence>
-        {openedRabbit && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
-            onClick={closeResult}
-          >
-            <motion.div
-              className="bg-white rounded-lg p-8 max-w-md w-full"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.8, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 50 }}
-            >
-              <div className="text-center">
-                {/* Rarity Badge */}
-                <div className="mb-4">
-                  <span
-                    className={`inline-block text-sm font-bold px-4 py-2 rounded-full ${getRarityColor(
-                      openedRabbit.rarity
-                    )}`}
-                  >
-                    {openedRabbit.rarity.toUpperCase()}
-                  </span>
-                </div>
-
-                {/* Rabbit Image */}
-                <div className="text-8xl mb-4">{openedRabbit.image}</div>
-
-                {/* Rabbit Info */}
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                  {openedRabbit.name}
-                </h2>
-                <p className="text-gray-600 mb-4">{openedRabbit.description}</p>
-
-                {/* Stats */}
-                <div className="bg-gray-100 rounded-lg p-4 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Base CPS</span>
-                    <span className="text-lg font-bold text-carrot">
-                      +{formatNumber(openedRabbit.baseCPS)}/s
-                    </span>
-                  </div>
-                </div>
-
-                {/* Close Button */}
-                <button
-                  onClick={closeResult}
-                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all"
-                >
-                  Awesome!
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* Crate Opening Animation */}
+      {openedRabbit && openedCrate && (
+        <CrateOpening
+          crate={openedCrate}
+          rabbit={openedRabbit}
+          isDuplicate={isDuplicate}
+          onComplete={closeResult}
+        />
+      )}
     </div>
   );
 }

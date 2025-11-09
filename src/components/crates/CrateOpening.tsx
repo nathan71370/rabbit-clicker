@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Crate } from '@/types/crate';
 import type { Rabbit } from '@/types/rabbit';
@@ -19,6 +19,28 @@ type AnimationStage = 'closed' | 'shaking' | 'opening' | 'revealing' | 'complete
  */
 export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOpeningProps) {
   const [stage, setStage] = useState<AnimationStage>('closed');
+  const timeoutsRef = useRef<number[]>([]);
+
+  // Early return if no rabbit
+  if (!rabbit) return null;
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout);
+    };
+  }, []);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && stage === 'complete') {
+        onComplete();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [stage, onComplete]);
 
   /**
    * Start the opening sequence
@@ -26,29 +48,42 @@ export function CrateOpening({ crate, rabbit, isDuplicate, onComplete }: CrateOp
   const handleClick = () => {
     if (stage !== 'closed') return;
 
+    // Clear any existing timeouts
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+
     // Stage 1: Shake animation
     setStage('shaking');
 
     // Stage 2: Opening burst after shake
-    setTimeout(() => {
-      setStage('opening');
-    }, 800);
+    timeoutsRef.current.push(
+      setTimeout(() => {
+        setStage('opening');
+      }, 800)
+    );
 
     // Stage 3: Reveal rabbit after burst
-    setTimeout(() => {
-      setStage('revealing');
-    }, 1800);
+    timeoutsRef.current.push(
+      setTimeout(() => {
+        setStage('revealing');
+      }, 1800)
+    );
 
     // Stage 4: Complete state
-    setTimeout(() => {
-      setStage('complete');
-    }, 2500);
+    timeoutsRef.current.push(
+      setTimeout(() => {
+        setStage('complete');
+      }, 2500)
+    );
   };
 
-  if (!rabbit) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Crate opening animation"
+    >
       <div className="max-w-2xl w-full">
         <AnimatePresence mode="wait">
           {/* Stage 1-2: Closed/Shaking Crate */}
