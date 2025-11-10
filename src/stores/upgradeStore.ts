@@ -277,27 +277,52 @@ export const useUpgradeStore = create<UpgradeState>()(
     }),
     {
       name: 'rabbit-clicker-upgrade-storage',
-      version: 1,
+      version: 2, // Bumped to clear incompatible buildings data structure
+      // Migration function for version upgrades
+      migrate: (persistedState: unknown, version: number) => {
+        // If upgrading from version 1 to 2, ensure buildings is properly initialized
+        if (version === 1) {
+          const oldState = persistedState as {
+            purchasedUpgrades?: string[];
+            clickMultiplier?: number;
+            productionMultiplier?: number;
+          };
+
+          return {
+            purchasedUpgrades: oldState.purchasedUpgrades || [],
+            buildings: {}, // Initialize as empty object (will be converted to Map in merge)
+            clickMultiplier: oldState.clickMultiplier ?? 1,
+            productionMultiplier: oldState.productionMultiplier ?? 1,
+          };
+        }
+
+        return persistedState;
+      },
       // Custom serialization for Set and Map
       partialize: (state) => ({
         purchasedUpgrades: Array.from(state.purchasedUpgrades),
-        buildings: Object.fromEntries(state.buildings),
+        buildings: state.buildings instanceof Map ? Object.fromEntries(state.buildings) : {},
         clickMultiplier: state.clickMultiplier,
         productionMultiplier: state.productionMultiplier,
       }),
       // Custom deserialization for Set and Map
-      merge: (persistedState: unknown, currentState) => ({
-        ...currentState,
-        ...(persistedState as object),
-        purchasedUpgrades: new Set(
-          (persistedState as { purchasedUpgrades?: string[] }).purchasedUpgrades || []
-        ),
-        buildings: new Map(
-          Object.entries(
-            (persistedState as { buildings?: Record<string, number> }).buildings || {}
-          )
-        ),
-      }),
+      merge: (persistedState: unknown, currentState) => {
+        const persisted = persistedState as {
+          purchasedUpgrades?: string[];
+          buildings?: Record<string, number>;
+          clickMultiplier?: number;
+          productionMultiplier?: number;
+        };
+
+        return {
+          ...currentState,
+          purchasedUpgrades: new Set(persisted.purchasedUpgrades || []),
+          buildings: new Map(Object.entries(persisted.buildings || {})),
+          clickMultiplier: persisted.clickMultiplier ?? currentState.clickMultiplier,
+          productionMultiplier:
+            persisted.productionMultiplier ?? currentState.productionMultiplier,
+        };
+      },
     }
   )
 );
