@@ -112,8 +112,9 @@ export function calculateProductionBreakdown(): ProductionBreakdown {
   // 4. Apply building synergies to rabbit CPS
   // Rabbit Burrow: +5% rabbit CPS per burrow
   const burrowCount = upgradeState.getBuildingCount('rabbit_burrow');
-  if (burrowCount > 0) {
-    rabbitCPS *= 1 + burrowCount * 0.05; // +5% per burrow
+  const burrowBuilding = getBuildingById('rabbit_burrow');
+  if (burrowCount > 0 && burrowBuilding?.specialEffect?.type === 'rabbit_cps_boost') {
+    rabbitCPS *= 1 + burrowCount * burrowBuilding.specialEffect.value;
   }
 
   // 5. Total

@@ -31,7 +31,6 @@ interface UpgradeState {
   // Building Actions
   purchaseBuilding: (buildingId: string) => boolean;
   getBuildingCount: (buildingId: string) => number;
-  calculateBuildingCPS: () => number;
   getTotalBuildingCount: () => number;
 }
 
@@ -200,26 +199,6 @@ export const useUpgradeStore = create<UpgradeState>()(
       getTotalBuildingCount: () => {
         const state = get();
         return Array.from(state.buildings.values()).reduce((sum, count) => sum + count, 0);
-      },
-
-      /**
-       * Calculate total CPS from all buildings
-       * @returns Total carrots per second from buildings
-       */
-      calculateBuildingCPS: () => {
-        const state = get();
-        let totalCPS = 0;
-
-        // Iterate through all owned buildings
-        state.buildings.forEach((count, buildingId) => {
-          const buildingData = getBuildingById(buildingId);
-          if (!buildingData) return;
-
-          // Base CPS: baseCPS * count
-          totalCPS += buildingData.baseCPS * count;
-        });
-
-        return totalCPS;
       },
 
       /**
