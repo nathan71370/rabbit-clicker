@@ -8,6 +8,7 @@ import type { Crate } from '@/types/crate';
 import type { Rabbit } from '@/types/rabbit';
 import { formatNumber } from '@/utils';
 import { CrateOpening } from './CrateOpening';
+import { PityCounter } from './PityCounter';
 
 /**
  * CrateShop Component
@@ -96,25 +97,6 @@ export function CrateShop() {
     setXpAmount(0);
   };
 
-  /**
-   * Get pity progress percentage
-   */
-  const getPityProgress = (
-    counter: number,
-    threshold: number
-  ): { percentage: number; label: string } => {
-    const percentage = Math.min((counter / threshold) * 100, 100);
-    const remaining = Math.max(threshold - counter, 0);
-    return {
-      percentage,
-      label: remaining === 0 ? 'Guaranteed!' : `${remaining} left`,
-    };
-  };
-
-  const epicPity = getPityProgress(cratesSinceEpic, epicPityThreshold);
-  const legendaryPity = getPityProgress(cratesSinceLegendary, legendaryPityThreshold);
-  const mythicalPity = getPityProgress(cratesSinceMythical, mythicalPityThreshold);
-
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
@@ -128,51 +110,14 @@ export function CrateShop() {
         </p>
 
         {/* Pity Progress */}
-        <div className="mt-4 space-y-2">
-          <h3 className="text-sm font-bold uppercase tracking-wide opacity-90">Pity Progress</h3>
-
-          {/* Epic Pity */}
-          <div className="bg-white/10 rounded-lg p-2">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold">Epic Guarantee</span>
-              <span className="text-xs">{epicPity.label}</span>
-            </div>
-            <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-purple-300 h-full transition-all duration-300"
-                style={{ width: `${epicPity.percentage}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Legendary Pity */}
-          <div className="bg-white/10 rounded-lg p-2">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold">Legendary Guarantee</span>
-              <span className="text-xs">{legendaryPity.label}</span>
-            </div>
-            <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-yellow-300 h-full transition-all duration-300"
-                style={{ width: `${legendaryPity.percentage}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Mythical Pity */}
-          <div className="bg-white/10 rounded-lg p-2">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold">Mythical Guarantee</span>
-              <span className="text-xs">{mythicalPity.label}</span>
-            </div>
-            <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-pink-300 h-full transition-all duration-300"
-                style={{ width: `${mythicalPity.percentage}%` }}
-              />
-            </div>
-          </div>
-        </div>
+        <PityCounter
+          cratesSinceEpic={cratesSinceEpic}
+          cratesSinceLegendary={cratesSinceLegendary}
+          cratesSinceMythical={cratesSinceMythical}
+          epicPityThreshold={epicPityThreshold}
+          legendaryPityThreshold={legendaryPityThreshold}
+          mythicalPityThreshold={mythicalPityThreshold}
+        />
       </div>
 
       {/* Crate Cards */}
