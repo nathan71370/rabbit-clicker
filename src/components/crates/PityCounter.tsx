@@ -50,15 +50,16 @@ export function PityCounter({
           <button
             type="button"
             aria-label="Pity system information"
-            aria-expanded={tooltipOpen}
+            aria-describedby="pity-tooltip"
             onClick={() => setTooltipOpen(!tooltipOpen)}
             className="text-xs opacity-70 cursor-help focus:outline-none focus:ring-2 focus:ring-purple-400 rounded"
           >
             ℹ️
           </button>
           <div
+            id="pity-tooltip"
             role="tooltip"
-            className={`absolute left-0 top-6 z-10 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl ${
+            className={`absolute left-0 sm:left-auto sm:right-0 top-6 z-10 w-64 max-w-[calc(100vw-2rem)] p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl ${
               tooltipOpen ? 'block' : 'hidden group-hover:block group-focus-within:block'
             }`}
           >
@@ -86,6 +87,11 @@ export function PityCounter({
         </div>
         <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
           <div
+            role="progressbar"
+            aria-label="Epic pity progress"
+            aria-valuenow={Math.round(epicPity.percentage)}
+            aria-valuemin={0}
+            aria-valuemax={100}
             className="bg-purple-300 h-full transition-all duration-300"
             style={{ width: `${epicPity.percentage}%` }}
           />
@@ -100,6 +106,11 @@ export function PityCounter({
         </div>
         <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
           <div
+            role="progressbar"
+            aria-label="Legendary pity progress"
+            aria-valuenow={Math.round(legendaryPity.percentage)}
+            aria-valuemin={0}
+            aria-valuemax={100}
             className="bg-yellow-300 h-full transition-all duration-300"
             style={{ width: `${legendaryPity.percentage}%` }}
           />
@@ -114,6 +125,11 @@ export function PityCounter({
         </div>
         <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
           <div
+            role="progressbar"
+            aria-label="Mythical pity progress"
+            aria-valuenow={Math.round(mythicalPity.percentage)}
+            aria-valuemin={0}
+            aria-valuemax={100}
             className="bg-pink-300 h-full transition-all duration-300"
             style={{ width: `${mythicalPity.percentage}%` }}
           />
