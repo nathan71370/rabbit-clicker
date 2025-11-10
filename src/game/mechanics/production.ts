@@ -2,6 +2,7 @@ import { useGameStore } from '@/stores/gameStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { useRabbitStore } from '@/stores/rabbitStore';
 import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES } from '@/game/data/upgrades';
+import { getBuildingById } from '@/game/data/buildings';
 
 /**
  * Production breakdown by source
@@ -18,12 +19,60 @@ export interface ProductionBreakdown {
 }
 
 /**
+ * Calculate building CPS with special effects and synergies
+ *
+ * @param rabbitCount - Total number of owned rabbits
+ * @returns Total building CPS
+ */
+function calculateBuildingCPS(rabbitCount: number): number {
+  const upgradeState = useUpgradeStore.getState();
+  let totalBuildingCPS = 0;
+
+  // Iterate through all owned buildings
+  upgradeState.buildings.forEach((count, buildingId) => {
+    if (count === 0) return;
+
+    const buildingData = getBuildingById(buildingId);
+    if (!buildingData) return;
+
+    // Base CPS: baseCPS * count
+    let buildingCPS = buildingData.baseCPS * count;
+
+    // Apply special effects
+    if (buildingData.specialEffect) {
+      switch (buildingData.specialEffect.type) {
+        case 'per_rabbit_boost':
+          // Carrot Farm: +1% CPS per rabbit owned
+          // This applies to the farm's own CPS
+          buildingCPS *= 1 + rabbitCount * buildingData.specialEffect.value;
+          break;
+
+        case 'rabbit_cps_boost':
+          // Rabbit Burrow: +5% rabbit CPS per burrow
+          // This is applied elsewhere (in calculateProductionBreakdown)
+          // Not applied to building's own CPS
+          break;
+
+        case 'multiplier':
+          // Generic multiplier (future use)
+          buildingCPS *= 1 + buildingData.specialEffect.value;
+          break;
+      }
+    }
+
+    totalBuildingCPS += buildingCPS;
+  });
+
+  return totalBuildingCPS;
+}
+
+/**
  * Calculate total carrots per second from all production sources
  *
  * Sources:
  * - Auto-clicker upgrades (multiplied by click power)
  * - Active rabbits in team (with level scaling and abilities)
- * - Buildings (future expansion)
+ * - Buildings (with special effects and synergies)
  *
  * @returns Total CPS
  */
@@ -54,13 +103,21 @@ export function calculateProductionBreakdown(): ProductionBreakdown {
   const clickPower = calculateClickPower();
   const autoClickerCPS = autoClicksPerSecond * clickPower;
 
-  // 2. Calculate rabbit CPS
-  const rabbitCPS = rabbitState.getTeamCPS();
+  // 2. Calculate rabbit CPS (base, before building synergies)
+  let rabbitCPS = rabbitState.getTeamCPS();
 
-  // 3. Buildings (not yet implemented)
-  const buildingCPS = 0;
+  // 3. Calculate building CPS with special effects
+  const buildingCPS = calculateBuildingCPS(rabbitState.ownedRabbits.size);
 
-  // 4. Total
+  // 4. Apply building synergies to rabbit CPS
+  // Rabbit Burrow: +5% rabbit CPS per burrow
+  const burrowCount = upgradeState.getBuildingCount('rabbit_burrow');
+  const burrowBuilding = getBuildingById('rabbit_burrow');
+  if (burrowCount > 0 && burrowBuilding?.specialEffect?.type === 'rabbit_cps_boost') {
+    rabbitCPS *= 1 + burrowCount * burrowBuilding.specialEffect.value;
+  }
+
+  // 5. Total
   const totalCPS = autoClickerCPS + rabbitCPS + buildingCPS;
 
   return {
