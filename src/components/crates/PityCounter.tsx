@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 interface PityCounterProps {
   cratesSinceEpic: number;
   cratesSinceLegendary: number;
@@ -20,6 +22,7 @@ export function PityCounter({
   legendaryPityThreshold,
   mythicalPityThreshold,
 }: PityCounterProps) {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   /**
    * Calculate pity progress percentage and label
    */
@@ -44,8 +47,22 @@ export function PityCounter({
       <div className="flex items-center gap-2">
         <h3 className="text-sm font-bold uppercase tracking-wide opacity-90">Pity Progress</h3>
         <div className="group relative">
-          <span className="text-xs opacity-70 cursor-help">ℹ️</span>
-          <div className="absolute left-0 top-6 z-10 hidden group-hover:block w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl">
+          <button
+            type="button"
+            aria-label="Pity system information"
+            aria-expanded={tooltipOpen}
+            onClick={() => setTooltipOpen(!tooltipOpen)}
+            onBlur={() => setTooltipOpen(false)}
+            className="text-xs opacity-70 cursor-help focus:outline-none focus:ring-2 focus:ring-purple-400 rounded"
+          >
+            ℹ️
+          </button>
+          <div
+            role="tooltip"
+            className={`absolute left-0 top-6 z-10 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl ${
+              tooltipOpen ? 'block' : 'hidden group-hover:block group-focus-within:block'
+            }`}
+          >
             <p className="font-bold mb-2">What is the Pity System?</p>
             <p className="mb-2">
               The pity system guarantees you'll get rare rabbits after opening a certain number of crates without getting one.
@@ -56,7 +73,7 @@ export function PityCounter({
               <li>Mythical: Guaranteed after {mythicalPityThreshold} crates</li>
             </ul>
             <p className="mt-2 text-gray-300">
-              Your counter resets when you get that rarity!
+              Higher rarity drops reset lower tier counters too!
             </p>
           </div>
         </div>
