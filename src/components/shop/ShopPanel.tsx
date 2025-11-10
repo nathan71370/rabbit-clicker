@@ -9,6 +9,7 @@ import { RABBIT_PURCHASE_COST } from '@/game/data/constants';
 import { UpgradeCard } from './UpgradeCard';
 import { RabbitCard } from './RabbitCard';
 import { BuildingCard } from './BuildingCard';
+import { CrateShop } from '@/components/crates';
 import { playSound } from '@/utils/sounds';
 import { formatNumber } from '@/utils';
 
@@ -269,15 +270,7 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
       )}
 
       {/* Crates Tab */}
-      {activeTab === 'crates' && (
-        <div className="flex flex-col items-center justify-center py-12 gap-4">
-          <span className="text-6xl">📦</span>
-          <h3 className="text-xl font-bold text-gray-600">Crates Coming Soon!</h3>
-          <p className="text-sm text-gray-500 text-center max-w-md">
-            Open crates to discover rare rabbits and special items. This feature is under development.
-          </p>
-        </div>
-      )}
+      {activeTab === 'crates' && <CrateShop />}
 
       {/* Rabbits Tab */}
       {activeTab === 'rabbits' && (
