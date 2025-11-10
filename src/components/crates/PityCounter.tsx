@@ -52,7 +52,6 @@ export function PityCounter({
             aria-label="Pity system information"
             aria-expanded={tooltipOpen}
             onClick={() => setTooltipOpen(!tooltipOpen)}
-            onBlur={() => setTooltipOpen(false)}
             className="text-xs opacity-70 cursor-help focus:outline-none focus:ring-2 focus:ring-purple-400 rounded"
           >
             ℹ️
