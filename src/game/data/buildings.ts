@@ -121,6 +121,78 @@ const GREENHOUSE: BuildingData = {
 };
 
 /**
+ * Processing Plant
+ * Industrial-scale carrot processing facility
+ * Special: +10% all CPS per plant
+ */
+const PROCESSING_PLANT: BuildingData = {
+  id: 'processing_plant',
+  name: 'Processing Plant',
+  description: 'An industrial facility that processes and packages carrots at scale. Boosts all production by 10%!',
+  baseCost: 10000000,
+  baseCPS: 5000,
+  costMultiplier: 1.15,
+  icon: '🏗️',
+  unlockRequirement: {
+    type: 'lifetime_carrots',
+    value: 5000000, // Unlock after earning 5M lifetime carrots
+  },
+  specialEffect: {
+    type: 'multiplier',
+    value: 0.10, // +10% all CPS per plant
+    description: '+10% all CPS per plant',
+  },
+};
+
+/**
+ * Genetic Lab
+ * Advanced genetic research laboratory
+ * Special: +25% all CPS per lab
+ */
+const GENETIC_LAB: BuildingData = {
+  id: 'genetic_lab',
+  name: 'Genetic Lab',
+  description: 'A cutting-edge laboratory researching super-carrots and enhanced rabbits. Massive 25% production boost!',
+  baseCost: 100000000,
+  baseCPS: 25000,
+  costMultiplier: 1.15,
+  icon: '🧬',
+  unlockRequirement: {
+    type: 'lifetime_carrots',
+    value: 50000000, // Unlock after earning 50M lifetime carrots
+  },
+  specialEffect: {
+    type: 'multiplier',
+    value: 0.25, // +25% all CPS per lab
+    description: '+25% all CPS per lab',
+  },
+};
+
+/**
+ * Space Station
+ * Orbital carrot production station
+ * Special: ×2 all production per station
+ */
+const SPACE_STATION: BuildingData = {
+  id: 'space_station',
+  name: 'Space Station',
+  description: 'An orbital station growing carrots in zero gravity. Boosts all production by 100% with advanced space technology!',
+  baseCost: 1000000000,
+  baseCPS: 100000,
+  costMultiplier: 1.15,
+  icon: '🛰️',
+  unlockRequirement: {
+    type: 'lifetime_carrots',
+    value: 500000000, // Unlock after earning 500M lifetime carrots
+  },
+  specialEffect: {
+    type: 'multiplier',
+    value: 1.0, // ×2 all production (100% increase)
+    description: '+100% all production per station',
+  },
+};
+
+/**
  * All buildings array
  * Export this for use throughout the game
  */
@@ -129,6 +201,9 @@ export const BUILDINGS: BuildingData[] = [
   RABBIT_BURROW,
   CARROT_FARM,
   GREENHOUSE,
+  PROCESSING_PLANT,
+  GENETIC_LAB,
+  SPACE_STATION,
 ];
 
 /**

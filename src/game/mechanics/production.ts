@@ -38,7 +38,7 @@ function calculateBuildingCPS(rabbitCount: number): number {
     // Base CPS: baseCPS * count
     let buildingCPS = buildingData.baseCPS * count;
 
-    // Apply special effects
+    // Apply special effects that affect the building's own CPS
     if (buildingData.specialEffect) {
       switch (buildingData.specialEffect.type) {
         case 'per_rabbit_boost':
@@ -54,8 +54,9 @@ function calculateBuildingCPS(rabbitCount: number): number {
           break;
 
         case 'multiplier':
-          // Generic multiplier (future use)
-          buildingCPS *= 1 + buildingData.specialEffect.value;
+          // Global multipliers (Processing Plant, Genetic Lab, Space Station)
+          // Applied to total production, not building's own CPS
+          // Handled in calculateProductionBreakdown
           break;
       }
     }
@@ -64,6 +65,35 @@ function calculateBuildingCPS(rabbitCount: number): number {
   });
 
   return totalBuildingCPS;
+}
+
+/**
+ * Calculate global production multiplier from buildings
+ * Buildings with 'multiplier' special effect boost ALL production
+ *
+ * @returns Total multiplier (1.0 = no bonus, 2.0 = double production)
+ */
+function calculateGlobalMultiplier(): number {
+  const upgradeState = useUpgradeStore.getState();
+  let multiplier = 1.0;
+
+  // Iterate through all owned buildings
+  upgradeState.buildings.forEach((count, buildingId) => {
+    if (count === 0) return;
+
+    const buildingData = getBuildingById(buildingId);
+    if (!buildingData) return;
+
+    // Apply global multiplier effects
+    if (buildingData.specialEffect?.type === 'multiplier') {
+      // Each building adds its multiplier value
+      // Example: Processing Plant with value 0.10 means +10% per plant
+      // If you own 3 plants: 1 + (3 * 0.10) = 1.30 = 130% = +30% total
+      multiplier += count * buildingData.specialEffect.value;
+    }
+  });
+
+  return multiplier;
 }
 
 /**
@@ -101,13 +131,13 @@ export function calculateProductionBreakdown(): ProductionBreakdown {
 
   // Auto-clickers are affected by click power
   const clickPower = calculateClickPower();
-  const autoClickerCPS = autoClicksPerSecond * clickPower;
+  let autoClickerCPS = autoClicksPerSecond * clickPower;
 
   // 2. Calculate rabbit CPS (base, before building synergies)
   let rabbitCPS = rabbitState.getTeamCPS();
 
   // 3. Calculate building CPS with special effects
-  const buildingCPS = calculateBuildingCPS(rabbitState.ownedRabbits.size);
+  let buildingCPS = calculateBuildingCPS(rabbitState.ownedRabbits.size);
 
   // 4. Apply building synergies to rabbit CPS
   // Rabbit Burrow: +5% rabbit CPS per burrow
@@ -117,7 +147,14 @@ export function calculateProductionBreakdown(): ProductionBreakdown {
     rabbitCPS *= 1 + burrowCount * burrowBuilding.specialEffect.value;
   }
 
-  // 5. Total
+  // 5. Apply global multipliers from buildings
+  // Processing Plant, Genetic Lab, Space Station boost ALL production
+  const globalMultiplier = calculateGlobalMultiplier();
+  autoClickerCPS *= globalMultiplier;
+  rabbitCPS *= globalMultiplier;
+  buildingCPS *= globalMultiplier;
+
+  // 6. Total
   const totalCPS = autoClickerCPS + rabbitCPS + buildingCPS;
 
   return {
