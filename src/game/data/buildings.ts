@@ -176,7 +176,7 @@ const GENETIC_LAB: BuildingData = {
 const SPACE_STATION: BuildingData = {
   id: 'space_station',
   name: 'Space Station',
-  description: 'An orbital station growing carrots in zero gravity. Doubles all production with advanced space technology!',
+  description: 'An orbital station growing carrots in zero gravity. Boosts all production by 100% with advanced space technology!',
   baseCost: 1000000000,
   baseCPS: 100000,
   costMultiplier: 1.15,
@@ -188,7 +188,7 @@ const SPACE_STATION: BuildingData = {
   specialEffect: {
     type: 'multiplier',
     value: 1.0, // ×2 all production (100% increase)
-    description: '×2 all production per station',
+    description: '+100% all production per station',
   },
 };
 
