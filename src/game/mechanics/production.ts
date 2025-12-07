@@ -1,7 +1,7 @@
 import { useGameStore } from '@/stores/gameStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { useRabbitStore } from '@/stores/rabbitStore';
-import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES } from '@/game/data/upgrades';
+import { CLICK_UPGRADES, AUTO_CLICKER_UPGRADES, CPS_MULTIPLIER_UPGRADES } from '@/game/data/upgrades';
 import { getBuildingById } from '@/game/data/buildings';
 
 /**
@@ -97,6 +97,29 @@ function calculateGlobalMultiplier(): number {
 }
 
 /**
+ * Calculate CPS multiplier from purchased upgrades
+ * CPS multiplier upgrades stack multiplicatively
+ *
+ * @returns Total multiplier (1.0 = no bonus, upgrades multiply from there)
+ * @example
+ * If you have 1.25× and 2× upgrades:
+ * Result = 1.25 × 2.0 = 2.5× total
+ */
+function calculateCPSMultiplier(): number {
+  const upgradeState = useUpgradeStore.getState();
+  let multiplier = 1.0;
+
+  // Apply all purchased CPS multiplier upgrades multiplicatively
+  CPS_MULTIPLIER_UPGRADES.forEach((upgrade) => {
+    if (upgradeState.purchasedUpgrades.has(upgrade.id)) {
+      multiplier *= upgrade.effect;
+    }
+  });
+
+  return multiplier;
+}
+
+/**
  * Calculate total carrots per second from all production sources
  *
  * Sources:
@@ -154,7 +177,14 @@ export function calculateProductionBreakdown(): ProductionBreakdown {
   rabbitCPS *= globalMultiplier;
   buildingCPS *= globalMultiplier;
 
-  // 6. Total
+  // 6. Apply CPS multiplier upgrades (stack multiplicatively)
+  // Carrot Fertilizer, Growth Hormone, Genetic Engineering, etc.
+  const cpsMultiplier = calculateCPSMultiplier();
+  autoClickerCPS *= cpsMultiplier;
+  rabbitCPS *= cpsMultiplier;
+  buildingCPS *= cpsMultiplier;
+
+  // 7. Total
   const totalCPS = autoClickerCPS + rabbitCPS + buildingCPS;
 
   return {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGameStore } from '@/stores/gameStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { useRabbitStore } from '@/stores/rabbitStore';
-import { getClickUpgrades, getAutoClickerUpgrades } from '@/game/data/upgrades';
+import { getClickUpgrades, getAutoClickerUpgrades, getCPSMultiplierUpgrades } from '@/game/data/upgrades';
 import { getCommonRabbits } from '@/game/data/rabbits';
 import { BUILDINGS, getUnlockedBuildings, calculateBuildingCost } from '@/game/data/buildings';
 import { RABBIT_PURCHASE_COST } from '@/game/data/constants';
@@ -38,6 +38,7 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
   const clickUpgrades = getClickUpgrades();
   const autoClickerUpgrades = getAutoClickerUpgrades();
+  const cpsMultiplierUpgrades = getCPSMultiplierUpgrades();
   const commonRabbits = getCommonRabbits();
   const unlockedBuildings = getUnlockedBuildings(lifetimeCarrots);
 
@@ -215,6 +216,34 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
             </div>
 
             {autoClickerUpgrades.map((upgrade) => {
+              const affordable = canAfford(upgrade.currentCost);
+              const purchased = isPurchased(upgrade.id);
+              const requirementsMet = checkRequirements(upgrade.id);
+
+              return (
+                <UpgradeCard
+                  key={upgrade.id}
+                  upgrade={upgrade}
+                  isAffordable={affordable}
+                  isPurchased={purchased}
+                  onPurchase={handlePurchase}
+                  requirementsMet={requirementsMet}
+                />
+              );
+            })}
+          </div>
+
+          {/* CPS Multiplier Upgrades Section */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <div className="h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent flex-1"></div>
+              <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+                Production Multipliers
+              </h3>
+              <div className="h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent flex-1"></div>
+            </div>
+
+            {cpsMultiplierUpgrades.map((upgrade) => {
               const affordable = canAfford(upgrade.currentCost);
               const purchased = isPurchased(upgrade.id);
               const requirementsMet = checkRequirements(upgrade.id);
