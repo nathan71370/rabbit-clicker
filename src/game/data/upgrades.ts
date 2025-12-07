@@ -206,12 +206,169 @@ export const AUTO_CLICKER_UPGRADES: Upgrade[] = [
 ];
 
 /**
+ * CPS Multiplier Upgrades
+ * One-time upgrades that multiply ALL production (stacks multiplicatively)
+ */
+export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
+  {
+    id: 'carrot_fertilizer',
+    name: 'Carrot Fertilizer',
+    description: 'Premium fertilizer that boosts all carrot production by 25%.',
+    type: 'cps_multiplier',
+    baseCost: 5000,
+    currentCost: 5000,
+    effect: 1.25, // 1.25× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🧪',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'growth_hormone',
+    name: 'Growth Hormone',
+    description: 'Experimental growth hormone that increases all production by 50%.',
+    type: 'cps_multiplier',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1.5, // 1.5× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '💉',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'genetic_engineering',
+    name: 'Genetic Engineering',
+    description: 'Genetically modified carrots that double all production.',
+    type: 'cps_multiplier',
+    baseCost: 100000,
+    currentCost: 100000,
+    effect: 2.0, // 2× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🧬',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'super_carrots',
+    name: 'Super Carrots',
+    description: 'Ultra-enhanced super carrots that multiply all production by 2.5×.',
+    type: 'cps_multiplier',
+    baseCost: 500000,
+    currentCost: 500000,
+    effect: 2.5, // 2.5× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🦸',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'quantum_growth',
+    name: 'Quantum Growth',
+    description: 'Quantum mechanics applied to agriculture. Multiplies all production by 5×.',
+    type: 'cps_multiplier',
+    baseCost: 1000000,
+    currentCost: 1000000,
+    effect: 5.0, // 5× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '⚛️',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'molecular_enhancement',
+    name: 'Molecular Enhancement',
+    description: 'Rearrange molecules for perfect carrots. Multiplies all production by 10×.',
+    type: 'cps_multiplier',
+    baseCost: 10000000,
+    currentCost: 10000000,
+    effect: 10.0, // 10× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔬',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'temporal_acceleration',
+    name: 'Temporal Acceleration',
+    description: 'Bend time itself to accelerate growth. Multiplies all production by 25×.',
+    type: 'cps_multiplier',
+    baseCost: 100000000,
+    currentCost: 100000000,
+    effect: 25.0, // 25× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '⏰',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'reality_warping',
+    name: 'Reality Warping',
+    description: 'Warp reality to create carrots from nothing. Multiplies all production by 50×.',
+    type: 'cps_multiplier',
+    baseCost: 1000000000,
+    currentCost: 1000000000,
+    effect: 50.0, // 50× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🌀',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'dimensional_farming',
+    name: 'Dimensional Farming',
+    description: 'Farm carrots across infinite dimensions. Multiplies all production by 100×.',
+    type: 'cps_multiplier',
+    baseCost: 10000000000,
+    currentCost: 10000000000,
+    effect: 100.0, // 100× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🌌',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'omnipotent_harvest',
+    name: 'Omnipotent Harvest',
+    description: 'Ascend to godhood and harvest carrots from the very fabric of existence. Multiplies all production by 500×.',
+    type: 'cps_multiplier',
+    baseCost: 100000000000,
+    currentCost: 100000000000,
+    effect: 500.0, // 500× multiplier
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '👁️',
+    isAffordable: false,
+    isMaxed: false,
+  },
+];
+
+/**
  * Get upgrade by ID
  * @param upgradeId - Unique upgrade identifier
  * @returns Upgrade object or undefined if not found
  */
 export function getUpgradeById(upgradeId: string): Upgrade | undefined {
-  const allUpgrades = [...CLICK_UPGRADES, ...AUTO_CLICKER_UPGRADES];
+  const allUpgrades = [...CLICK_UPGRADES, ...AUTO_CLICKER_UPGRADES, ...CPS_MULTIPLIER_UPGRADES];
   return allUpgrades.find((upgrade) => upgrade.id === upgradeId);
 }
 
@@ -229,4 +386,12 @@ export function getClickUpgrades(): Upgrade[] {
  */
 export function getAutoClickerUpgrades(): Upgrade[] {
   return AUTO_CLICKER_UPGRADES;
+}
+
+/**
+ * Get all CPS multiplier upgrades
+ * @returns Array of CPS multiplier upgrades
+ */
+export function getCPSMultiplierUpgrades(): Upgrade[] {
+  return CPS_MULTIPLIER_UPGRADES;
 }
