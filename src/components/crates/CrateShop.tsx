@@ -15,7 +15,7 @@ import { PityCounter } from './PityCounter';
  * Displays available crates for purchase and handles crate opening
  */
 export function CrateShop() {
-  const { carrots, spendCarrots } = useGameStore();
+  const { carrots, goldenCarrots, spendCarrots, spendGoldenCarrots } = useGameStore();
   const { ownedRabbits } = useRabbitStore();
   const {
     openCrate,
@@ -37,15 +37,29 @@ export function CrateShop() {
    * Handle crate purchase and opening
    */
   const handlePurchase = async (crate: Crate) => {
-    // Check if player can afford
-    if (!crate.cost.carrots || carrots < crate.cost.carrots) {
+    // Determine currency type and check if player can afford
+    const usesGoldenCarrots = crate.cost.goldenCarrots !== undefined;
+    const usesCarrots = crate.cost.carrots !== undefined;
+
+    if (usesGoldenCarrots && (!crate.cost.goldenCarrots || goldenCarrots < crate.cost.goldenCarrots)) {
+      return;
+    }
+
+    if (usesCarrots && (!crate.cost.carrots || carrots < crate.cost.carrots)) {
       return;
     }
 
     setIsOpening(true);
     try {
-      // Deduct cost (returns false if failed)
-      const didSpend = spendCarrots(crate.cost.carrots);
+      // Deduct cost based on currency type
+      let didSpend = false;
+
+      if (usesGoldenCarrots && crate.cost.goldenCarrots) {
+        didSpend = spendGoldenCarrots(crate.cost.goldenCarrots);
+      } else if (usesCarrots && crate.cost.carrots) {
+        didSpend = spendCarrots(crate.cost.carrots);
+      }
+
       if (didSpend === false) {
         return;
       }
@@ -72,7 +86,7 @@ export function CrateShop() {
     } catch (error) {
       // Handle crate opening failure
       console.error('Failed to open crate:', error);
-      // TODO: Refund carrots via addCarrots when error handling is implemented
+      // TODO: Refund currency when error handling is implemented
     } finally {
       // Always reset opening state
       setIsOpening(false);
@@ -83,8 +97,13 @@ export function CrateShop() {
    * Check if player can afford a crate
    */
   const canAfford = (crate: Crate): boolean => {
-    if (!crate.cost.carrots) return false;
-    return carrots >= crate.cost.carrots;
+    if (crate.cost.goldenCarrots !== undefined) {
+      return goldenCarrots >= crate.cost.goldenCarrots;
+    }
+    if (crate.cost.carrots !== undefined) {
+      return carrots >= crate.cost.carrots;
+    }
+    return false;
   };
 
   /**
@@ -194,10 +213,17 @@ export function CrateShop() {
                     <div className="text-xs text-gray-500 uppercase tracking-wide font-semibold">
                       Cost
                     </div>
-                    <div className="text-2xl font-bold text-carrot flex items-center gap-1">
-                      <span>🥕</span>
-                      <span>{formatNumber(crate.cost.carrots || 0)}</span>
-                    </div>
+                    {crate.cost.goldenCarrots !== undefined ? (
+                      <div className="text-2xl font-bold text-yellow-600 flex items-center gap-1">
+                        <span>🥕✨</span>
+                        <span>{formatNumber(crate.cost.goldenCarrots)}</span>
+                      </div>
+                    ) : (
+                      <div className="text-2xl font-bold text-carrot flex items-center gap-1">
+                        <span>🥕</span>
+                        <span>{formatNumber(crate.cost.carrots || 0)}</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Buy Button */}
@@ -215,7 +241,11 @@ export function CrateShop() {
 
                   {!affordable && (
                     <span className="text-xs text-red-600 font-semibold">
-                      Need {formatNumber((crate.cost.carrots || 0) - carrots)} more 🥕
+                      {crate.cost.goldenCarrots !== undefined ? (
+                        <>Need {formatNumber(crate.cost.goldenCarrots - goldenCarrots)} more 🥕✨</>
+                      ) : (
+                        <>Need {formatNumber((crate.cost.carrots || 0) - carrots)} more 🥕</>
+                      )}
                     </span>
                   )}
                 </div>

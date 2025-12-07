@@ -23,6 +23,8 @@ interface GameState {
   // Actions
   addCarrots: (amount: number) => void;
   spendCarrots: (amount: number) => boolean;
+  addGoldenCarrots: (amount: number) => void;
+  spendGoldenCarrots: (amount: number) => boolean;
   click: () => void;
   tick: (deltaTime: number) => void;
   calculateOfflineProgress: () => void;
@@ -74,6 +76,38 @@ export const useGameStore = create<GameState>()(
         const state = get();
         if (state.carrots >= amount) {
           set({ carrots: state.carrots - amount });
+          return true;
+        }
+        return false;
+      },
+
+      /**
+       * Add golden carrots to the player's balance
+       * @param amount - Number of golden carrots to add (must be positive and finite)
+       */
+      addGoldenCarrots: (amount: number) => {
+        if (!Number.isFinite(amount) || amount < 0) {
+          console.error('Invalid amount for addGoldenCarrots:', amount);
+          return;
+        }
+        set((state) => ({
+          goldenCarrots: state.goldenCarrots + amount,
+        }));
+      },
+
+      /**
+       * Spend golden carrots if the player has enough
+       * @param amount - Number of golden carrots to spend (must be positive and finite)
+       * @returns true if successful, false if insufficient funds or invalid amount
+       */
+      spendGoldenCarrots: (amount: number) => {
+        if (!Number.isFinite(amount) || amount < 0) {
+          console.error('Invalid amount for spendGoldenCarrots:', amount);
+          return false;
+        }
+        const state = get();
+        if (state.goldenCarrots >= amount) {
+          set({ goldenCarrots: state.goldenCarrots - amount });
           return true;
         }
         return false;
