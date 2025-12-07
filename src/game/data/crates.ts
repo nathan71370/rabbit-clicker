@@ -85,12 +85,39 @@ export const GOLD_CRATE: Crate = {
 };
 
 /**
+ * Premium Crate
+ * Cost: 100 Golden Carrots
+ * Drop rates: 0% Common, 0% Uncommon, 50% Rare, 35% Epic, 14% Legendary, 1% Mythical
+ */
+export const PREMIUM_CRATE: Crate = {
+  id: 'premium_crate',
+  name: 'Premium Crate',
+  type: 'premium' as CrateType,
+  description: 'The best crate available! Uses Golden Carrots for the highest rarity odds!',
+  cost: {
+    goldenCarrots: 100,
+  },
+  icon: '💎',
+  dropRates: {
+    common: 0,        // 0%
+    uncommon: 0,      // 0%
+    rare: 0.5,        // 50%
+    epic: 0.35,       // 35%
+    legendary: 0.14,  // 14%
+    mythical: 0.01,   // 1%
+  } as Record<Rarity, number>,
+  isAvailable: true,
+  features: ['Guaranteed rare+', 'Mythical chance', 'Best odds', 'Golden Carrot exclusive'],
+};
+
+/**
  * All available crate types
  */
 export const CRATE_TYPES: Crate[] = [
   BASIC_CRATE,
   SILVER_CRATE,
   GOLD_CRATE,
+  PREMIUM_CRATE,
 ];
 
 /**

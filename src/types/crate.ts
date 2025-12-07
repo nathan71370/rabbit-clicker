@@ -7,7 +7,7 @@ import type { Rarity, Rabbit } from './rabbit';
 /**
  * Crate type definitions
  */
-export type CrateType = 'basic' | 'silver' | 'gold' | 'special_event';
+export type CrateType = 'basic' | 'silver' | 'gold' | 'premium' | 'special_event';
 
 /**
  * Crate definition
