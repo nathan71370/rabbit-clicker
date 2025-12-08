@@ -24,7 +24,7 @@ export interface RabbitData {
 }
 
 /**
- * COMMON RABBITS (8 total)
+ * COMMON RABBITS (12 total)
  * Rarity: Common | CPS Range: 5-50
  * Easy to obtain, good for early game
  */
@@ -165,10 +165,78 @@ const COMMON_RABBITS: RabbitData[] = [
       target: 'cps',
     },
   },
+  {
+    id: 'dusty',
+    name: 'Dusty',
+    rarity: 'common',
+    description: 'A dusty brown rabbit who loves digging tunnels. Expert at finding buried carrots.',
+    baseCPS: 14,
+    favoriteFood: 'Root Vegetables',
+    image: '/assets/images/rabbits/dusty.png',
+    ability: {
+      id: 'tunnel_vision',
+      name: 'Tunnel Vision',
+      description: 'Finds hidden carrots underground',
+      type: 'passive',
+      value: 5,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'buttons',
+    name: 'Buttons',
+    rarity: 'common',
+    description: 'Tiny rabbit with button-like eyes. Adorable and surprisingly productive.',
+    baseCPS: 16,
+    favoriteFood: 'Carrot Chips',
+    image: '/assets/images/rabbits/buttons.png',
+    ability: {
+      id: 'cute_appeal',
+      name: 'Cute Appeal',
+      description: 'Cuteness inspires harder work',
+      type: 'passive',
+      value: 6,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'rusty',
+    name: 'Rusty',
+    rarity: 'common',
+    description: 'An old experienced rabbit with rust-colored fur. Knows all the best carrot spots.',
+    baseCPS: 28,
+    favoriteFood: 'Heirloom Carrots',
+    image: '/assets/images/rabbits/rusty.png',
+    ability: {
+      id: 'veteran_knowledge',
+      name: 'Veteran Knowledge',
+      description: 'Years of experience pay off',
+      type: 'passive',
+      value: 9,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'sprout',
+    name: 'Sprout',
+    rarity: 'common',
+    description: 'Young and eager rabbit just starting out. What they lack in skill, they make up for in enthusiasm!',
+    baseCPS: 11,
+    favoriteFood: 'Carrot Greens',
+    image: '/assets/images/rabbits/sprout.png',
+    ability: {
+      id: 'youthful_energy',
+      name: 'Youthful Energy',
+      description: 'Boundless enthusiasm',
+      type: 'passive',
+      value: 4,
+      target: 'cps',
+    },
+  },
 ];
 
 /**
- * UNCOMMON RABBITS (5 total)
+ * UNCOMMON RABBITS (10 total)
  * Rarity: Uncommon | CPS Range: 50-200
  * Moderately rare, great for mid-game progression
  */
@@ -258,10 +326,95 @@ const UNCOMMON_RABBITS: RabbitData[] = [
       target: 'offline_earnings',
     },
   },
+  {
+    id: 'azure',
+    name: 'Azure',
+    rarity: 'uncommon',
+    description: 'A striking blue-gray rabbit with sky-colored eyes. Has an affinity for high places.',
+    baseCPS: 85,
+    favoriteFood: 'Blueberry Carrots',
+    image: '/assets/images/rabbits/azure.png',
+    ability: {
+      id: 'sky_watcher',
+      name: 'Sky Watcher',
+      description: 'Aerial perspective increases efficiency',
+      type: 'passive',
+      value: 18,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'ember',
+    name: 'Ember',
+    rarity: 'uncommon',
+    description: 'Fiery red rabbit with a passionate spirit. When motivated, nothing can stop them.',
+    baseCPS: 110,
+    favoriteFood: 'Roasted Carrots',
+    image: '/assets/images/rabbits/ember.png',
+    ability: {
+      id: 'burning_passion',
+      name: 'Burning Passion',
+      description: 'Intense focus multiplies output',
+      type: 'passive',
+      value: 22,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'jade',
+    name: 'Jade',
+    rarity: 'uncommon',
+    description: 'Elegant green-tinged rabbit with a connection to nature. Plants seem to grow faster around them.',
+    baseCPS: 140,
+    favoriteFood: 'Wild Carrots',
+    image: '/assets/images/rabbits/jade.png',
+    ability: {
+      id: 'natural_growth',
+      name: 'Natural Growth',
+      description: 'Nature magic accelerates carrot growth',
+      type: 'passive',
+      value: 28,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'storm',
+    name: 'Storm',
+    rarity: 'uncommon',
+    description: 'Gray rabbit with electric energy crackling through their fur. Fast and unpredictable.',
+    baseCPS: 160,
+    favoriteFood: 'Static Carrots',
+    image: '/assets/images/rabbits/storm.png',
+    ability: {
+      id: 'electric_charge',
+      name: 'Electric Charge',
+      description: 'Lightning speed gathering',
+      type: 'passive',
+      value: 32,
+      target: 'cps',
+    },
+  },
+  {
+    id: 'frost',
+    name: 'Frost',
+    rarity: 'uncommon',
+    description: 'Ice-blue rabbit that leaves frost in their wake. Preserves carrots in perfect condition.',
+    baseCPS: 190,
+    favoriteFood: 'Icicle Carrots',
+    image: '/assets/images/rabbits/frost.png',
+    ability: {
+      id: 'deep_freeze',
+      name: 'Deep Freeze',
+      description: 'Perfect preservation increases value',
+      type: 'passive',
+      value: 38,
+      target: 'cps',
+    },
+  },
 ];
 
 /**
- * RARE RABBITS (2 total)
+ * RARE RABBITS (5 total)
  * Rarity: Rare | CPS Range: 200-800
  * Very rare, powerful late-game rabbits
  */
@@ -300,16 +453,136 @@ const RARE_RABBITS: RabbitData[] = [
       target: 'all',
     },
   },
+  {
+    id: 'nebula',
+    name: 'Nebula',
+    rarity: 'rare',
+    description: 'Cosmic purple rabbit with swirling galaxy patterns in their fur. Channels the power of the stars.',
+    baseCPS: 600,
+    favoriteFood: 'Cosmic Carrots',
+    image: '/assets/images/rabbits/nebula.png',
+    ability: {
+      id: 'stellar_energy',
+      name: 'Stellar Energy',
+      description: 'Star power amplifies all production',
+      type: 'passive',
+      value: 85,
+      target: 'all',
+    },
+  },
+  {
+    id: 'crystal',
+    name: 'Crystal',
+    rarity: 'rare',
+    description: 'Transparent rabbit that seems to be made of living crystal. Refracts light into rainbow patterns.',
+    baseCPS: 700,
+    favoriteFood: 'Crystallized Carrots',
+    image: '/assets/images/rabbits/crystal.png',
+    ability: {
+      id: 'prismatic_power',
+      name: 'Prismatic Power',
+      description: 'Light refraction multiplies output',
+      type: 'passive',
+      value: 95,
+      target: 'all',
+    },
+  },
+  {
+    id: 'shadow',
+    name: 'Shadow',
+    rarity: 'rare',
+    description: 'Mysterious dark rabbit that moves through shadows. Can gather carrots from anywhere.',
+    baseCPS: 800,
+    favoriteFood: 'Midnight Carrots',
+    image: '/assets/images/rabbits/shadow.png',
+    ability: {
+      id: 'shadow_walk',
+      name: 'Shadow Walk',
+      description: 'Moves through darkness to find carrots',
+      type: 'passive',
+      value: 100,
+      target: 'all',
+    },
+  },
 ];
 
 /**
- * All starter rabbits combined
- * Total: 15 rabbits (8 Common, 5 Uncommon, 2 Rare)
+ * EPIC RABBITS (2 total)
+ * Rarity: Epic | CPS Range: 800-1500
+ * Extremely rare, game-changing rabbits
+ */
+const EPIC_RABBITS: RabbitData[] = [
+  {
+    id: 'phoenix',
+    name: 'Phoenix',
+    rarity: 'epic',
+    description: 'Legendary firebird rabbit reborn from flames. Its presence ignites passion in all nearby rabbits.',
+    baseCPS: 1000,
+    favoriteFood: 'Phoenix Fire Carrots',
+    image: '/assets/images/rabbits/phoenix.png',
+    ability: {
+      id: 'rebirth_flames',
+      name: 'Rebirth Flames',
+      description: 'Flames of rebirth triple team production',
+      type: 'passive',
+      value: 200,
+      target: 'all',
+    },
+  },
+  {
+    id: 'titan',
+    name: 'Titan',
+    rarity: 'epic',
+    description: 'Colossal ancient rabbit of immense power. Legends say it created the first carrot fields.',
+    baseCPS: 1400,
+    favoriteFood: 'Titan-Sized Carrots',
+    image: '/assets/images/rabbits/titan.png',
+    ability: {
+      id: 'titans_strength',
+      name: "Titan's Strength",
+      description: 'Ancient power quadruples all production',
+      type: 'passive',
+      value: 300,
+      target: 'all',
+    },
+  },
+];
+
+/**
+ * LEGENDARY RABBITS (1 total)
+ * Rarity: Legendary | CPS Range: 2000+
+ * The rarest and most powerful rabbit
+ */
+const LEGENDARY_RABBITS: RabbitData[] = [
+  {
+    id: 'omega',
+    name: 'Omega',
+    rarity: 'legendary',
+    description: 'The Alpha and Omega of all rabbits. A being of pure energy that transcends reality itself. The ultimate carrot harvester.',
+    baseCPS: 2500,
+    favoriteFood: 'Omega Carrots',
+    image: '/assets/images/rabbits/omega.png',
+    ability: {
+      id: 'omega_transcendence',
+      name: 'Omega Transcendence',
+      description: 'Transcends all limits, multiplying production by 10×',
+      type: 'passive',
+      value: 900,
+      target: 'all',
+    },
+  },
+];
+
+/**
+ * All rabbits combined
+ * Total: 30 rabbits (12 Common, 10 Uncommon, 5 Rare, 2 Epic, 1 Legendary)
  */
 export const RABBITS: RabbitData[] = [
   ...COMMON_RABBITS,
   ...UNCOMMON_RABBITS,
   ...RARE_RABBITS,
+  ...EPIC_RABBITS,
+  ...LEGENDARY_RABBITS,
 ];
 
 /**
@@ -352,4 +625,20 @@ export function getUncommonRabbits(): RabbitData[] {
  */
 export function getRareRabbits(): RabbitData[] {
   return RARE_RABBITS;
+}
+
+/**
+ * Get all epic rabbits
+ * @returns Array of epic rabbits
+ */
+export function getEpicRabbits(): RabbitData[] {
+  return EPIC_RABBITS;
+}
+
+/**
+ * Get all legendary rabbits
+ * @returns Array of legendary rabbits
+ */
+export function getLegendaryRabbits(): RabbitData[] {
+  return LEGENDARY_RABBITS;
 }
