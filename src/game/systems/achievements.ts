@@ -237,7 +237,7 @@ export function updateCrateAchievementProgress(crateType?: string): void {
   ];
 
   crateAchievements.forEach(({ id, target }) => {
-    if (!achievementState.isUnlocked(id) && newCratesOpened >= target) {
+    if (!achievementState.isUnlocked(id)) {
       achievementState.updateProgress(id, newCratesOpened);
     }
   });
