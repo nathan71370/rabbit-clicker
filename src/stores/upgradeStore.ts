@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useGameStore } from './gameStore';
+import { useRabbitStore } from './rabbitStore';
 import { getUpgradeById } from '@/game/data/upgrades';
 import { getBuildingById, calculateBuildingCost } from '@/game/data/buildings';
 import { playSound } from '@/utils/sounds';
@@ -130,18 +131,28 @@ export const useUpgradeStore = create<UpgradeState>()(
           return false;
         }
 
-        // Check if affordable
-        if (!state.canAfford(upgrade.currentCost)) {
-          console.warn(`Cannot afford upgrade: ${upgradeId}`);
-          return false;
+        const gameState = useGameStore.getState();
+        let purchaseSuccess = false;
+
+        // Handle different currency types
+        if (upgrade.goldenCarrotCost && upgrade.goldenCarrotCost > 0) {
+          // This upgrade costs golden carrots
+          if (gameState.goldenCarrots < upgrade.goldenCarrotCost) {
+            console.warn(`Cannot afford upgrade (golden carrots): ${upgradeId}`);
+            return false;
+          }
+          purchaseSuccess = gameState.spendGoldenCarrots(upgrade.goldenCarrotCost);
+        } else {
+          // This upgrade costs regular carrots
+          if (!state.canAfford(upgrade.currentCost)) {
+            console.warn(`Cannot afford upgrade: ${upgradeId}`);
+            return false;
+          }
+          purchaseSuccess = gameState.spendCarrots(upgrade.currentCost);
         }
 
-        // Spend carrots
-        const gameState = useGameStore.getState();
-        const purchaseSuccess = gameState.spendCarrots(upgrade.currentCost);
-
         if (!purchaseSuccess) {
-          console.error(`Failed to spend carrots for upgrade: ${upgradeId}`);
+          console.error(`Failed to spend currency for upgrade: ${upgradeId}`);
           return false;
         }
 
@@ -152,6 +163,15 @@ export const useUpgradeStore = create<UpgradeState>()(
         set({
           purchasedUpgrades: newPurchasedUpgrades,
         });
+
+        // Apply special upgrade effects
+        if (upgrade.type === 'special') {
+          if (upgradeId.startsWith('extra_team_slot')) {
+            // Increase max team size
+            const rabbitStore = useRabbitStore.getState();
+            rabbitStore.increaseMaxTeamSize(upgrade.effect);
+          }
+        }
 
         // Recalculate multipliers
         get().recalculateMultipliers();

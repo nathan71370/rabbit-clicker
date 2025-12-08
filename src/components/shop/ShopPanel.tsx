@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGameStore } from '@/stores/gameStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { useRabbitStore } from '@/stores/rabbitStore';
-import { getClickUpgrades, getAutoClickerUpgrades, getCPSMultiplierUpgrades } from '@/game/data/upgrades';
+import { getClickUpgrades, getAutoClickerUpgrades, getCPSMultiplierUpgrades, getSpecialUpgrades } from '@/game/data/upgrades';
 import { getCommonRabbits } from '@/game/data/rabbits';
 import { BUILDINGS, getUnlockedBuildings, calculateBuildingCost } from '@/game/data/buildings';
 import { RABBIT_PURCHASE_COST } from '@/game/data/constants';
@@ -22,7 +22,7 @@ interface ShopPanelProps {
  * Displays available upgrades and handles purchases
  */
 export function ShopPanel({ onPurchase }: ShopPanelProps) {
-  const { carrots, spendCarrots, lifetimeCarrots } = useGameStore();
+  const { carrots, goldenCarrots, spendCarrots, lifetimeCarrots } = useGameStore();
   const {
     purchaseUpgrade,
     canAfford,
@@ -39,6 +39,7 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
   const clickUpgrades = getClickUpgrades();
   const autoClickerUpgrades = getAutoClickerUpgrades();
   const cpsMultiplierUpgrades = getCPSMultiplierUpgrades();
+  const specialUpgrades = getSpecialUpgrades();
   const commonRabbits = getCommonRabbits();
   const unlockedBuildings = getUnlockedBuildings(lifetimeCarrots);
 
@@ -245,6 +246,36 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
             {cpsMultiplierUpgrades.map((upgrade) => {
               const affordable = canAfford(upgrade.currentCost);
+              const purchased = isPurchased(upgrade.id);
+              const requirementsMet = checkRequirements(upgrade.id);
+
+              return (
+                <UpgradeCard
+                  key={upgrade.id}
+                  upgrade={upgrade}
+                  isAffordable={affordable}
+                  isPurchased={purchased}
+                  onPurchase={handlePurchase}
+                  requirementsMet={requirementsMet}
+                />
+              );
+            })}
+          </div>
+
+          {/* Special Upgrades Section */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
+              <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+                Special Upgrades
+              </h3>
+              <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
+            </div>
+
+            {specialUpgrades.map((upgrade) => {
+              const affordable = upgrade.goldenCarrotCost
+                ? goldenCarrots >= upgrade.goldenCarrotCost
+                : canAfford(upgrade.currentCost);
               const purchased = isPurchased(upgrade.id);
               const requirementsMet = checkRequirements(upgrade.id);
 

@@ -31,6 +31,7 @@ interface RabbitState {
   removeFromTeam: (rabbitId: string) => void;
   getActiveRabbits: () => Rabbit[];
   isInActiveTeam: (rabbitId: string) => boolean;
+  increaseMaxTeamSize: (amount: number) => void;
 
   // Calculations
   getTotalCPS: () => number;
@@ -262,6 +263,16 @@ export const useRabbitStore = create<RabbitState>()(
        */
       isInActiveTeam: (rabbitId: string) => {
         return get().activeTeam.includes(rabbitId);
+      },
+
+      /**
+       * Increase the maximum team size
+       * @param amount - Amount to increase max team size by
+       */
+      increaseMaxTeamSize: (amount: number) => {
+        set((state) => ({
+          maxTeamSize: state.maxTeamSize + amount,
+        }));
       },
 
       // Calculations

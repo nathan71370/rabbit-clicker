@@ -23,6 +23,8 @@ export interface Upgrade {
   baseCost: number;
   /** Current cost (may increase with purchases) */
   currentCost: number;
+  /** Optional cost in golden carrots (for special upgrades) */
+  goldenCarrotCost?: number;
   /** Effect value (multiplier, flat bonus, etc.) */
   effect: number;
   /** Maximum purchase count (null for unlimited) */

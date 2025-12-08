@@ -33,6 +33,18 @@ export function UpgradeCard({
         return `${upgrade.effect}× Production`;
       case 'building':
         return `${upgrade.effect}× Building Power`;
+      case 'special':
+        // Special upgrades have various effects
+        if (upgrade.id.startsWith('extra_team_slot')) {
+          return `+${upgrade.effect} Team Slot`;
+        } else if (upgrade.id === 'offline_boost') {
+          return `${upgrade.effect * 100}% Offline Production`;
+        } else if (upgrade.id === 'crate_luck') {
+          return `+${upgrade.effect * 100}% Crate Luck`;
+        } else if (upgrade.id === 'golden_touch') {
+          return `${upgrade.effect * 100}% Spent → CPS`;
+        }
+        return `${upgrade.effect}× Effect`;
       default:
         return `${upgrade.effect}× Effect`;
     }
@@ -92,11 +104,20 @@ export function UpgradeCard({
             </div>
             <div
               className={`font-bold text-xl flex items-center gap-1 ${
-                isAffordable ? 'text-carrot' : 'text-gray-400'
+                isAffordable ? (upgrade.goldenCarrotCost ? 'text-yellow-500' : 'text-carrot') : 'text-gray-400'
               }`}
             >
-              <span className="text-base">🥕</span>
-              <span>{formatNumber(upgrade.currentCost)}</span>
+              {upgrade.goldenCarrotCost && upgrade.goldenCarrotCost > 0 ? (
+                <>
+                  <span className="text-base">🥇</span>
+                  <span>{formatNumber(upgrade.goldenCarrotCost)}</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-base">🥕</span>
+                  <span>{formatNumber(upgrade.currentCost)}</span>
+                </>
+              )}
             </div>
           </div>
 

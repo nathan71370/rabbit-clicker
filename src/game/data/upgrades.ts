@@ -368,7 +368,7 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
  * @returns Upgrade object or undefined if not found
  */
 export function getUpgradeById(upgradeId: string): Upgrade | undefined {
-  const allUpgrades = [...CLICK_UPGRADES, ...AUTO_CLICKER_UPGRADES, ...CPS_MULTIPLIER_UPGRADES];
+  const allUpgrades = [...CLICK_UPGRADES, ...AUTO_CLICKER_UPGRADES, ...CPS_MULTIPLIER_UPGRADES, ...SPECIAL_UPGRADES];
   return allUpgrades.find((upgrade) => upgrade.id === upgradeId);
 }
 
@@ -394,4 +394,222 @@ export function getAutoClickerUpgrades(): Upgrade[] {
  */
 export function getCPSMultiplierUpgrades(): Upgrade[] {
   return CPS_MULTIPLIER_UPGRADES;
+}
+
+/**
+ * Special Upgrades
+ * Unique one-time upgrades with special effects
+ * Some cost Golden Carrots instead of regular carrots
+ */
+export const SPECIAL_UPGRADES: Upgrade[] = [
+  // Extra Team Slot upgrades (7 total)
+  {
+    id: 'extra_team_slot_1',
+    name: 'Extra Team Slot I',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'extra_team_slot_2',
+    name: 'Extra Team Slot II',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+    requirements: [
+      {
+        type: 'upgrade_purchased',
+        target: 'extra_team_slot_1',
+        progress: 0,
+        isMet: false,
+      },
+    ],
+  },
+  {
+    id: 'extra_team_slot_3',
+    name: 'Extra Team Slot III',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+    requirements: [
+      {
+        type: 'upgrade_purchased',
+        target: 'extra_team_slot_2',
+        progress: 0,
+        isMet: false,
+      },
+    ],
+  },
+  {
+    id: 'extra_team_slot_4',
+    name: 'Extra Team Slot IV',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+    requirements: [
+      {
+        type: 'upgrade_purchased',
+        target: 'extra_team_slot_3',
+        progress: 0,
+        isMet: false,
+      },
+    ],
+  },
+  {
+    id: 'extra_team_slot_5',
+    name: 'Extra Team Slot V',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+    requirements: [
+      {
+        type: 'upgrade_purchased',
+        target: 'extra_team_slot_4',
+        progress: 0,
+        isMet: false,
+      },
+    ],
+  },
+  {
+    id: 'extra_team_slot_6',
+    name: 'Extra Team Slot VI',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+    requirements: [
+      {
+        type: 'upgrade_purchased',
+        target: 'extra_team_slot_5',
+        progress: 0,
+        isMet: false,
+      },
+    ],
+  },
+  {
+    id: 'extra_team_slot_7',
+    name: 'Extra Team Slot VII',
+    description: 'Expand your rabbit team by 1 slot. Allows more rabbits to work together!',
+    type: 'special',
+    baseCost: 25000,
+    currentCost: 25000,
+    effect: 1, // +1 team slot
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🔓',
+    isAffordable: false,
+    isMaxed: false,
+    requirements: [
+      {
+        type: 'upgrade_purchased',
+        target: 'extra_team_slot_6',
+        progress: 0,
+        isMet: false,
+      },
+    ],
+  },
+  // Golden Carrot upgrades
+  {
+    id: 'offline_boost',
+    name: 'Offline Boost',
+    description: 'Increase offline production from 50% to 75% of normal rate. Keep earning while away!',
+    type: 'special',
+    baseCost: 0,
+    currentCost: 0,
+    goldenCarrotCost: 50,
+    effect: 0.75, // 75% offline production
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🌙',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'crate_luck',
+    name: 'Crate Luck',
+    description: 'Improve your crate luck! Increases the chance of getting rarer rabbits by 10%.',
+    type: 'special',
+    baseCost: 0,
+    currentCost: 0,
+    goldenCarrotCost: 100,
+    effect: 0.10, // +10% rarity chance
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '🍀',
+    isAffordable: false,
+    isMaxed: false,
+  },
+  {
+    id: 'golden_touch',
+    name: 'Golden Touch',
+    description: 'Transform 1% of all spent carrots into permanent CPS. Every purchase makes you stronger!',
+    type: 'special',
+    baseCost: 500000,
+    currentCost: 500000,
+    effect: 0.01, // 1% of spent carrots → CPS
+    maxPurchases: 1,
+    purchaseCount: 0,
+    costScaling: 1.0,
+    icon: '👑',
+    isAffordable: false,
+    isMaxed: false,
+  },
+];
+
+/**
+ * Get all special upgrades
+ * @returns Array of special upgrades
+ */
+export function getSpecialUpgrades(): Upgrade[] {
+  return SPECIAL_UPGRADES;
 }
