@@ -5,6 +5,17 @@ import { ACHIEVEMENTS, getAchievementById } from '@/game/data/achievements';
 import type { Achievement } from '@/types/achievement';
 
 /**
+ * Achievement with runtime tracking data
+ * Extends base Achievement with isUnlocked and unlockedAt fields
+ */
+export interface AchievementWithProgress extends Achievement {
+  /** Whether achievement is unlocked (overrides base type) */
+  isUnlocked: boolean;
+  /** Timestamp when achievement was unlocked (overrides base type) */
+  unlockedAt: number | null;
+}
+
+/**
  * Achievement Store State Interface
  * Manages achievement tracking, progress, and rewards
  */
@@ -14,6 +25,8 @@ interface AchievementState {
   unlockedAchievements: Set<string>;
   /** Map of achievement ID to current progress value */
   achievementProgress: Map<string, number>;
+  /** Map of achievement ID to unlock timestamp */
+  unlockTimestamps: Map<string, number>;
   /** Timestamp of last achievement check */
   lastCheckTime: number;
 
@@ -33,7 +46,7 @@ interface AchievementState {
   /** Get all unlocked achievement IDs */
   getUnlockedIds: () => string[];
   /** Get achievement with current progress */
-  getAchievementWithProgress: (achievementId: string) => Achievement | null;
+  getAchievementWithProgress: (achievementId: string) => AchievementWithProgress | null;
 }
 
 /**
@@ -46,6 +59,7 @@ export const useAchievementStore = create<AchievementState>()(
       // Initial state
       unlockedAchievements: new Set<string>(),
       achievementProgress: new Map<string, number>(),
+      unlockTimestamps: new Map<string, number>(),
       lastCheckTime: Date.now(),
 
       /**
@@ -129,12 +143,16 @@ export const useAchievementStore = create<AchievementState>()(
           return false;
         }
 
-        // Add to unlocked achievements
+        // Add to unlocked achievements and record timestamp
         const newUnlockedAchievements = new Set(state.unlockedAchievements);
         newUnlockedAchievements.add(achievementId);
 
+        const newUnlockTimestamps = new Map(state.unlockTimestamps);
+        newUnlockTimestamps.set(achievementId, Date.now());
+
         set({
           unlockedAchievements: newUnlockedAchievements,
+          unlockTimestamps: newUnlockTimestamps,
         });
 
         // Award rewards
@@ -254,7 +272,7 @@ export const useAchievementStore = create<AchievementState>()(
        * @param achievementId - Achievement identifier
        * @returns Achievement object with current progress, or null if not found
        */
-      getAchievementWithProgress: (achievementId: string) => {
+      getAchievementWithProgress: (achievementId: string): AchievementWithProgress | null => {
         const achievement = getAchievementById(achievementId);
         if (!achievement) {
           return null;
@@ -263,6 +281,7 @@ export const useAchievementStore = create<AchievementState>()(
         const state = get();
         const currentProgress = state.getProgress(achievementId);
         const isUnlocked = state.isUnlocked(achievementId);
+        const unlockedAt = state.unlockTimestamps.get(achievementId) || null;
 
         // Return achievement with updated progress
         return {
@@ -273,7 +292,7 @@ export const useAchievementStore = create<AchievementState>()(
             percentage: Math.min((currentProgress / achievement.progress.target) * 100, 100),
           },
           isUnlocked,
-          unlockedAt: isUnlocked ? Date.now() : null,
+          unlockedAt,
         };
       },
     }),
@@ -287,6 +306,8 @@ export const useAchievementStore = create<AchievementState>()(
           state.achievementProgress instanceof Map
             ? Object.fromEntries(state.achievementProgress)
             : {},
+        unlockTimestamps:
+          state.unlockTimestamps instanceof Map ? Object.fromEntries(state.unlockTimestamps) : {},
         lastCheckTime: state.lastCheckTime,
       }),
       // Custom deserialization for Set and Map
@@ -294,6 +315,7 @@ export const useAchievementStore = create<AchievementState>()(
         const persisted = persistedState as {
           unlockedAchievements?: string[];
           achievementProgress?: Record<string, number>;
+          unlockTimestamps?: Record<string, number>;
           lastCheckTime?: number;
         };
 
@@ -301,6 +323,7 @@ export const useAchievementStore = create<AchievementState>()(
           ...currentState,
           unlockedAchievements: new Set(persisted.unlockedAchievements || []),
           achievementProgress: new Map(Object.entries(persisted.achievementProgress || {})),
+          unlockTimestamps: new Map(Object.entries(persisted.unlockTimestamps || {})),
           lastCheckTime: persisted.lastCheckTime ?? currentState.lastCheckTime,
         };
       },
