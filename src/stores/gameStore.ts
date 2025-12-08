@@ -19,6 +19,7 @@ interface GameState {
   totalClicks: number;
   lastSaveTime: number;
   lastPlayTime: number;
+  gameSessionStartTime: number;
 
   // Actions
   addCarrots: (amount: number) => void;
@@ -28,6 +29,7 @@ interface GameState {
   click: () => void;
   tick: (deltaTime: number) => void;
   calculateOfflineProgress: () => void;
+  resetSessionStartTime: () => void;
 }
 
 /**
@@ -46,6 +48,7 @@ export const useGameStore = create<GameState>()(
       totalClicks: 0,
       lastSaveTime: Date.now(),
       lastPlayTime: Date.now(),
+      gameSessionStartTime: Date.now(),
 
       // Actions
       /**
@@ -186,6 +189,14 @@ export const useGameStore = create<GameState>()(
           // Update lastPlayTime even if no production
           set({ lastPlayTime: now });
         }
+      },
+
+      /**
+       * Reset the session start time
+       * Called when starting a new game session (e.g., after prestige)
+       */
+      resetSessionStartTime: () => {
+        set({ gameSessionStartTime: Date.now() });
       },
     }),
     {
