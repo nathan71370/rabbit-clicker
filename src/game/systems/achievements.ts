@@ -207,11 +207,12 @@ function checkSpecialAchievements(
     achievementState.updateProgress('max_level', maxRabbitLevel);
   }
 
-  // Prestige, speed run, and idle achievements are tracked separately
-  // as they require special timing/event detection:
-  // - first_prestige: Triggered when prestige() is called
-  // - speed_runner: Requires tracking game start time and checking if 1M carrots reached within 1 hour
-  // - idle_master: Requires tracking offline earnings when calculateOfflineProgress() is called
+  // Speed run achievement - automatically checked here
+  checkSpeedRunAchievement();
+
+  // Note: Other special achievements require manual triggering:
+  // - first_prestige: Call updatePrestigeAchievement() when prestige() is performed
+  // - idle_master: Call checkIdleMasterAchievement() when calculateOfflineProgress() runs
 }
 
 /**
@@ -261,10 +262,10 @@ export function updatePrestigeAchievement(): void {
 
 /**
  * Check speed run achievement
- * Call this when player reaches 1M carrots
- * @param gameStartTime - Timestamp when the current game/run started
+ * Automatically reads session start time from game store, or accepts optional override
+ * @param gameStartTime - Optional timestamp override (falls back to store value)
  */
-export function checkSpeedRunAchievement(gameStartTime: number): void {
+export function checkSpeedRunAchievement(gameStartTime?: number): void {
   const achievementState = useAchievementStore.getState();
   const gameState = useGameStore.getState();
 
@@ -272,10 +273,19 @@ export function checkSpeedRunAchievement(gameStartTime: number): void {
     return;
   }
 
+  // Use provided gameStartTime or fall back to store value
+  const sessionStartTime = gameStartTime ?? gameState.gameSessionStartTime;
+
+  // Guard: if no valid start time, cannot check speed run
+  if (!sessionStartTime || !Number.isFinite(sessionStartTime)) {
+    return;
+  }
+
   const { lifetimeCarrots } = gameState;
 
+  // Only check if player has reached 1M carrots
   if (lifetimeCarrots >= 1000000) {
-    const elapsedTime = Date.now() - gameStartTime;
+    const elapsedTime = Date.now() - sessionStartTime;
     const oneHourMs = 60 * 60 * 1000;
 
     if (elapsedTime <= oneHourMs) {
