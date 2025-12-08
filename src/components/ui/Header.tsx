@@ -12,7 +12,7 @@ interface HeaderProps {
  * Top header bar showing currencies and action buttons
  */
 export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
-  const { carrots } = useGameStore();
+  const { carrots, goldenCarrots } = useGameStore();
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-20 shadow-sm">
@@ -35,12 +35,14 @@ export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
             </div>
           </div>
 
-          {/* Golden Carrots (placeholder - always 0 for now) */}
+          {/* Golden Carrots */}
           <div className="flex items-center gap-2 bg-yellow-100 px-3 py-2 rounded-lg">
-            <span className="text-2xl" aria-hidden="true">✨</span>
+            <span className="text-2xl" aria-hidden="true">🥇</span>
             <div className="flex flex-col">
               <span className="text-xs text-gray-600 hidden sm:block">Golden</span>
-              <span className="font-bold text-yellow-600">0</span>
+              <span className="font-bold text-yellow-600">
+                {formatNumber(Math.floor(goldenCarrots))}
+              </span>
             </div>
           </div>
 
