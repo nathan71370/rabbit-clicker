@@ -71,13 +71,15 @@ export function AchievementList({ onClose }: AchievementListProps) {
         break;
 
       case 'tier':
-        const tierOrder = { bronze: 0, silver: 1, gold: 2, platinum: 3, diamond: 4 };
-        sorted.sort((a, b) => {
-          const tierDiff = tierOrder[b.tier] - tierOrder[a.tier]; // Highest tier first
-          if (tierDiff !== 0) return tierDiff;
-          return a.sortOrder - b.sortOrder;
-        });
-        break;
+        {
+          const tierOrder = { bronze: 0, silver: 1, gold: 2, platinum: 3, diamond: 4 };
+          sorted.sort((a, b) => {
+            const tierDiff = tierOrder[b.tier] - tierOrder[a.tier]; // Highest tier first
+            if (tierDiff !== 0) return tierDiff;
+            return a.sortOrder - b.sortOrder;
+          });
+          break;
+        }
     }
 
     return sorted;
