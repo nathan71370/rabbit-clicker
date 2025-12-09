@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { checkAllAchievements } from '@/game/systems/achievements';
 
 /**
  * Game Store State Interface
@@ -151,6 +152,9 @@ export const useGameStore = create<GameState>()(
             lastPlayTime: Date.now(),
           };
         });
+
+        // Check achievements after state update
+        checkAllAchievements();
       },
 
       /**

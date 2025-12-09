@@ -236,7 +236,7 @@ export function updateCrateAchievementProgress(crateType?: string): void {
     { id: 'gacha_king', target: 1000 },
   ];
 
-  crateAchievements.forEach(({ id, target }) => {
+  crateAchievements.forEach(({ id }) => {
     if (!achievementState.isUnlocked(id)) {
       achievementState.updateProgress(id, newCratesOpened);
     }

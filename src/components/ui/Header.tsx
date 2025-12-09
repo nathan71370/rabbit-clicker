@@ -52,13 +52,13 @@ export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
 
         {/* Right: Action Buttons */}
         <div className="flex items-center gap-2">
-          {/* Achievements Button (placeholder) */}
+          {/* Achievements Button */}
           {onAchievementsClick && (
             <button
               onClick={onAchievementsClick}
               aria-label="View achievements"
               className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Achievements (Coming Soon)"
+              title="Achievements"
             >
               <span className="text-2xl">🏆</span>
             </button>

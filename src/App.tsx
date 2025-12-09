@@ -3,6 +3,7 @@ import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
 import { RabbitTeam } from '@/components/rabbits';
 import { CrateShop } from '@/components/crates';
+import { AchievementList } from '@/components/achievements';
 import {
   ProductionDisplay,
   SavingIndicator,
@@ -21,6 +22,7 @@ import { loadGame } from '@/services';
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('clicker');
 
   // Load saved game on initialization
@@ -60,10 +62,18 @@ function App() {
       <SavingIndicator isSaving={isSaving} />
 
       {/* Header */}
-      <Header onSettingsClick={() => setIsSettingsOpen(true)} />
+      <Header
+        onSettingsClick={() => setIsSettingsOpen(true)}
+        onAchievementsClick={() => setIsAchievementsOpen(true)}
+      />
 
       {/* Settings Modal */}
       <Settings isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+
+      {/* Achievements Modal */}
+      {isAchievementsOpen && (
+        <AchievementList onClose={() => setIsAchievementsOpen(false)} />
+      )}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 pt-24 pb-20 md:pb-8">
