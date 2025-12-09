@@ -160,6 +160,11 @@ export const useAchievementStore = create<AchievementState>()(
 
         console.log(`Achievement unlocked: ${achievement.name}`);
 
+        // Show toast notification
+        if (typeof window !== 'undefined' && (window as any).showAchievementToast) {
+          (window as any).showAchievementToast(achievement);
+        }
+
         return true;
       },
 

@@ -3,7 +3,7 @@ import { CarrotClicker } from '@/components/clicker/CarrotClicker';
 import { ShopPanel } from '@/components/shop/ShopPanel';
 import { RabbitTeam } from '@/components/rabbits';
 import { CrateShop } from '@/components/crates';
-import { AchievementList } from '@/components/achievements';
+import { AchievementList, AchievementToast } from '@/components/achievements';
 import {
   ProductionDisplay,
   SavingIndicator,
@@ -60,6 +60,9 @@ function App() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Saving Indicator */}
       <SavingIndicator isSaving={isSaving} />
+
+      {/* Achievement Toast Notifications */}
+      <AchievementToast />
 
       {/* Header */}
       <Header
