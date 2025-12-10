@@ -40,14 +40,28 @@ export function AchievementToast() {
   /**
    * Dismiss the current toast
    */
+  const exitTimeoutRef = useRef<number | null>(null);
+
   const dismissToast = useCallback(() => {
     setIsExiting(true);
 
-    // Wait for exit animation to complete
-    setTimeout(() => {
+    if (exitTimeoutRef.current !== null) {
+      clearTimeout(exitTimeoutRef.current);
+    }
+
+    exitTimeoutRef.current = window.setTimeout(() => {
       setCurrentToast(null);
       setIsExiting(false);
+      exitTimeoutRef.current = null;
     }, 300); // Match animation duration
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        clearTimeout(exitTimeoutRef.current);
+      }
+    };
   }, []);
 
   /**
