@@ -56,9 +56,9 @@ export function AchievementToast() {
    */
   useEffect(() => {
     if (!currentToast && toastQueue.length > 0) {
-      const [nextToast, ...remainingQueue] = toastQueue;
+      const [nextToast] = toastQueue;
       setCurrentToast(nextToast);
-      setToastQueue(remainingQueue);
+      setToastQueue((prev) => prev.slice(1));
     }
   }, [currentToast, toastQueue]);
 
