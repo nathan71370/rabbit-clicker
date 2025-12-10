@@ -52,23 +52,28 @@ export function AchievementToast() {
 
   /**
    * Process toast queue
-   * Shows next toast when current one is dismissed
+   * When there is no current toast, show the next one in the queue (if any)
    */
   useEffect(() => {
     if (!currentToast && toastQueue.length > 0) {
-      // Show next toast in queue
       const [nextToast, ...remainingQueue] = toastQueue;
       setCurrentToast(nextToast);
       setToastQueue(remainingQueue);
-
-      // Auto-dismiss after 5 seconds
-      const timer = setTimeout(() => {
-        dismissToast();
-      }, 5000);
-
-      return () => clearTimeout(timer);
     }
-  }, [currentToast, toastQueue, dismissToast]);
+  }, [currentToast, toastQueue]);
+
+  /**
+   * Auto-dismiss the currently visible toast after 5 seconds
+   */
+  useEffect(() => {
+    if (!currentToast) return;
+
+    const timer = setTimeout(() => {
+      dismissToast();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [currentToast, dismissToast]);
 
   /**
    * Expose showToast globally for achievement system
@@ -102,7 +107,6 @@ export function AchievementToast() {
       <button
         onClick={dismissToast}
         className="bg-gradient-to-br from-yellow-400 via-orange-400 to-orange-500 text-white rounded-lg shadow-2xl p-4 pr-6 flex items-center gap-3 min-w-[280px] max-w-[400px] hover:shadow-3xl transition-shadow cursor-pointer border-2 border-yellow-300"
-        aria-label="Dismiss achievement notification"
       >
         {/* Achievement Icon */}
         <div className="bg-white bg-opacity-20 rounded-lg p-3 flex-shrink-0">
