@@ -96,10 +96,10 @@ export function AchievementToast() {
    */
   useEffect(() => {
     // Attach to window for global access
-    (window as any).showAchievementToast = showToast;
+    window.showAchievementToast = showToast;
 
     return () => {
-      delete (window as any).showAchievementToast;
+      delete window.showAchievementToast;
     };
   }, [showToast]);
 
@@ -111,6 +111,9 @@ export function AchievementToast() {
 
   return (
     <div
+      role="alert"
+      aria-live="polite"
+      aria-atomic="true"
       className={`fixed top-20 right-4 z-50 transition-all duration-300 ease-out ${
         isExiting
           ? 'translate-x-full opacity-0'
