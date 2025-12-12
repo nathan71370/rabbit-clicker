@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Achievement } from '@/types/achievement';
 
 interface ToastData {
@@ -22,6 +22,7 @@ export function AchievementToast() {
   const [toastQueue, setToastQueue] = useState<ToastData[]>([]);
   const [currentToast, setCurrentToast] = useState<ToastData | null>(null);
   const [isExiting, setIsExiting] = useState(false);
+  const exitTimeoutRef = useRef<number | null>(null);
 
   /**
    * Show a new achievement toast
@@ -40,8 +41,6 @@ export function AchievementToast() {
   /**
    * Dismiss the current toast
    */
-  const exitTimeoutRef = useRef<number | null>(null);
-
   const dismissToast = useCallback(() => {
     setIsExiting(true);
 
@@ -54,14 +53,6 @@ export function AchievementToast() {
       setIsExiting(false);
       exitTimeoutRef.current = null;
     }, 300); // Match animation duration
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (exitTimeoutRef.current !== null) {
-        clearTimeout(exitTimeoutRef.current);
-      }
-    };
   }, []);
 
   /**
@@ -88,6 +79,17 @@ export function AchievementToast() {
 
     return () => clearTimeout(timer);
   }, [currentToast, dismissToast]);
+
+  /**
+   * Cleanup exit timer on unmount
+   */
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) {
+        clearTimeout(exitTimeoutRef.current);
+      }
+    };
+  }, []);
 
   /**
    * Expose showToast globally for achievement system
