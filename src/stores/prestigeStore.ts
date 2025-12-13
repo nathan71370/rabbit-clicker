@@ -24,7 +24,7 @@ interface PrestigeState {
   getPrestigeBonus: () => number;
   /** Check if player can prestige (has 1 billion+ lifetime carrots in current run) */
   canPrestige: (currentRunCarrots: number) => boolean;
-  /** Add carrots to total lifetime counter (called when carrots are earned) */
+  /** Add carrots to total lifetime counter (for special cases only - see performPrestige) */
   addLifetimeCarrots: (amount: number) => void;
 }
 
@@ -128,9 +128,23 @@ export const usePrestigeStore = create<PrestigeState>()(
 
       /**
        * Add carrots to total lifetime counter
-       * This tracks carrots earned across ALL runs
-       * Note: This is separate from the current run's lifetime carrots
+       *
+       * ⚠️ WARNING: This method should NOT be called during normal gameplay!
+       *
+       * The totalLifetimeCarrots counter is automatically updated by performPrestige()
+       * when a prestige occurs (see line 94). Calling this method during normal gameplay
+       * will cause double-counting of carrots.
+       *
+       * This method is reserved for special cases only:
+       * - Admin/debug commands to manually adjust lifetime totals
+       * - Data corrections or migrations
+       * - Future features that grant bonus lifetime carrots outside of prestige
+       *
+       * During a run, carrots are tracked in gameStore.lifetimeCarrots (current run only).
+       * When prestiging, performPrestige() adds the run's total to this global counter.
+       *
        * @param amount - Number of carrots to add to lifetime total
+       * @see performPrestige - Line 94 where totalLifetimeCarrots is normally updated
        */
       addLifetimeCarrots: (amount: number) => {
         if (!Number.isFinite(amount) || amount < 0) {
