@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Achievement } from '@/types/achievement';
+import { playAchievementUnlockSound } from '@/utils/achievementSounds';
 
 interface ToastData {
   id: string;
@@ -27,6 +28,7 @@ export function AchievementToast() {
   /**
    * Show a new achievement toast
    * Adds to queue if toast is already showing
+   * Plays achievement unlock sound
    */
   const showToast = useCallback((achievement: Achievement) => {
     const newToast: ToastData = {
@@ -34,6 +36,9 @@ export function AchievementToast() {
       achievement,
       timestamp: Date.now(),
     };
+
+    // Play achievement unlock sound
+    playAchievementUnlockSound();
 
     setToastQueue((prev) => [...prev, newToast]);
   }, []);
