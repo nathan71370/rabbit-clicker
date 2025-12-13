@@ -5,55 +5,41 @@ import { CPS_MULTIPLIER_UPGRADES } from '@/game/data/upgrades';
 import { getBuildingById } from '@/game/data/buildings';
 
 /**
- * Calculate global production multiplier from buildings
- * Buildings with 'multiplier' special effect boost ALL production
- */
-function calculateGlobalMultiplier(): number {
-  const upgradeState = useUpgradeStore.getState();
-  let multiplier = 1.0;
-
-  upgradeState.buildings.forEach((count, buildingId) => {
-    if (count === 0) return;
-
-    const buildingData = getBuildingById(buildingId);
-    if (!buildingData) return;
-
-    if (buildingData.specialEffect?.type === 'multiplier') {
-      multiplier += count * buildingData.specialEffect.value;
-    }
-  });
-
-  return multiplier;
-}
-
-/**
- * Calculate CPS multiplier from purchased upgrades
- * CPS multiplier upgrades stack multiplicatively
- */
-function calculateCPSMultiplier(): number {
-  const upgradeState = useUpgradeStore.getState();
-  let multiplier = 1.0;
-
-  CPS_MULTIPLIER_UPGRADES.forEach((upgrade) => {
-    if (upgradeState.purchasedUpgrades.has(upgrade.id)) {
-      multiplier *= upgrade.effect;
-    }
-  });
-
-  return multiplier;
-}
-
-/**
  * ProductionBreakdown Tooltip Component
  * Shows detailed CPS breakdown on hover
  * Displays breakdown by source: rabbits, buildings, auto-clickers, and multipliers
  */
 export function ProductionBreakdown() {
-  // Calculate breakdown and multipliers
-  // These functions access the stores internally and will trigger re-renders when stores update
+  // Calculate breakdown - this uses getState() internally but calculates all at once
   const breakdown = calculateProductionBreakdown();
-  const globalMultiplier = calculateGlobalMultiplier();
-  const cpsMultiplier = calculateCPSMultiplier();
+
+  // Subscribe to buildings state to calculate global multiplier
+  // This ensures the component re-renders when buildings change
+  const globalMultiplier = useUpgradeStore((state) => {
+    let multiplier = 1.0;
+    state.buildings.forEach((count, buildingId) => {
+      if (count === 0) return;
+      const buildingData = getBuildingById(buildingId);
+      if (!buildingData) return;
+      if (buildingData.specialEffect?.type === 'multiplier') {
+        multiplier += count * buildingData.specialEffect.value;
+      }
+    });
+    return multiplier;
+  });
+
+  // Subscribe to purchased upgrades to calculate CPS multiplier
+  // This ensures the component re-renders when upgrades are purchased
+  const cpsMultiplier = useUpgradeStore((state) => {
+    let multiplier = 1.0;
+    CPS_MULTIPLIER_UPGRADES.forEach((upgrade) => {
+      if (state.purchasedUpgrades.has(upgrade.id)) {
+        multiplier *= upgrade.effect;
+      }
+    });
+    return multiplier;
+  });
+
   const totalMultiplier = globalMultiplier * cpsMultiplier;
 
   return (
