@@ -5,9 +5,9 @@ Add the actual `achievement-unlock.mp3` file to this directory.
 
 ## Where to Get It
 Source from free sound libraries:
-- **Freesound.org**: https://freesound.org/search/?q=achievement+unlock
-- **Zapsplat.com**: https://www.zapsplat.com/sound-effect-category/game-sounds/
-- **Mixkit.co**: https://mixkit.co/free-sound-effects/game/
+- **Freesound.org**: <https://freesound.org/search/?q=achievement+unlock>
+- **Zapsplat.com**: <https://www.zapsplat.com/sound-effect-category/game-sounds/>
+- **Mixkit.co**: <https://mixkit.co/free-sound-effects/game/>
 
 ## Requirements
 - **Format**: MP3

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Achievement } from '@/types/achievement';
-import { playAchievementUnlockSound } from '@/utils/achievementSounds';
+import { playAchievementUnlockSound, preloadAchievementSounds } from '@/utils/achievementSounds';
 
 interface ToastData {
   id: string;
@@ -24,6 +24,13 @@ export function AchievementToast() {
   const [currentToast, setCurrentToast] = useState<ToastData | null>(null);
   const [isExiting, setIsExiting] = useState(false);
   const exitTimeoutRef = useRef<number | null>(null);
+
+  /**
+   * Preload achievement sounds on mount
+   */
+  useEffect(() => {
+    preloadAchievementSounds();
+  }, []);
 
   /**
    * Show a new achievement toast
