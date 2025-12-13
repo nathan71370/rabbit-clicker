@@ -77,6 +77,30 @@ Sound notification for duplicate rabbits.
 - Gentle chime
 - "Already have" sound
 
+### Achievement Unlock Sound (`achievement-unlock.mp3`)
+**Status:** 🟡 Required for RAB-80
+
+Celebratory sound when an achievement is unlocked.
+
+**Requirements:**
+- Format: MP3
+- Duration: ~500-1500ms
+- Volume: Medium (0.65 in sound manager)
+- Tone: Satisfying, positive, celebratory (not too loud or jarring)
+
+**Suggestions:**
+- Achievement fanfare
+- Success chime
+- Victory jingle
+- Level-up sound
+- Positive notification sound
+
+**Implementation Notes:**
+- Plays when achievement toast notification appears
+- Throttled to 1000ms to prevent sound spam
+- Should feel rewarding but not overwhelming
+- Can be sourced from free sound libraries (see above)
+
 ## Temporary Workaround
 
 Until actual sound files are added, the sound system will:
