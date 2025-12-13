@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
 import { formatNumber } from '@/utils/formatNumber';
+import { ProductionBreakdown } from '@/components/clicker/ProductionBreakdown';
 
 /**
  * ProductionDisplay Component
  * Displays the current carrots-per-second (CPS) production rate prominently
  * Features animated updates when the value changes
+ * Shows detailed breakdown tooltip on hover
  */
 export function ProductionDisplay() {
   const carrotsPerSecond = useGameStore((state) => state.carrotsPerSecond);
@@ -21,23 +23,28 @@ export function ProductionDisplay() {
           <span className="text-xs text-gray-500">Carrots per Second</span>
         </div>
 
-        {/* CPS Value with Animation */}
-        <motion.div
-          key={carrotsPerSecond}
-          initial={{ scale: 1.2, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{
-            type: 'spring',
-            stiffness: 500,
-            damping: 25,
-          }}
-          className="text-right"
-        >
-          <div className="text-4xl font-bold text-green-700">
-            {formatNumber(carrotsPerSecond)}
-          </div>
-          <div className="text-sm text-gray-500 mt-1">per second</div>
-        </motion.div>
+        {/* CPS Value with Animation and Tooltip */}
+        <div className="relative group">
+          <motion.div
+            key={carrotsPerSecond}
+            initial={{ scale: 1.2, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: 'spring',
+              stiffness: 500,
+              damping: 25,
+            }}
+            className="text-right cursor-help"
+          >
+            <div className="text-4xl font-bold text-green-700">
+              {formatNumber(carrotsPerSecond)}
+            </div>
+            <div className="text-sm text-gray-500 mt-1">per second</div>
+          </motion.div>
+
+          {/* Tooltip - appears on hover */}
+          <ProductionBreakdown />
+        </div>
       </div>
     </div>
   );
