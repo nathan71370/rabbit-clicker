@@ -179,26 +179,31 @@ export function performPrestige(): PrestigeResult {
  * Keeps only the specified rabbits (Legendary/Mythical)
  * Resets all other game progress
  *
+ * Uses getInitialState() with replace flag to ensure complete state reset,
+ * preventing unintentional field persistence from Zustand's shallow merge
+ *
  * @param keptRabbits - Array of Legendary/Mythical rabbits to keep
  */
 function resetGameState(keptRabbits: Rabbit[]): void {
   const gameStore = useGameStore.getState();
 
+  // Get initial states for complete reset
+  const initialGameState = useGameStore.getInitialState();
+  const initialRabbitState = useRabbitStore.getInitialState();
+  const initialUpgradeState = useUpgradeStore.getInitialState();
+  const initialCrateState = useCrateStore.getInitialState();
+
   // Reset gameStore (keep Golden Carrots, reset everything else)
   const currentGoldenCarrots = gameStore.goldenCarrots;
 
-  // Use Zustand's setState to reset all game state
-  useGameStore.setState({
-    carrots: 0,
-    goldenCarrots: currentGoldenCarrots, // Keep Golden Carrots
-    lifetimeCarrots: 0, // Reset current run's lifetime carrots
-    carrotsPerSecond: 0,
-    clickPower: 1, // Reset to base click power
-    totalClicks: 0,
-    lastSaveTime: Date.now(),
-    lastPlayTime: Date.now(),
-    gameSessionStartTime: Date.now(),
-  });
+  // Full state replacement to prevent any fields from persisting
+  useGameStore.setState(
+    {
+      ...initialGameState,
+      goldenCarrots: currentGoldenCarrots, // Keep Golden Carrots
+    },
+    true // Replace entire state instead of merging
+  );
 
   // Reset rabbitStore (keep only Legendary/Mythical rabbits)
   const newOwnedRabbits = new Map<string, Rabbit>();
@@ -212,28 +217,29 @@ function resetGameState(keptRabbits: Rabbit[]): void {
     });
   });
 
-  useRabbitStore.setState({
-    ownedRabbits: newOwnedRabbits,
-    activeTeam: [], // Clear active team
-    maxTeamSize: 3, // Reset to base team size
-    rabbitXP: 0, // Reset rabbit XP
-  });
+  useRabbitStore.setState(
+    {
+      ...initialRabbitState,
+      ownedRabbits: newOwnedRabbits, // Keep Legendary/Mythical rabbits
+    },
+    true // Replace entire state instead of merging
+  );
 
   // Reset upgradeStore (clear all upgrades and buildings)
-  useUpgradeStore.setState({
-    purchasedUpgrades: new Set<string>(),
-    buildings: new Map<string, number>(),
-    clickMultiplier: 1,
-    productionMultiplier: 1,
-  });
+  useUpgradeStore.setState(
+    {
+      ...initialUpgradeState,
+    },
+    true // Replace entire state instead of merging
+  );
 
-  // Reset crateStore (reset pity counters)
-  useCrateStore.setState({
-    cratesSinceEpic: 0,
-    cratesSinceLegendary: 0,
-    cratesSinceMythical: 0,
-    recentDrops: [],
-  });
+  // Reset crateStore (reset pity counters and thresholds)
+  useCrateStore.setState(
+    {
+      ...initialCrateState,
+    },
+    true // Replace entire state instead of merging
+  );
 
   // Note: achievementStore is NOT reset - achievements are permanent
   // Note: prestigeStore is NOT reset - Golden Seeds and prestige count are permanent
