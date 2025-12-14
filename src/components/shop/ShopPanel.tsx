@@ -112,62 +112,62 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Shop Header */}
-      <div className="card bg-gradient-to-br from-carrot via-carrot to-carrot-dark text-white shadow-lg border-none">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-4xl">🏪</span>
-          <h2 className="text-3xl font-bold">Upgrade Shop</h2>
+      {/* Shop Header - Clean design with yellow/black scheme */}
+      <div className="bg-white rounded-3xl shadow-md p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-5xl">🏪</span>
+          <h2 className="text-4xl font-black text-accent">Upgrade Shop</h2>
         </div>
-        <div className="flex items-center gap-2 bg-white/20 rounded-lg px-4 py-3 backdrop-blur-sm">
-          <span className="text-2xl">🥕</span>
+        <div className="flex items-center gap-3 bg-gradient-to-br from-primary to-primary-dark rounded-2xl px-6 py-4 shadow-md">
+          <span className="text-3xl">🥕</span>
           <div className="flex-1">
-            <div className="text-xs opacity-90 uppercase tracking-wide font-semibold">
+            <div className="text-xs font-bold text-accent uppercase tracking-wide">
               Your Carrots
             </div>
-            <div className="text-2xl font-bold">
+            <div className="text-3xl font-black text-accent">
               {formatNumber(Math.floor(carrots))}
             </div>
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex gap-2 mt-4 overflow-x-auto">
+        {/* Tab Navigation - Clean pill-style buttons */}
+        <div className="flex gap-2 mt-5 overflow-x-auto pb-1">
           <button
             onClick={() => setActiveTab('upgrades')}
-            className={`px-4 py-2 rounded-lg font-bold transition-all whitespace-nowrap ${
+            className={`px-6 py-3 rounded-2xl font-bold transition-all whitespace-nowrap shadow-sm ${
               activeTab === 'upgrades'
-                ? 'bg-white text-carrot shadow-md'
-                : 'bg-white/10 text-white/80 hover:bg-white/20'
+                ? 'bg-accent text-white'
+                : 'bg-white text-accent hover:bg-cream'
             }`}
           >
             ⚡ Upgrades
           </button>
           <button
             onClick={() => setActiveTab('buildings')}
-            className={`px-4 py-2 rounded-lg font-bold transition-all whitespace-nowrap ${
+            className={`px-6 py-3 rounded-2xl font-bold transition-all whitespace-nowrap shadow-sm ${
               activeTab === 'buildings'
-                ? 'bg-white text-carrot shadow-md'
-                : 'bg-white/10 text-white/80 hover:bg-white/20'
+                ? 'bg-accent text-white'
+                : 'bg-white text-accent hover:bg-cream'
             }`}
           >
             🏭 Buildings
           </button>
           <button
             onClick={() => setActiveTab('crates')}
-            className={`px-4 py-2 rounded-lg font-bold transition-all whitespace-nowrap ${
+            className={`px-6 py-3 rounded-2xl font-bold transition-all whitespace-nowrap shadow-sm ${
               activeTab === 'crates'
-                ? 'bg-white text-carrot shadow-md'
-                : 'bg-white/10 text-white/80 hover:bg-white/20'
+                ? 'bg-accent text-white'
+                : 'bg-white text-accent hover:bg-cream'
             }`}
           >
             📦 Crates
           </button>
           <button
             onClick={() => setActiveTab('rabbits')}
-            className={`px-4 py-2 rounded-lg font-bold transition-all whitespace-nowrap ${
+            className={`px-6 py-3 rounded-2xl font-bold transition-all whitespace-nowrap shadow-sm ${
               activeTab === 'rabbits'
-                ? 'bg-white text-carrot shadow-md'
-                : 'bg-white/10 text-white/80 hover:bg-white/20'
+                ? 'bg-accent text-white'
+                : 'bg-white text-accent hover:bg-cream'
             }`}
           >
             🐰 Rabbits
@@ -180,12 +180,12 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
         <div className="flex flex-col gap-6">
           {/* Click Power Upgrades Section */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
-              <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+            <div className="flex items-center gap-3">
+              <div className="h-1 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1 rounded-full"></div>
+              <h3 className="text-base font-black text-accent uppercase tracking-wider px-4 py-2 bg-white rounded-2xl shadow-bold border-2 border-carrot">
                 Click Power Upgrades
               </h3>
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1"></div>
+              <div className="h-1 bg-gradient-to-r from-transparent via-carrot to-transparent flex-1 rounded-full"></div>
             </div>
 
             {clickUpgrades.map((upgrade) => {
@@ -208,12 +208,12 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
           {/* Auto-Clicker Upgrades Section */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
-              <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+            <div className="flex items-center gap-3">
+              <div className="h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1 rounded-full"></div>
+              <h3 className="text-base font-black text-accent uppercase tracking-wider px-4 py-2 bg-white rounded-2xl shadow-bold border-2 border-purple-400">
                 Auto-Clicker Upgrades
               </h3>
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+              <div className="h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1 rounded-full"></div>
             </div>
 
             {autoClickerUpgrades.map((upgrade) => {
@@ -236,12 +236,12 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
           {/* CPS Multiplier Upgrades Section */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent flex-1"></div>
-              <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+            <div className="flex items-center gap-3">
+              <div className="h-1 bg-gradient-to-r from-transparent via-green-400 to-transparent flex-1 rounded-full"></div>
+              <h3 className="text-base font-black text-accent uppercase tracking-wider px-4 py-2 bg-white rounded-2xl shadow-bold border-2 border-green-400">
                 Production Multipliers
               </h3>
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent flex-1"></div>
+              <div className="h-1 bg-gradient-to-r from-transparent via-green-400 to-transparent flex-1 rounded-full"></div>
             </div>
 
             {cpsMultiplierUpgrades.map((upgrade) => {
@@ -264,12 +264,12 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
           {/* Special Upgrades Section */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
-              <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+            <div className="flex items-center gap-3">
+              <div className="h-1 bg-gradient-to-r from-transparent via-primary to-transparent flex-1 rounded-full"></div>
+              <h3 className="text-base font-black text-accent uppercase tracking-wider px-4 py-2 bg-white rounded-2xl shadow-bold border-2 border-primary">
                 Special Upgrades
               </h3>
-              <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1"></div>
+              <div className="h-1 bg-gradient-to-r from-transparent via-primary to-transparent flex-1 rounded-full"></div>
             </div>
 
             {specialUpgrades.map((upgrade) => {
@@ -297,14 +297,14 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
       {/* Buildings Tab */}
       {activeTab === 'buildings' && (
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <div className="h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent flex-1"></div>
-            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+          <div className="flex items-center gap-3">
+            <div className="h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent flex-1 rounded-full"></div>
+            <h3 className="text-base font-black text-accent uppercase tracking-wider px-4 py-2 bg-white rounded-2xl shadow-bold border-2 border-blue-400">
               Buildings
             </h3>
-            <div className="h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent flex-1"></div>
+            <div className="h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent flex-1 rounded-full"></div>
           </div>
-          <p className="text-xs text-gray-500 text-center mb-2">
+          <p className="text-sm font-bold text-accent text-center mb-2 bg-white rounded-2xl px-4 py-3 shadow-md border-2 border-cream">
             Automated carrot production facilities. Each building generates carrots per second!
           </p>
 
@@ -335,14 +335,14 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
       {/* Rabbits Tab */}
       {activeTab === 'rabbits' && (
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
-            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider">
+          <div className="flex items-center gap-3">
+            <div className="h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1 rounded-full"></div>
+            <h3 className="text-base font-black text-accent uppercase tracking-wider px-4 py-2 bg-white rounded-2xl shadow-bold border-2 border-purple-400">
               Common Rabbits
             </h3>
-            <div className="h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1"></div>
+            <div className="h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent flex-1 rounded-full"></div>
           </div>
-          <p className="text-xs text-gray-500 text-center mb-2">
+          <p className="text-sm font-bold text-accent text-center mb-2 bg-white rounded-2xl px-4 py-3 shadow-md border-2 border-cream">
             Purchase common rabbits directly! An alternative to crates for getting started.
           </p>
 

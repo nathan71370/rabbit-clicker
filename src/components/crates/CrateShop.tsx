@@ -118,13 +118,13 @@ export function CrateShop() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
-      <div className="card bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 text-white shadow-lg border-none">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-4xl">🎁</span>
-          <h2 className="text-3xl font-bold">Crate Shop</h2>
+      {/* Header - Clean design */}
+      <div className="bg-white rounded-3xl shadow-md p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-5xl">🎁</span>
+          <h2 className="text-4xl font-black text-accent">Crate Shop</h2>
         </div>
-        <p className="text-purple-100 text-sm">
+        <p className="text-base font-bold text-gray-700 mb-4">
           Open crates to collect new rabbits! Better crates have higher odds for rare rabbits.
         </p>
 
@@ -147,24 +147,24 @@ export function CrateShop() {
           return (
             <div
               key={crate.id}
-              className={`card transition-all duration-200 ${
+              className={`bg-white rounded-2xl shadow-md transition-all duration-200 p-4 ${
                 affordable
-                  ? 'hover:shadow-lg hover:border-purple-400 hover:-translate-y-0.5 border-2 border-transparent'
-                  : 'opacity-70 border-2 border-transparent'
+                  ? 'hover:shadow-lg hover:-translate-y-1'
+                  : 'opacity-70'
               }`}
             >
               <div className="flex items-start justify-between gap-4">
                 {/* Icon and Info */}
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="text-5xl flex-shrink-0 p-3 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="text-5xl flex-shrink-0 p-3 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl shadow-md">
                       {crate.icon}
                     </div>
                     <div>
-                      <h3 className="font-bold text-xl text-gray-800 mb-1">
+                      <h3 className="font-black text-xl text-accent mb-1">
                         {crate.name}
                       </h3>
-                      <p className="text-sm text-gray-600 leading-snug">
+                      <p className="text-sm font-medium text-gray-700 leading-snug">
                         {crate.description}
                       </p>
                     </div>
@@ -172,7 +172,7 @@ export function CrateShop() {
 
                   {/* Drop Rates */}
                   <div className="mt-3">
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                    <h4 className="text-xs font-black text-accent uppercase tracking-wide mb-2">
                       Drop Rates
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -181,7 +181,7 @@ export function CrateShop() {
                         .map(([rarity, rate]) => (
                           <span
                             key={rarity}
-                            className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${getRarityColor(
+                            className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm ${getRarityColor(
                               rarity
                             )}`}
                           >
@@ -197,9 +197,9 @@ export function CrateShop() {
                       {crate.features.map((feature) => (
                         <span
                           key={feature}
-                          className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full"
+                          className="inline-flex items-center gap-2 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm"
                         >
-                          ✓ {feature}
+                          <span className="text-sm">✓</span> {feature}
                         </span>
                       ))}
                     </div>
@@ -207,20 +207,20 @@ export function CrateShop() {
                 </div>
 
                 {/* Purchase Section */}
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-end gap-3">
                   {/* Cost */}
                   <div className="text-right">
-                    <div className="text-xs text-gray-500 uppercase tracking-wide font-semibold">
+                    <div className="text-xs font-bold text-accent uppercase tracking-wide mb-1">
                       Cost
                     </div>
                     {crate.cost.goldenCarrots !== undefined ? (
-                      <div className="text-2xl font-bold text-yellow-600 flex items-center gap-1">
-                        <span>🥕✨</span>
+                      <div className="text-2xl font-black text-primary flex items-center gap-2">
+                        <span className="text-xl">🥕✨</span>
                         <span>{formatNumber(crate.cost.goldenCarrots)}</span>
                       </div>
                     ) : (
-                      <div className="text-2xl font-bold text-carrot flex items-center gap-1">
-                        <span>🥕</span>
+                      <div className="text-2xl font-black text-carrot flex items-center gap-2">
+                        <span className="text-xl">🥕</span>
                         <span>{formatNumber(crate.cost.carrots || 0)}</span>
                       </div>
                     )}
@@ -230,17 +230,17 @@ export function CrateShop() {
                   <button
                     onClick={() => handlePurchase(crate)}
                     disabled={!affordable || isOpening}
-                    className={`px-6 py-3 rounded-lg font-bold text-white shadow-md transition-all ${
+                    className={`px-6 py-3 rounded-xl font-bold text-white shadow-md transition-all ${
                       affordable && !isOpening
-                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 hover:shadow-lg active:scale-95'
+                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 hover:shadow-lg hover:scale-105'
                         : 'bg-gray-300 cursor-not-allowed'
                     }`}
                   >
-                    {isOpening ? 'Opening...' : 'Open Crate'}
+                    {isOpening ? 'OPENING...' : 'OPEN CRATE'}
                   </button>
 
                   {!affordable && (
-                    <span className="text-xs text-red-600 font-semibold">
+                    <span className="text-xs text-red-600 font-bold bg-red-50 px-3 py-1.5 rounded-lg">
                       {crate.cost.goldenCarrots !== undefined ? (
                         <>Need {formatNumber(crate.cost.goldenCarrots - goldenCarrots)} more 🥕✨</>
                       ) : (
