@@ -34,6 +34,22 @@ interface GameState {
 }
 
 /**
+ * Initial game state values
+ * Used for store creation and state reset
+ */
+const getInitialGameState = () => ({
+  carrots: 0,
+  goldenCarrots: 0,
+  lifetimeCarrots: 0,
+  carrotsPerSecond: 0,
+  clickPower: 1,
+  totalClicks: 0,
+  lastSaveTime: Date.now(),
+  lastPlayTime: Date.now(),
+  gameSessionStartTime: Date.now(),
+});
+
+/**
  * Main game store using Zustand
  * Handles all core game state and currency management
  */
@@ -41,15 +57,7 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       // Initial state
-      carrots: 0,
-      goldenCarrots: 0,
-      lifetimeCarrots: 0,
-      carrotsPerSecond: 0,
-      clickPower: 1,
-      totalClicks: 0,
-      lastSaveTime: Date.now(),
-      lastPlayTime: Date.now(),
-      gameSessionStartTime: Date.now(),
+      ...getInitialGameState(),
 
       // Actions
       /**
@@ -209,3 +217,10 @@ export const useGameStore = create<GameState>()(
     }
   )
 );
+
+/**
+ * Get initial state for game store
+ * Used by prestige system to reset game state
+ * @returns Initial state object (without actions)
+ */
+(useGameStore as any).getInitialState = getInitialGameState;

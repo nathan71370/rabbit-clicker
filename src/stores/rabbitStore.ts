@@ -46,6 +46,17 @@ interface RabbitState {
 }
 
 /**
+ * Initial rabbit store state values
+ * Used for store creation and state reset
+ */
+const getInitialRabbitState = () => ({
+  ownedRabbits: new Map<string, Rabbit>(),
+  activeTeam: [],
+  maxTeamSize: 3,
+  rabbitXP: 0,
+});
+
+/**
  * Rabbit store using Zustand
  * Manages rabbit ownership, team composition, and CPS calculations
  */
@@ -53,10 +64,7 @@ export const useRabbitStore = create<RabbitState>()(
   persist(
     (set, get) => ({
       // Initial state
-      ownedRabbits: new Map<string, Rabbit>(),
-      activeTeam: [],
-      maxTeamSize: 3,
-      rabbitXP: 0,
+      ...getInitialRabbitState(),
 
       // Experience & Progression
       /**
@@ -377,3 +385,10 @@ export const useRabbitStore = create<RabbitState>()(
     }
   )
 );
+
+/**
+ * Get initial state for rabbit store
+ * Used by prestige system to reset rabbit state
+ * @returns Initial state object (without actions)
+ */
+(useRabbitStore as any).getInitialState = getInitialRabbitState;
