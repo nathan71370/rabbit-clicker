@@ -118,8 +118,8 @@ export function CrateShop() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header - Clean design */}
-      <div className="bg-white rounded-3xl shadow-md p-6">
+      {/* Header - Rounded card design */}
+      <div className="card border-2 border-purple-200">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-5xl">🎁</span>
           <h2 className="text-4xl font-black text-accent">Crate Shop</h2>
@@ -147,10 +147,10 @@ export function CrateShop() {
           return (
             <div
               key={crate.id}
-              className={`bg-white rounded-2xl shadow-md transition-all duration-200 p-4 ${
+              className={`card transition-all duration-200 ${
                 affordable
-                  ? 'hover:shadow-lg hover:-translate-y-1'
-                  : 'opacity-70'
+                  ? 'hover:shadow-lg hover:-translate-y-1 border-2 border-purple-200'
+                  : 'opacity-70 border-2 border-gray-200'
               }`}
             >
               <div className="flex items-start justify-between gap-4">

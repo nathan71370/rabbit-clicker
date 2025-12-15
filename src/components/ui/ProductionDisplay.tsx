@@ -13,7 +13,7 @@ export function ProductionDisplay() {
   const carrotsPerSecond = useGameStore((state) => state.carrotsPerSecond);
 
   return (
-    <div className="bg-white rounded-3xl shadow-md border border-green-500 overflow-hidden">
+    <div className="card border-2 border-green-500 overflow-hidden p-0">
       <div className="bg-gradient-to-br from-green-400 to-green-600 px-6 py-4">
         <div className="flex items-center gap-3">
           <span className="text-4xl">📊</span>

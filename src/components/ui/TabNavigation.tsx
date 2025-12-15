@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 interface Tab {
   id: string;
   label: string;
@@ -23,7 +21,7 @@ export function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationPro
       role="tablist"
       aria-label="Main navigation"
     >
-      <div className="flex justify-around items-center h-16">
+      <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -31,25 +29,23 @@ export function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationPro
               key={tab.id}
               role="tab"
               onClick={() => onTabChange(tab.id)}
-              className={`relative flex-1 flex flex-col items-center justify-center h-full transition-colors ${
+              className={`relative flex-1 flex flex-col items-center justify-center h-full transition-all rounded-xl mx-0.5 ${
                 isActive
-                  ? 'text-carrot'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-primary'
+                  : 'text-gray-400 hover:text-gray-600'
               }`}
               aria-label={`Switch to ${tab.label} tab`}
               aria-selected={isActive}
               tabIndex={isActive ? 0 : -1}
             >
-              <span className="text-2xl mb-1">{tab.icon}</span>
-              <span className="text-xs font-semibold">{tab.label}</span>
+              <span className="text-2xl mb-0.5">{tab.icon}</span>
+              <span className="text-[10px] font-semibold">
+                {tab.label}
+              </span>
 
-              {/* Active indicator */}
+              {/* Active indicator dot */}
               {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-carrot"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
+                <div className="absolute bottom-1 w-1 h-1 bg-primary rounded-full"></div>
               )}
             </button>
           );

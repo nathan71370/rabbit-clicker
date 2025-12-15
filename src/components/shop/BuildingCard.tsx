@@ -30,12 +30,12 @@ export function BuildingCard({
 
   return (
     <div
-      className={`bg-white rounded-2xl shadow-md transition-all duration-200 p-4 ${
+      className={`card transition-all duration-200 ${
         !isUnlocked
-          ? 'opacity-50'
+          ? 'opacity-50 border-2 border-gray-300'
           : isAffordable
-          ? 'hover:shadow-lg hover:-translate-y-1'
-          : ''
+          ? 'hover:shadow-lg hover:-translate-y-1 border-2 border-gray-200'
+          : 'border-2 border-gray-200'
       }`}
     >
       <div className="flex items-start justify-between gap-4">

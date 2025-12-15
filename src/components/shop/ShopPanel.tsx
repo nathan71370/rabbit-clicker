@@ -112,8 +112,8 @@ export function ShopPanel({ onPurchase }: ShopPanelProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Shop Header - Clean design with yellow/black scheme */}
-      <div className="bg-white rounded-3xl shadow-md p-6">
+      {/* Shop Header - Rounded card design */}
+      <div className="card border-2 border-primary">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-5xl">🏪</span>
           <h2 className="text-4xl font-black text-accent">Upgrade Shop</h2>

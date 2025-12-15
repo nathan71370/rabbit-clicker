@@ -105,7 +105,7 @@ export function RabbitCard({
     >
       <div
         className={`
-          relative rounded-lg border-2 p-4 transition-all
+          relative rounded-2xl border-2 p-4 transition-all
           ${borderColor}
           ${isActive ? bgColor : 'bg-white'}
           ${!isOwned ? 'opacity-50 grayscale' : ''}

@@ -57,8 +57,8 @@ export function CarrotClicker() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 p-8">
-      {/* Carrot Count Display - Clean and prominent */}
-      <div className="text-center bg-white rounded-3xl px-8 py-6 shadow-md">
+      {/* Carrot Count Display - Rounded card */}
+      <div className="text-center card border-2 border-carrot px-8 py-6">
         <div className="text-7xl font-black text-carrot tracking-tight">
           {formatNumber(Math.floor(carrots))}
         </div>
@@ -96,10 +96,10 @@ export function CarrotClicker() {
         <ClickParticles particles={particles} onParticleComplete={handleParticleComplete} />
       </div>
 
-      {/* Production Stats Display - Bold cards */}
+      {/* Production Stats Display - Rounded cards */}
       <div className="flex gap-6">
         {/* Click Power Display */}
-        <div className="text-center bg-white rounded-2xl px-6 py-4 shadow-bold border-3 border-primary min-w-[140px]">
+        <div className="text-center card border-2 border-primary px-6 py-4 min-w-[140px]">
           <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1">
             Per Click
           </div>
@@ -109,7 +109,7 @@ export function CarrotClicker() {
         </div>
 
         {/* CPS Display */}
-        <div className="text-center bg-white rounded-2xl px-6 py-4 shadow-bold border-3 border-primary min-w-[140px]">
+        <div className="text-center card border-2 border-primary px-6 py-4 min-w-[140px]">
           <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1">
             Per Second
           </div>
