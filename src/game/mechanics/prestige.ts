@@ -79,6 +79,16 @@ export function getPrestigeBonus(): number {
 }
 
 /**
+ * Calculate multiplier from a given number of Golden Seeds
+ * Each Golden Seed provides +10% to all carrot production
+ * @param seeds - Number of Golden Seeds
+ * @returns Multiplier value (e.g., 3 seeds = 1.3x = +30%)
+ */
+export function calculateMultiplierFromSeeds(seeds: number): number {
+  return 1 + seeds * 0.1;
+}
+
+/**
  * Perform prestige and reset game state
  *
  * Keeps:

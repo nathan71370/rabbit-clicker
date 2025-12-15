@@ -9,6 +9,7 @@ import {
   canPrestige,
   calculatePrestigeReward,
   getPrestigeBonus,
+  calculateMultiplierFromSeeds,
   performPrestige,
   PRESTIGE_UNLOCK_THRESHOLD,
 } from '@/game/mechanics/prestige';
@@ -49,7 +50,7 @@ export function PrestigePanel({ onClose }: PrestigePanelProps) {
   const goldenSeedsToEarn = calculatePrestigeReward();
   const currentMultiplier = getPrestigeBonus();
   const newGoldenSeeds = goldenSeeds + goldenSeedsToEarn;
-  const newMultiplier = 1 + newGoldenSeeds * 0.1; // Each Golden Seed = +10%
+  const newMultiplier = calculateMultiplierFromSeeds(newGoldenSeeds);
 
   // Get what will be kept
   const allRabbits = getOwnedRabbitsArray();
@@ -207,8 +208,8 @@ export function PrestigePanel({ onClose }: PrestigePanelProps) {
               <li className="flex items-center gap-2">
                 <span className="text-xl">🌟</span>
                 <span>
-                  <strong>Golden Seeds:</strong> All {goldenSeeds} Golden Seeds (
-                  {currentMultiplier.toFixed(2)}x multiplier)
+                  <strong>Golden Seeds:</strong> All {newGoldenSeeds} Golden Seeds (
+                  {newMultiplier.toFixed(2)}x multiplier)
                 </span>
               </li>
               <li className="flex items-center gap-2">
