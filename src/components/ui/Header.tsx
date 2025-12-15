@@ -1,18 +1,21 @@
 import { useGameStore } from '@/stores/gameStore';
 import { formatNumber } from '@/utils';
 import { XPDisplay } from './XPDisplay';
+import { canPrestige } from '@/game/mechanics/prestige';
 
 interface HeaderProps {
   onSettingsClick: () => void;
   onAchievementsClick?: () => void;
+  onPrestigeClick?: () => void;
 }
 
 /**
  * Header Component
  * Top header bar showing currencies and action buttons
  */
-export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
+export function Header({ onSettingsClick, onAchievementsClick, onPrestigeClick }: HeaderProps) {
   const { carrots, goldenCarrots } = useGameStore();
+  const canDoPrestige = canPrestige();
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-20 shadow-md border-b border-gray-100">
@@ -48,6 +51,20 @@ export function Header({ onSettingsClick, onAchievementsClick }: HeaderProps) {
 
         {/* Right: Action Buttons */}
         <div className="flex items-center gap-2">
+          {/* Prestige Button (only show when available) */}
+          {canDoPrestige && onPrestigeClick && (
+            <button
+              onClick={onPrestigeClick}
+              aria-label="View prestige"
+              className="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl transition-all relative"
+              title="Prestige Available!"
+            >
+              <span className="text-xl">✨</span>
+              {/* Pulse animation to draw attention */}
+              <span className="absolute top-0 right-0 h-3 w-3 bg-purple-500 rounded-full animate-ping"></span>
+            </button>
+          )}
+
           {/* Achievements Button */}
           {onAchievementsClick && (
             <button
