@@ -4,6 +4,7 @@ import { ShopPanel } from '@/components/shop/ShopPanel';
 import { RabbitTeam } from '@/components/rabbits';
 import { CrateShop } from '@/components/crates';
 import { AchievementList, AchievementToast } from '@/components/achievements';
+import { PrestigePanel } from '@/components/prestige';
 import {
   ProductionDisplay,
   SavingIndicator,
@@ -23,6 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
+  const [isPrestigeOpen, setIsPrestigeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('clicker');
 
   // Load saved game on initialization
@@ -68,6 +70,7 @@ function App() {
       <Header
         onSettingsClick={() => setIsSettingsOpen(true)}
         onAchievementsClick={() => setIsAchievementsOpen(true)}
+        onPrestigeClick={() => setIsPrestigeOpen(true)}
       />
 
       {/* Settings Modal */}
@@ -77,6 +80,9 @@ function App() {
       {isAchievementsOpen && (
         <AchievementList onClose={() => setIsAchievementsOpen(false)} />
       )}
+
+      {/* Prestige Modal */}
+      {isPrestigeOpen && <PrestigePanel onClose={() => setIsPrestigeOpen(false)} />}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 pt-20 pb-20 md:pb-8">
