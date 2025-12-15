@@ -1,18 +1,38 @@
 /**
  * Theme color variables and configurations
+ * Bold, playful design system with yellow/black color scheme
  */
 
 :root {
-  /* Game colors */
+  /* Primary Brand Colors - Yellow/Black Scheme */
+  --color-primary: #FFD700;           /* Gold yellow */
+  --color-primary-light: #FFE44D;     /* Light yellow */
+  --color-primary-dark: #FFC107;      /* Darker yellow */
+  --color-accent: #000000;            /* Black accent */
+  --color-accent-soft: #1a1a1a;       /* Soft black */
+
+  /* Background Colors - Cream/Beige */
+  --color-background: #FFF4E6;        /* Light cream */
+  --color-background-alt: #FFFAF0;    /* Ivory */
+  --color-surface: #FFFFFF;           /* White cards */
+  --color-surface-elevated: #FFFFFF;  /* Elevated surfaces */
+
+  /* Text Colors */
+  --color-text-primary: #000000;      /* Black text */
+  --color-text-secondary: #4a4a4a;    /* Dark gray */
+  --color-text-tertiary: #8a8a8a;     /* Medium gray */
+  --color-text-on-primary: #000000;   /* Text on yellow */
+  --color-text-on-accent: #FFFFFF;    /* Text on black */
+
+  /* Game Currency Colors */
   --color-carrot: #ff6b35;
   --color-carrot-light: #ff8c61;
   --color-carrot-dark: #e85a28;
+  --color-golden: #FFD700;
+  --color-golden-light: #FFE44D;
+  --color-golden-dark: #FFC107;
 
-  --color-golden: #ffd700;
-  --color-golden-light: #ffe033;
-  --color-golden-dark: #ccac00;
-
-  /* Rarity colors */
+  /* Rarity Colors */
   --color-rarity-common: #9ca3af;
   --color-rarity-uncommon: #10b981;
   --color-rarity-rare: #3b82f6;
@@ -20,42 +40,61 @@
   --color-rarity-legendary: #f59e0b;
   --color-rarity-mythical: #ec4899;
 
-  /* UI colors */
-  --color-background: #f9fafb;
-  --color-surface: #ffffff;
-  --color-text-primary: #1f2937;
-  --color-text-secondary: #6b7280;
-  --color-border: #e5e7eb;
-  --color-hover: #f3f4f6;
-
-  /* Status colors */
+  /* Status Colors */
   --color-success: #10b981;
   --color-error: #ef4444;
   --color-warning: #f59e0b;
   --color-info: #3b82f6;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* Border Colors */
+  --color-border: #e8d5b7;            /* Subtle cream border */
+  --color-border-dark: #d4c4a8;       /* Darker border */
+  --color-hover: #FFF9E6;             /* Hover state */
 
-  /* Border radius */
-  --radius-sm: 0.25rem;
-  --radius: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  /* Shadows - Soft and subtle for clean look */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.12);
+  --shadow-2xl: 0 16px 36px rgba(0, 0, 0, 0.14);
+
+  /* Border Radius - Rounded and playful */
+  --radius-sm: 0.5rem;      /* 8px */
+  --radius: 1rem;           /* 16px */
+  --radius-md: 1.25rem;     /* 20px */
+  --radius-lg: 1.5rem;      /* 24px */
+  --radius-xl: 2rem;        /* 32px */
+  --radius-2xl: 2.5rem;     /* 40px */
   --radius-full: 9999px;
 
   /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 3rem;      /* 48px */
+  --spacing-3xl: 4rem;      /* 64px */
+
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 1.875rem;    /* 30px */
+  --font-size-4xl: 2.25rem;     /* 36px */
+  --font-size-5xl: 3rem;        /* 48px */
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
 
   /* Transitions */
   --transition-fast: 150ms ease-in-out;

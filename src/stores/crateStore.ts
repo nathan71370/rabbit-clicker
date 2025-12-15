@@ -39,6 +39,20 @@ interface CrateState {
 }
 
 /**
+ * Initial crate store state values
+ * Used for store creation and state reset
+ */
+const getInitialCrateState = () => ({
+  cratesSinceEpic: 0,
+  cratesSinceLegendary: 0,
+  cratesSinceMythical: 0,
+  recentDrops: [],
+  epicPityThreshold: PITY_THRESHOLDS.epic,
+  legendaryPityThreshold: PITY_THRESHOLDS.legendary,
+  mythicalPityThreshold: PITY_THRESHOLDS.mythical,
+});
+
+/**
  * Crate store using Zustand
  * Manages gacha mechanics with pity system
  */
@@ -46,15 +60,7 @@ export const useCrateStore = create<CrateState>()(
   persist(
     (set, get) => ({
       // Initial state
-      cratesSinceEpic: 0,
-      cratesSinceLegendary: 0,
-      cratesSinceMythical: 0,
-      recentDrops: [],
-
-      // Pity thresholds (from gacha system constants)
-      epicPityThreshold: PITY_THRESHOLDS.epic,
-      legendaryPityThreshold: PITY_THRESHOLDS.legendary,
-      mythicalPityThreshold: PITY_THRESHOLDS.mythical,
+      ...getInitialCrateState(),
 
       /**
        * Open a crate and get a random rabbit
@@ -166,3 +172,10 @@ export const useCrateStore = create<CrateState>()(
     }
   )
 );
+
+/**
+ * Get initial state for crate store
+ * Used by prestige system to reset crate state
+ * @returns Initial state object (without actions)
+ */
+(useCrateStore as any).getInitialState = getInitialCrateState;

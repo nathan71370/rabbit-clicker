@@ -9,18 +9,13 @@ export function XPDisplay() {
   const { rabbitXP } = useRabbitStore();
 
   return (
-    <div className="flex items-center gap-2 bg-purple-100 px-4 py-2 rounded-lg">
-      <span className="text-2xl" title="Rabbit XP">
+    <div className="flex items-center gap-2 bg-purple-50 px-3 py-2 rounded-xl">
+      <span className="text-xl" title="Rabbit XP">
         ✨
       </span>
-      <div className="flex flex-col">
-        <span className="text-xs text-purple-600 font-semibold uppercase tracking-wide">
-          Rabbit XP
-        </span>
-        <span className="text-lg font-bold text-purple-700">
-          {formatNumber(rabbitXP)}
-        </span>
-      </div>
+      <span className="font-bold text-gray-900 text-sm">
+        {formatNumber(rabbitXP)}
+      </span>
     </div>
   );
 }

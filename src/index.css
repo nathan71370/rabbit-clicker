@@ -68,70 +68,105 @@
 }
 
 @layer components {
-  /* Custom component utilities */
+  /* Custom component utilities - Bold, playful design */
+
+  /* Primary Button - Clean yellow */
   .btn-primary {
-    background-color: var(--color-carrot);
-    color: white;
+    background-color: var(--color-primary);
+    color: #000;
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 200ms;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    transition: all var(--transition);
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
   }
 
   .btn-primary:hover {
-    background-color: var(--color-carrot-dark);
+    background-color: var(--color-primary-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
   }
 
   .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
+  /* Secondary Button - Clean gray */
   .btn-secondary {
-    background-color: var(--color-hover);
-    color: var(--color-text-primary);
+    background-color: #f3f4f6;
+    color: #1f2937;
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 200ms;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    transition: all var(--transition);
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
   }
 
   .btn-secondary:hover {
-    background-color: var(--color-border);
+    background-color: #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.98);
   }
 
   .btn-secondary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
+  /* Golden Button - For special actions */
   .btn-golden {
     background-color: var(--color-golden);
-    color: var(--color-text-primary);
+    color: #000;
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 200ms;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    transition: all var(--transition);
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: none;
   }
 
   .btn-golden:hover {
     background-color: var(--color-golden-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-golden:active {
+    transform: scale(0.98);
   }
 
   .btn-golden:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
+  /* Card - Clean, rounded with soft shadow */
   .card {
     background-color: var(--color-surface);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-md);
-    padding: 1rem;
-    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;        /* 24px - very rounded */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);  /* Soft shadow */
+    padding: 1.5rem;
+    border: none;
+    transition: all var(--transition);
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
   }
 
   .rarity-border-common {

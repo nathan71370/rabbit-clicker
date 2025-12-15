@@ -32,24 +32,24 @@ export function BuildingCard({
     <div
       className={`card transition-all duration-200 ${
         !isUnlocked
-          ? 'opacity-50 bg-gray-50 border-2 border-gray-300'
+          ? 'opacity-50 border-2 border-gray-300'
           : isAffordable
-          ? 'hover:shadow-lg hover:border-blue-400 hover:-translate-y-0.5 border-2 border-transparent'
-          : 'border-2 border-transparent'
+          ? 'hover:shadow-lg hover:-translate-y-1 border-2 border-gray-200'
+          : 'border-2 border-gray-200'
       }`}
     >
       <div className="flex items-start justify-between gap-4">
         {/* Icon and Info */}
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="text-4xl flex-shrink-0 p-2 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="text-5xl flex-shrink-0 p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl shadow-md">
               {building.icon}
             </div>
             <div>
-              <h3 className="font-bold text-lg text-gray-800 mb-0.5">
+              <h3 className="font-black text-xl text-accent mb-1">
                 {building.name}
               </h3>
-              <p className="text-sm text-gray-600 leading-snug">
+              <p className="text-sm font-medium text-gray-700 leading-snug">
                 {building.description}
               </p>
             </div>
@@ -58,15 +58,15 @@ export function BuildingCard({
           {/* Stats Badges */}
           <div className="mt-3 flex flex-wrap gap-2">
             {/* CPS Badge */}
-            <span className="inline-flex items-center gap-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-              <span>⚡</span>
-              <span>+{formatNumber(building.baseCPS)}/s CPS each</span>
+            <span className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm">
+              <span className="text-lg">⚡</span>
+              <span>+{formatNumber(building.baseCPS)}/s each</span>
             </span>
 
             {/* Total CPS if owned */}
             {ownedCount > 0 && (
-              <span className="inline-flex items-center gap-1 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                <span>📊</span>
+              <span className="inline-flex items-center gap-2 bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm">
+                <span className="text-lg">📊</span>
                 <span>Total: +{formatNumber(totalCPS)}/s</span>
               </span>
             )}
@@ -74,10 +74,10 @@ export function BuildingCard({
             {/* Special Effect Badge */}
             {building.specialEffect && (
               <span
-                className="inline-flex items-center gap-1 bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm"
+                className="inline-flex items-center gap-2 bg-purple-500 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm"
                 title={building.specialEffect.description}
               >
-                <span>✨</span>
+                <span className="text-lg">✨</span>
                 <span>{building.specialEffect.description}</span>
               </span>
             )}
@@ -85,8 +85,8 @@ export function BuildingCard({
 
           {/* Unlock Warning */}
           {!isUnlocked && (
-            <div className="mt-2 flex items-center gap-1 text-xs text-red-600 font-semibold">
-              <span>🔒</span>
+            <div className="mt-3 flex items-center gap-2 text-sm text-red-600 font-bold bg-red-50 px-3 py-2 rounded-xl border-2 border-red-300">
+              <span className="text-lg">🔒</span>
               <span>
                 Requires{' '}
                 {building.unlockRequirement.type === 'lifetime_carrots'
@@ -100,14 +100,14 @@ export function BuildingCard({
         </div>
 
         {/* Purchase Section */}
-        <div className="flex flex-col items-end gap-2 flex-shrink-0">
+        <div className="flex flex-col items-end gap-3 flex-shrink-0">
           {/* Owned Count */}
           {ownedCount > 0 && (
             <div className="text-right">
-              <div className="text-xs text-gray-500 uppercase tracking-wide font-semibold">
+              <div className="text-xs font-bold text-accent uppercase tracking-wide mb-1">
                 Owned
               </div>
-              <div className="text-lg font-bold text-blue-600">
+              <div className="text-2xl font-black text-blue-600">
                 {formatNumber(ownedCount)}
               </div>
             </div>
@@ -115,15 +115,15 @@ export function BuildingCard({
 
           {/* Cost */}
           <div className="text-right">
-            <div className="text-xs text-gray-500 uppercase tracking-wide font-semibold">
+            <div className="text-xs font-bold text-accent uppercase tracking-wide mb-1">
               Cost
             </div>
             <div
-              className={`font-bold text-xl flex items-center gap-1 ${
+              className={`font-black text-2xl flex items-center gap-2 ${
                 isAffordable ? 'text-carrot' : 'text-gray-400'
               }`}
             >
-              <span className="text-base">🥕</span>
+              <span className="text-xl">🥕</span>
               <span>{formatNumber(currentCost)}</span>
             </div>
           </div>
@@ -132,17 +132,17 @@ export function BuildingCard({
           <button
             onClick={() => onPurchase(building.id)}
             disabled={!canPurchase}
-            className={`px-5 py-2.5 rounded-lg font-bold text-white shadow-md transition-all ${
+            className={`px-6 py-3 rounded-xl font-bold text-white shadow-md transition-all ${
               canPurchase
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-lg active:scale-95'
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-lg hover:scale-105'
                 : 'bg-gray-300 cursor-not-allowed'
             }`}
           >
-            Buy
+            BUY
           </button>
 
           {!isAffordable && isUnlocked && (
-            <span className="text-xs text-red-600 font-semibold">
+            <span className="text-xs text-red-600 font-bold bg-red-50 px-3 py-1.5 rounded-lg">
               Need {formatNumber(carrotDeficit)} more 🥕
             </span>
           )}

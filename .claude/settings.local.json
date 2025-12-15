@@ -24,7 +24,8 @@
       "mcp__github__create_pull_request",
       "Bash(git restore:*)",
       "mcp__github__pull_request_read",
-      "mcp__github__add_issue_comment"
+      "mcp__github__add_issue_comment",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

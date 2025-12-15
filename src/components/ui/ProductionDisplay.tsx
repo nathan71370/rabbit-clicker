@@ -13,16 +13,20 @@ export function ProductionDisplay() {
   const carrotsPerSecond = useGameStore((state) => state.carrotsPerSecond);
 
   return (
-    <div className="card bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-300">
-      <div className="flex items-center justify-between p-6">
-        {/* Label */}
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-            Production
-          </span>
-          <span className="text-xs text-gray-500">Carrots per Second</span>
+    <div className="card border-2 border-green-500 overflow-hidden p-0">
+      <div className="bg-gradient-to-br from-green-400 to-green-600 px-6 py-4">
+        <div className="flex items-center gap-3">
+          <span className="text-4xl">📊</span>
+          <div>
+            <h3 className="text-xl font-black text-white uppercase tracking-wide">
+              Production
+            </h3>
+            <p className="text-sm font-bold text-green-100">Carrots per Second</p>
+          </div>
         </div>
+      </div>
 
+      <div className="p-6">
         {/* CPS Value with Animation and Tooltip */}
         <div className="relative group">
           <motion.div
@@ -34,12 +38,14 @@ export function ProductionDisplay() {
               stiffness: 500,
               damping: 25,
             }}
-            className="text-right cursor-help"
+            className="text-center cursor-help"
           >
-            <div className="text-4xl font-bold text-green-700">
+            <div className="text-6xl font-black text-green-600">
               {formatNumber(carrotsPerSecond)}
             </div>
-            <div className="text-sm text-gray-500 mt-1">per second</div>
+            <div className="text-lg font-bold text-accent mt-2 uppercase tracking-wider">
+              per second
+            </div>
           </motion.div>
 
           {/* Tooltip - appears on hover */}

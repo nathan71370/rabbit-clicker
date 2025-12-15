@@ -57,7 +57,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-cream">
       {/* Saving Indicator */}
       <SavingIndicator isSaving={isSaving} />
 
@@ -79,7 +79,7 @@ function App() {
       )}
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pt-24 pb-20 md:pb-8">
+      <main className="container mx-auto px-4 pt-20 pb-20 md:pb-8">
 
         {/* Mobile: Tab-based Layout */}
         <div className="md:hidden">

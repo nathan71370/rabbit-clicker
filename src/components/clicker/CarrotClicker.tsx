@@ -56,13 +56,15 @@ export function CarrotClicker() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 p-8">
-      {/* Carrot Count Display */}
-      <div className="text-center">
-        <div className="text-6xl font-bold text-carrot">
+    <div className="flex flex-col items-center justify-center gap-8 p-8">
+      {/* Carrot Count Display - Rounded card */}
+      <div className="text-center card border-2 border-carrot px-8 py-6">
+        <div className="text-7xl font-black text-carrot tracking-tight">
           {formatNumber(Math.floor(carrots))}
         </div>
-        <div className="text-xl text-gray-600 mt-2">Carrots</div>
+        <div className="text-2xl font-bold text-accent mt-2 uppercase tracking-wider">
+          Carrots
+        </div>
       </div>
 
       {/* Click Button with Framer Motion animations */}
@@ -72,20 +74,20 @@ export function CarrotClicker() {
           onClick={handleClick}
           className="group"
           aria-label="Click to earn carrots"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
           transition={{
             type: 'spring',
             stiffness: 400,
             damping: 17,
           }}
         >
-          {/* Carrot button with SVG icon */}
-          <div className="w-48 h-48 bg-gradient-to-br from-carrot-light to-carrot-dark rounded-full shadow-lg flex items-center justify-center p-8">
+          {/* Carrot button with clean shadow */}
+          <div className="w-56 h-56 bg-gradient-to-br from-carrot-light via-carrot to-carrot-dark rounded-full shadow-xl flex items-center justify-center p-10 transition-all group-hover:shadow-2xl">
             <img
               src="/assets/images/icons/carrot.svg"
               alt="Carrot"
-              className="w-full h-full object-contain drop-shadow-lg"
+              className="w-full h-full object-contain drop-shadow-2xl"
             />
           </div>
         </motion.button>
@@ -94,24 +96,24 @@ export function CarrotClicker() {
         <ClickParticles particles={particles} onParticleComplete={handleParticleComplete} />
       </div>
 
-      {/* Production Stats Display */}
-      <div className="flex gap-8">
+      {/* Production Stats Display - Rounded cards */}
+      <div className="flex gap-6">
         {/* Click Power Display */}
-        <div className="text-center">
-          <div className="text-sm text-gray-500 uppercase tracking-wide">
+        <div className="text-center card border-2 border-primary px-6 py-4 min-w-[140px]">
+          <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1">
             Per Click
           </div>
-          <div className="text-2xl font-semibold text-carrot">
+          <div className="text-3xl font-black text-carrot">
             +{formatNumber(clickPower)}
           </div>
         </div>
 
         {/* CPS Display */}
-        <div className="text-center">
-          <div className="text-sm text-gray-500 uppercase tracking-wide">
+        <div className="text-center card border-2 border-primary px-6 py-4 min-w-[140px]">
+          <div className="text-xs font-bold text-accent uppercase tracking-wider mb-1">
             Per Second
           </div>
-          <div className="text-2xl font-semibold text-carrot">
+          <div className="text-3xl font-black text-carrot">
             +{formatNumber(carrotsPerSecond)}
           </div>
         </div>

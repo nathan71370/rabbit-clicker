@@ -136,6 +136,9 @@ export function performPrestige(): PrestigeResult {
   // Perform prestige in prestige store (awards Golden Seeds)
   prestigeStore.performPrestige(gameStore.lifetimeCarrots);
 
+  // Re-fetch updated prestige state after mutation
+  const updatedPrestigeStore = usePrestigeStore.getState();
+
   // Award milestone Golden Carrots if applicable
   if (milestoneGoldenCarrots > 0) {
     gameStore.addGoldenCarrots(milestoneGoldenCarrots);
@@ -156,7 +159,7 @@ export function performPrestige(): PrestigeResult {
 
   console.log(`Prestige complete!`);
   console.log(`- Earned ${goldenSeedsEarned} Golden Seeds`);
-  console.log(`- Total Golden Seeds: ${prestigeStore.goldenSeeds}`);
+  console.log(`- Total Golden Seeds: ${updatedPrestigeStore.goldenSeeds}`);
   console.log(`- Prestige count: ${newPrestigeCount}`);
   console.log(`- Kept ${keptRabbits.length} Legendary/Mythical rabbits`);
   console.log(`- Removed ${removedRabbits.length} other rabbits`);
@@ -168,7 +171,7 @@ export function performPrestige(): PrestigeResult {
     success: true,
     goldenSeeds: goldenSeedsEarned,
     milestoneGoldenCarrots,
-    totalGoldenSeeds: prestigeStore.goldenSeeds,
+    totalGoldenSeeds: updatedPrestigeStore.goldenSeeds,
     prestigeCount: newPrestigeCount,
     keptRabbits,
   };

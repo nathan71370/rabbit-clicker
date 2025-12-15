@@ -36,6 +36,17 @@ interface UpgradeState {
 }
 
 /**
+ * Initial upgrade store state values
+ * Used for store creation and state reset
+ */
+const getInitialUpgradeState = () => ({
+  purchasedUpgrades: new Set<string>(),
+  buildings: new Map<string, number>(),
+  clickMultiplier: 1,
+  productionMultiplier: 1,
+});
+
+/**
  * Upgrade Store using Zustand
  * Handles upgrade purchases and multiplier calculations
  */
@@ -43,10 +54,7 @@ export const useUpgradeStore = create<UpgradeState>()(
   persist(
     (set, get) => ({
       // Initial state
-      purchasedUpgrades: new Set<string>(),
-      buildings: new Map<string, number>(),
-      clickMultiplier: 1,
-      productionMultiplier: 1,
+      ...getInitialUpgradeState(),
 
       /**
        * Check if player can afford a cost
@@ -325,3 +333,10 @@ export const useUpgradeStore = create<UpgradeState>()(
     }
   )
 );
+
+/**
+ * Get initial state for upgrade store
+ * Used by prestige system to reset upgrade state
+ * @returns Initial state object (without actions)
+ */
+(useUpgradeStore as any).getInitialState = getInitialUpgradeState;
