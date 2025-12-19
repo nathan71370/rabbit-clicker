@@ -5,3 +5,4 @@ export { Settings } from './Settings';
 export { TabNavigation } from './TabNavigation';
 export { Header } from './Header';
 export { XPDisplay } from './XPDisplay';
+export { WelcomeBackModal } from './WelcomeBackModal';

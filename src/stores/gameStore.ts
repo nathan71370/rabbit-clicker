@@ -29,8 +29,22 @@ interface GameState {
   spendGoldenCarrots: (amount: number) => boolean;
   click: () => void;
   tick: (deltaTime: number) => void;
-  calculateOfflineProgress: () => void;
+  calculateOfflineProgress: () => OfflineEarnings | null;
   resetSessionStartTime: () => void;
+}
+
+/**
+ * Offline earnings result
+ */
+export interface OfflineEarnings {
+  /** Time away in seconds */
+  timeAway: number;
+  /** Carrots earned at 50% efficiency */
+  carrotsEarned: number;
+  /** What earnings would be at 100% efficiency */
+  potentialCarrots: number;
+  /** Production rate (carrots per second) */
+  carrotsPerSecond: number;
 }
 
 /**
@@ -168,7 +182,7 @@ export const useGameStore = create<GameState>()(
       /**
        * Calculate and apply offline progress
        * Called when the player returns to the game after being away
-       * Grants production based on time away (capped at 1 hour)
+       * Grants production based on time away (capped at 24 hours, 50% efficiency)
        */
       calculateOfflineProgress: () => {
         const state = get();
@@ -176,16 +190,25 @@ export const useGameStore = create<GameState>()(
         const timeAwayMs = now - state.lastPlayTime;
         const timeAwaySec = timeAwayMs / 1000;
 
-        // Only apply offline progress if away for more than 1 second
-        if (timeAwaySec < 1) {
-          return;
+        // Handle time travel (negative time) - just update lastPlayTime
+        if (timeAwaySec < 0) {
+          set({ lastPlayTime: now });
+          return null;
         }
 
-        // Cap offline time at 1 hour (3600 seconds)
-        const cappedTimeAway = Math.min(timeAwaySec, 3600);
+        // Only apply offline progress if away for more than 5 seconds
+        if (timeAwaySec < 5) {
+          return null;
+        }
 
-        // Calculate offline production
-        const offlineProduction = state.carrotsPerSecond * cappedTimeAway;
+        // Cap offline time at 24 hours (86400 seconds)
+        const cappedTimeAway = Math.min(timeAwaySec, 86400);
+
+        // Calculate offline production at 100% (potential earnings)
+        const potentialCarrots = state.carrotsPerSecond * cappedTimeAway;
+
+        // Apply 50% efficiency for offline earnings
+        const offlineProduction = potentialCarrots * 0.5;
 
         if (offlineProduction > 0) {
           set({
@@ -195,11 +218,23 @@ export const useGameStore = create<GameState>()(
           });
 
           console.log(
-            `Offline progress: +${offlineProduction.toFixed(2)} carrots from ${cappedTimeAway.toFixed(1)}s away`
+            `Offline progress: +${offlineProduction.toFixed(2)} carrots (50% of ${potentialCarrots.toFixed(2)}) from ${cappedTimeAway.toFixed(1)}s away`
           );
+
+          // Check achievements after offline progress
+          checkAllAchievements();
+
+          // Return offline earnings data
+          return {
+            timeAway: cappedTimeAway,
+            carrotsEarned: offlineProduction,
+            potentialCarrots,
+            carrotsPerSecond: state.carrotsPerSecond,
+          };
         } else {
           // Update lastPlayTime even if no production
           set({ lastPlayTime: now });
+          return null;
         }
       },
 
