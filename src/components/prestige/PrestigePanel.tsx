@@ -13,6 +13,7 @@ import {
   performPrestige,
   PRESTIGE_UNLOCK_THRESHOLD,
 } from '@/game/mechanics/prestige';
+import { PrestigeConfirm } from './PrestigeConfirm';
 
 interface PrestigePanelProps {
   onClose?: () => void;
@@ -278,44 +279,35 @@ export function PrestigePanel({ onClose }: PrestigePanelProps) {
           </div>
 
           {/* Prestige Button */}
-          {!isConfirming ? (
-            <button
-              onClick={() => setIsConfirming(true)}
-              disabled={!canDoPrestige || isPerformingPrestige}
-              className={`w-full py-4 rounded-xl font-bold text-xl transition-all ${
-                canDoPrestige && !isPerformingPrestige
-                  ? 'bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 hover:shadow-lg active:scale-98'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {isPerformingPrestige ? 'Performing Prestige...' : 'Prestige Now'}
-            </button>
-          ) : (
-            <div className="space-y-3">
-              <div className="card bg-yellow-50 border-2 border-yellow-400">
-                <p className="text-center font-bold text-yellow-900">
-                  ⚠️ Are you sure? This will reset your current run progress!
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setIsConfirming(false)}
-                  className="py-3 rounded-lg font-bold bg-gray-300 text-gray-700 hover:bg-gray-400 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handlePrestige}
-                  disabled={isPerformingPrestige}
-                  className="py-3 rounded-lg font-bold bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 transition-all"
-                >
-                  {isPerformingPrestige ? 'Prestiging...' : 'Confirm Prestige'}
-                </button>
-              </div>
-            </div>
-          )}
+          <button
+            onClick={() => setIsConfirming(true)}
+            disabled={!canDoPrestige || isPerformingPrestige}
+            className={`w-full py-4 rounded-xl font-bold text-xl transition-all ${
+              canDoPrestige && !isPerformingPrestige
+                ? 'bg-gradient-to-r from-purple-500 to-purple-700 text-white hover:from-purple-600 hover:to-purple-800 hover:shadow-lg active:scale-98'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {isPerformingPrestige ? 'Performing Prestige...' : 'Prestige Now'}
+          </button>
         </div>
       </div>
+
+      {/* Dramatic Confirmation Dialog */}
+      {isConfirming && (
+        <PrestigeConfirm
+          goldenSeedsToEarn={goldenSeedsToEarn}
+          newGoldenSeeds={newGoldenSeeds}
+          newMultiplier={newMultiplier}
+          keptRabbitsCount={keptRabbits.length}
+          lostRabbitsCount={allRabbits.length - keptRabbits.length}
+          goldenCarrots={goldenCarrots}
+          achievementsCompleted={achievementStats.completed}
+          onConfirm={handlePrestige}
+          onCancel={() => setIsConfirming(false)}
+          isPerforming={isPerformingPrestige}
+        />
+      )}
     </div>
   );
 }
