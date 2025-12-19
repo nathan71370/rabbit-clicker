@@ -5,3 +5,4 @@
 
 export { useGameLoop } from './useGameLoop';
 export { useAutoSave } from './useAutoSave';
+export { useOfflineTime } from './useOfflineTime';

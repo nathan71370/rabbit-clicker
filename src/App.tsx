@@ -12,8 +12,9 @@ import {
   Settings,
   TabNavigation,
   Header,
+  WelcomeBackModal,
 } from '@/components/ui';
-import { useGameLoop, useAutoSave } from '@/hooks';
+import { useGameLoop, useAutoSave, useOfflineTime } from '@/hooks';
 import { loadGame } from '@/services';
 
 /**
@@ -26,6 +27,10 @@ function App() {
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
   const [isPrestigeOpen, setIsPrestigeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('clicker');
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+
+  // Calculate offline earnings
+  const offlineEarnings = useOfflineTime();
 
   // Load saved game on initialization
   useEffect(() => {
@@ -46,6 +51,13 @@ function App() {
       setIsLoading(false);
     }
   }, []);
+
+  // Show welcome back modal if there are offline earnings
+  useEffect(() => {
+    if (!isLoading && offlineEarnings) {
+      setShowWelcomeBack(true);
+    }
+  }, [isLoading, offlineEarnings]);
 
   // Initialize game loop for idle production (waits for loading to complete)
   useGameLoop(false, isLoading);
@@ -83,6 +95,14 @@ function App() {
 
       {/* Prestige Modal */}
       {isPrestigeOpen && <PrestigePanel onClose={() => setIsPrestigeOpen(false)} />}
+
+      {/* Welcome Back Modal */}
+      {showWelcomeBack && offlineEarnings && (
+        <WelcomeBackModal
+          earnings={offlineEarnings}
+          onClose={() => setShowWelcomeBack(false)}
+        />
+      )}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 pt-20 pb-20 md:pb-8">
