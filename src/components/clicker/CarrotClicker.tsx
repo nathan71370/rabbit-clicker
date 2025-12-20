@@ -32,15 +32,29 @@ export function CarrotClicker() {
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      // Spawn 3-5 particles
-      const particleCount = 3 + Math.floor(Math.random() * 3);
+      // Spawn 5-8 particles for a more polished effect
+      const particleCount = 5 + Math.floor(Math.random() * 4);
       const newParticles: Particle[] = [];
 
+      // Color variations (orange shades)
+      const colors = ['normal', 'light', 'dark'];
+
       for (let i = 0; i < particleCount; i++) {
+        // Physics-based velocity
+        const angle = (Math.random() * Math.PI) - Math.PI / 2; // Spread in upper hemisphere
+        const speed = 60 + Math.random() * 80; // Velocity magnitude
+        const vx = Math.cos(angle) * speed;
+        const vy = Math.sin(angle) * speed - 100; // Negative for upward motion
+
         newParticles.push({
           id: performance.now() + i, // Microsecond precision + index for guaranteed uniqueness
-          x: x + (Math.random() - 0.5) * 40, // Random spread
-          y: y + (Math.random() - 0.5) * 40,
+          x: x + (Math.random() - 0.5) * 30, // Slight random initial spread
+          y: y + (Math.random() - 0.5) * 30,
+          vx,
+          vy,
+          rotation: Math.random() * 360, // Random initial rotation
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 0.8 + Math.random() * 0.4, // Size variation (0.8 to 1.2)
         });
       }
 
