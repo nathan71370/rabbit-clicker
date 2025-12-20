@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Crate } from '@/types/crate';
 import type { Rabbit } from '@/types/rabbit';
@@ -87,6 +87,34 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
       clearTimeout(startTimer);
     };
   }, [rabbit, stage, isDuplicate]);
+
+  // Memoize particle data to prevent visual inconsistencies on re-renders
+  const burstParticles = useMemo(() =>
+    Array.from({ length: 16 }).map((_, i) => ({
+      angle: (i * Math.PI * 2) / 16,
+      distance: 150 + Math.random() * 100,
+      rotation: Math.random() * 360,
+    })), []
+  );
+
+  const confettiParticles = useMemo(() =>
+    Array.from({ length: 30 }).map(() => {
+      const confettiColors = ['bg-red-500', 'bg-yellow-400', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
+      return {
+        angle: Math.random() * Math.PI * 2,
+        distance: 80 + Math.random() * 150,
+        color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+        rotation: Math.random() * 720 - 360,
+      };
+    }), []
+  );
+
+  const sparkleParticles = useMemo(() =>
+    Array.from({ length: 8 }).map((_, i) => ({
+      angle: (i * Math.PI * 2) / 8,
+      distance: 100,
+    })), []
+  );
 
   // Early return if no rabbit (after all hooks to avoid Rules of Hooks violation)
   if (!rabbit) return null;
@@ -180,9 +208,7 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
               {/* Enhanced burst particles with physics */}
               <div className="relative">
                 {/* Main energy burst particles */}
-                {Array.from({ length: 16 }).map((_, i) => {
-                  const angle = (i * Math.PI * 2) / 16;
-                  const distance = 150 + Math.random() * 100;
+                {burstParticles.map((particle, i) => {
                   const isEpicPlus = ['epic', 'legendary', 'mythical'].includes(rabbit.rarity);
 
                   return (
@@ -192,10 +218,10 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
                       initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
                       animate={{
                         scale: [0, 1.2, 0.8, 0],
-                        x: [0, Math.cos(angle) * distance * 0.5, Math.cos(angle) * distance],
-                        y: [0, Math.sin(angle) * distance * 0.5 - 30, Math.sin(angle) * distance + 50],
+                        x: [0, Math.cos(particle.angle) * particle.distance * 0.5, Math.cos(particle.angle) * particle.distance],
+                        y: [0, Math.sin(particle.angle) * particle.distance * 0.5 - 30, Math.sin(particle.angle) * particle.distance + 50],
                         opacity: [1, 1, 0.8, 0],
-                        rotate: [0, Math.random() * 360],
+                        rotate: [0, particle.rotation],
                       }}
                       transition={{
                         duration: 1,
@@ -212,31 +238,24 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
                 {/* Confetti for Epic+ rarities */}
                 {['epic', 'legendary', 'mythical'].includes(rabbit.rarity) && (
                   <>
-                    {Array.from({ length: 30 }).map((_, i) => {
-                      const angle = Math.random() * Math.PI * 2;
-                      const distance = 80 + Math.random() * 150;
-                      const confettiColors = ['bg-red-500', 'bg-yellow-400', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
-                      const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-
-                      return (
-                        <motion.div
-                          key={`confetti-${i}`}
-                          className={`absolute top-1/2 left-1/2 w-2 h-3 ${color}`}
-                          initial={{ scale: 0, x: 0, y: 0, opacity: 1, rotate: 0 }}
-                          animate={{
-                            scale: [0, 1, 1, 1],
-                            x: Math.cos(angle) * distance,
-                            y: [0, Math.sin(angle) * distance - 50, Math.sin(angle) * distance + 200],
-                            opacity: [1, 1, 1, 0],
-                            rotate: [0, Math.random() * 720 - 360],
-                          }}
-                          transition={{
-                            duration: 1.2,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                          }}
-                        />
-                      );
-                    })}
+                    {confettiParticles.map((particle, i) => (
+                      <motion.div
+                        key={`confetti-${i}`}
+                        className={`absolute top-1/2 left-1/2 w-2 h-3 ${particle.color}`}
+                        initial={{ scale: 0, x: 0, y: 0, opacity: 1, rotate: 0 }}
+                        animate={{
+                          scale: [0, 1, 1, 1],
+                          x: Math.cos(particle.angle) * particle.distance,
+                          y: [0, Math.sin(particle.angle) * particle.distance - 50, Math.sin(particle.angle) * particle.distance + 200],
+                          opacity: [1, 1, 1, 0],
+                          rotate: [0, particle.rotation],
+                        }}
+                        transition={{
+                          duration: 1.2,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }}
+                      />
+                    ))}
                   </>
                 )}
 
@@ -256,32 +275,27 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
                 )}
 
                 {/* Sparkle particles */}
-                {Array.from({ length: 8 }).map((_, i) => {
-                  const angle = (i * Math.PI * 2) / 8;
-                  const distance = 100;
-
-                  return (
-                    <motion.div
-                      key={`sparkle-${i}`}
-                      className="absolute top-1/2 left-1/2 text-3xl"
-                      initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
-                      animate={{
-                        scale: [0, 1.5, 0],
-                        x: Math.cos(angle) * distance,
-                        y: Math.sin(angle) * distance,
-                        opacity: [0, 1, 0],
-                        rotate: [0, 180],
-                      }}
-                      transition={{
-                        duration: 0.8,
-                        delay: i * 0.05,
-                        ease: 'easeOut',
-                      }}
-                    >
-                      ✨
-                    </motion.div>
-                  );
-                })}
+                {sparkleParticles.map((particle, i) => (
+                  <motion.div
+                    key={`sparkle-${i}`}
+                    className="absolute top-1/2 left-1/2 text-3xl"
+                    initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                    animate={{
+                      scale: [0, 1.5, 0],
+                      x: Math.cos(particle.angle) * particle.distance,
+                      y: Math.sin(particle.angle) * particle.distance,
+                      opacity: [0, 1, 0],
+                      rotate: [0, 180],
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      delay: i * 0.05,
+                      ease: 'easeOut',
+                    }}
+                  >
+                    ✨
+                  </motion.div>
+                ))}
 
                 {/* Central glow effect */}
                 <motion.div
