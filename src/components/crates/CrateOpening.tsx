@@ -104,24 +104,62 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
           {(stage === 'closed' || stage === 'shaking') && (
             <motion.div
               key="crate-closed"
-              className="text-center"
+              className="text-center relative"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: 1,
-                scale: 1,
-                rotate: stage === 'shaking' ? [0, -5, 5, -5, 5, 0] : 0,
+                scale: stage === 'shaking' ? [1, 1.05, 0.95, 1.05, 0.95, 1] : 1,
+                rotate: stage === 'shaking' ? [0, -8, 8, -10, 10, -8, 8, 0] : 0,
+                y: stage === 'shaking' ? [0, -10, 0, -15, 0, -10, 0] : 0,
               }}
-              exit={{ opacity: 0, scale: 0.5 }}
+              exit={{ opacity: 0, scale: 1.3 }}
               transition={{
+                scale: {
+                  duration: 0.8,
+                  ease: [0.4, 0, 0.2, 1],
+                  times: [0, 0.2, 0.4, 0.6, 0.8, 1],
+                },
                 rotate: {
-                  duration: 0.6,
-                  repeat: stage === 'shaking' ? 1 : 0,
+                  duration: 0.8,
+                  ease: [0.4, 0, 0.2, 1],
+                  times: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+                },
+                y: {
+                  duration: 0.8,
+                  ease: [0.4, 0, 0.2, 1],
+                  times: [0, 0.2, 0.35, 0.5, 0.65, 0.8, 1],
                 },
               }}
             >
+              {/* Anticipation glow during shake */}
+              {stage === 'shaking' && (
+                <motion.div
+                  className="absolute inset-0 -z-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.6, 0] }}
+                  transition={{ duration: 0.8, repeat: 1 }}
+                >
+                  <div className={`absolute inset-0 blur-3xl ${getRarityGlowColor(rabbit.rarity)} opacity-50`} />
+                </motion.div>
+              )}
+
               {/* Crate (animation starts automatically) */}
-              <div className="text-9xl mb-6">
+              <div className="text-9xl mb-6 relative">
                 {crate.icon}
+
+                {/* Crack lines appear during shake */}
+                {stage === 'shaking' && (
+                  <>
+                    <motion.div
+                      className="absolute inset-0 flex items-center justify-center text-6xl opacity-70"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: [0, 0.7, 0.7], scale: [0.5, 1, 1] }}
+                      transition={{ duration: 0.8, times: [0, 0.5, 1] }}
+                    >
+                      ⚡
+                    </motion.div>
+                  </>
+                )}
               </div>
 
               <p className="text-white text-2xl font-bold animate-pulse">
@@ -139,31 +177,122 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {/* Burst particles */}
+              {/* Enhanced burst particles with physics */}
               <div className="relative">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute top-1/2 left-1/2 w-4 h-4 bg-yellow-400 rounded-full"
-                    initial={{ scale: 0, x: 0, y: 0 }}
-                    animate={{
-                      scale: [0, 1, 0],
-                      x: Math.cos((i * Math.PI) / 6) * 200,
-                      y: Math.sin((i * Math.PI) / 6) * 200,
-                      opacity: [1, 1, 0],
-                    }}
-                    transition={{ duration: 0.8 }}
-                  />
-                ))}
+                {/* Main energy burst particles */}
+                {Array.from({ length: 16 }).map((_, i) => {
+                  const angle = (i * Math.PI * 2) / 16;
+                  const distance = 150 + Math.random() * 100;
+                  const isEpicPlus = ['epic', 'legendary', 'mythical'].includes(rabbit.rarity);
 
-                {/* Glow effect */}
+                  return (
+                    <motion.div
+                      key={`burst-${i}`}
+                      className={`absolute top-1/2 left-1/2 w-3 h-3 rounded-full ${getRarityParticleColor(rabbit.rarity)}`}
+                      initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
+                      animate={{
+                        scale: [0, 1.2, 0.8, 0],
+                        x: [0, Math.cos(angle) * distance * 0.5, Math.cos(angle) * distance],
+                        y: [0, Math.sin(angle) * distance * 0.5 - 30, Math.sin(angle) * distance + 50],
+                        opacity: [1, 1, 0.8, 0],
+                        rotate: [0, Math.random() * 360],
+                      }}
+                      transition={{
+                        duration: 1,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                        times: [0, 0.3, 0.7, 1],
+                      }}
+                      style={{
+                        boxShadow: isEpicPlus ? '0 0 10px currentColor' : 'none',
+                      }}
+                    />
+                  );
+                })}
+
+                {/* Confetti for Epic+ rarities */}
+                {['epic', 'legendary', 'mythical'].includes(rabbit.rarity) && (
+                  <>
+                    {Array.from({ length: 30 }).map((_, i) => {
+                      const angle = Math.random() * Math.PI * 2;
+                      const distance = 80 + Math.random() * 150;
+                      const confettiColors = ['bg-red-500', 'bg-yellow-400', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
+                      const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+
+                      return (
+                        <motion.div
+                          key={`confetti-${i}`}
+                          className={`absolute top-1/2 left-1/2 w-2 h-3 ${color}`}
+                          initial={{ scale: 0, x: 0, y: 0, opacity: 1, rotate: 0 }}
+                          animate={{
+                            scale: [0, 1, 1, 1],
+                            x: Math.cos(angle) * distance,
+                            y: [0, Math.sin(angle) * distance - 50, Math.sin(angle) * distance + 200],
+                            opacity: [1, 1, 1, 0],
+                            rotate: [0, Math.random() * 720 - 360],
+                          }}
+                          transition={{
+                            duration: 1.2,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                        />
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* Rainbow shimmer for Legendary */}
+                {rabbit.rarity === 'legendary' && (
+                  <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{
+                      scale: [0, 3, 4],
+                      opacity: [0, 0.8, 0],
+                    }}
+                    transition={{ duration: 1 }}
+                  >
+                    <div className="w-64 h-64 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 blur-2xl" />
+                  </motion.div>
+                )}
+
+                {/* Sparkle particles */}
+                {Array.from({ length: 8 }).map((_, i) => {
+                  const angle = (i * Math.PI * 2) / 8;
+                  const distance = 100;
+
+                  return (
+                    <motion.div
+                      key={`sparkle-${i}`}
+                      className="absolute top-1/2 left-1/2 text-3xl"
+                      initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                      animate={{
+                        scale: [0, 1.5, 0],
+                        x: Math.cos(angle) * distance,
+                        y: Math.sin(angle) * distance,
+                        opacity: [0, 1, 0],
+                        rotate: [0, 180],
+                      }}
+                      transition={{
+                        duration: 0.8,
+                        delay: i * 0.05,
+                        ease: 'easeOut',
+                      }}
+                    >
+                      ✨
+                    </motion.div>
+                  );
+                })}
+
+                {/* Central glow effect */}
                 <motion.div
-                  className={`text-9xl ${getRarityGlowColor(rabbit.rarity)}`}
-                  initial={{ scale: 1, opacity: 0.5 }}
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                  className="relative"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: [0.5, 1.5, 1], opacity: [0, 1, 0.8] }}
                   transition={{ duration: 0.8 }}
                 >
-                  ✨
+                  <div className={`text-9xl ${getRarityGlowColor(rabbit.rarity)} drop-shadow-2xl`}>
+                    ✨
+                  </div>
                 </motion.div>
               </div>
             </motion.div>
@@ -360,5 +489,27 @@ function getRarityBorderGlow(rarity: string): string {
       return 'bg-pink-400';
     default:
       return 'bg-gray-400';
+  }
+}
+
+/**
+ * Get rarity particle color for burst effect
+ */
+function getRarityParticleColor(rarity: string): string {
+  switch (rarity) {
+    case 'common':
+      return 'bg-gray-400';
+    case 'uncommon':
+      return 'bg-green-400';
+    case 'rare':
+      return 'bg-blue-400';
+    case 'epic':
+      return 'bg-purple-400';
+    case 'legendary':
+      return 'bg-yellow-400';
+    case 'mythical':
+      return 'bg-pink-400';
+    default:
+      return 'bg-yellow-400';
   }
 }
