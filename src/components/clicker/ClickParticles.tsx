@@ -1,6 +1,9 @@
 import { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Physics constant: pixels of downward acceleration
+const GRAVITY = 120;
+
 export interface Particle {
   id: number;
   x: number;
@@ -15,6 +18,15 @@ export interface Particle {
 interface ClickParticlesProps {
   particles: Particle[];
   onParticleComplete: (id: number) => void;
+}
+
+/**
+ * Helper function to get hue-rotate filter value based on particle color
+ */
+function getHueRotate(color: string): string {
+  if (color === 'light') return 'hue-rotate(10deg)';
+  if (color === 'dark') return 'hue-rotate(-10deg)';
+  return 'hue-rotate(0deg)';
 }
 
 /**
@@ -34,10 +46,12 @@ export function ClickParticles({ particles, onParticleComplete }: ClickParticles
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <AnimatePresence>
         {particles.map((particle) => {
-          // Calculate final position based on physics (velocity + gravity)
-          const gravity = 120; // Pixels of downward acceleration
+          // Calculate parabolic trajectory using physics: y(t) = y + vy*t + 0.5*g*t²
+          // Keyframes at t=0, t=0.5, t=1 for true parabolic motion
+          const midX = particle.x + particle.vx * 0.5;
+          const midY = particle.y + particle.vy * 0.5 + GRAVITY * 0.125; // 0.5 * GRAVITY * (0.5^2)
           const finalX = particle.x + particle.vx;
-          const finalY = particle.y + particle.vy + gravity;
+          const finalY = particle.y + particle.vy + 0.5 * GRAVITY; // 0.5 * GRAVITY * (1^2)
 
           return (
             <motion.div
@@ -52,8 +66,8 @@ export function ClickParticles({ particles, onParticleComplete }: ClickParticles
               animate={{
                 opacity: 0,
                 scale: 0.3,
-                x: finalX,
-                y: finalY,
+                x: [particle.x, midX, finalX], // Keyframes for parabolic x-motion
+                y: [particle.y, midY, finalY], // Keyframes for parabolic y-motion
                 rotate: particle.rotation + (particle.vx > 0 ? 360 : -360), // Rotate based on direction
               }}
               exit={{ opacity: 0 }}
@@ -71,7 +85,7 @@ export function ClickParticles({ particles, onParticleComplete }: ClickParticles
                 left: 0,
                 top: 0,
                 fontSize: `${particle.size * 24}px`,
-                filter: `hue-rotate(${particle.color === 'light' ? '10deg' : particle.color === 'dark' ? '-10deg' : '0deg'})`,
+                filter: getHueRotate(particle.color),
               }}
             >
               🥕
