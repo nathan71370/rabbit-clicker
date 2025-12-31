@@ -165,9 +165,9 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
                   className="absolute inset-0 -z-10"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 0.6, 0] }}
-                  transition={{ duration: 0.8, repeat: 1 }}
+                  transition={{ duration: 0.8, times: [0, 0.5, 1] }}
                 >
-                  <div className={`absolute inset-0 blur-3xl ${getRarityGlowColor(rabbit.rarity)} opacity-50`} />
+                  <div className={`absolute inset-0 blur-3xl ${getRarityParticleColor(rabbit.rarity)} opacity-50`} />
                 </motion.div>
               )}
 
@@ -524,6 +524,6 @@ function getRarityParticleColor(rarity: string): string {
     case 'mythical':
       return 'bg-pink-400';
     default:
-      return 'bg-yellow-400';
+      return 'bg-gray-400';
   }
 }
