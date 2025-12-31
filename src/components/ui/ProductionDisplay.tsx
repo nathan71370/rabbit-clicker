@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useGameStore } from '@/stores/gameStore';
 import { formatNumber } from '@/utils/formatNumber';
 import { ProductionBreakdown } from '@/components/clicker/ProductionBreakdown';
+import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 
 /**
  * ProductionDisplay Component
@@ -11,6 +12,14 @@ import { ProductionBreakdown } from '@/components/clicker/ProductionBreakdown';
  */
 export function ProductionDisplay() {
   const carrotsPerSecond = useGameStore((state) => state.carrotsPerSecond);
+
+  // Animate CPS value for smooth transitions
+  const animatedCPS = useAnimatedNumber(carrotsPerSecond, {
+    duration: 800,
+    useSpring: true,
+    stiffness: 80,
+    damping: 15,
+  });
 
   return (
     <div className="card border-2 border-green-500 overflow-hidden p-0">
@@ -30,18 +39,18 @@ export function ProductionDisplay() {
         {/* CPS Value with Animation and Tooltip */}
         <div className="relative group">
           <motion.div
-            key={carrotsPerSecond}
-            initial={{ scale: 1.2, opacity: 0 }}
+            key={Math.floor(carrotsPerSecond / 10)}
+            initial={{ scale: 1.05, opacity: 0.8 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{
               type: 'spring',
-              stiffness: 500,
-              damping: 25,
+              stiffness: 300,
+              damping: 20,
             }}
             className="text-center cursor-help"
           >
             <div className="text-6xl font-black text-green-600">
-              {formatNumber(carrotsPerSecond)}
+              {formatNumber(animatedCPS)}
             </div>
             <div className="text-lg font-bold text-accent mt-2 uppercase tracking-wider">
               per second

@@ -6,3 +6,4 @@
 export { useGameLoop } from './useGameLoop';
 export { useAutoSave } from './useAutoSave';
 export { useOfflineTime } from './useOfflineTime';
+export { useAnimatedNumber } from './useAnimatedNumber';
