@@ -177,16 +177,14 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
 
                 {/* Crack lines appear during shake */}
                 {stage === 'shaking' && (
-                  <>
-                    <motion.div
-                      className="absolute inset-0 flex items-center justify-center text-6xl opacity-70"
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: [0, 0.7, 0.7], scale: [0.5, 1, 1] }}
-                      transition={{ duration: 0.8, times: [0, 0.5, 1] }}
-                    >
-                      ⚡
-                    </motion.div>
-                  </>
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center text-6xl opacity-70"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: [0, 0.7, 0.7], scale: [0.5, 1, 1] }}
+                    transition={{ duration: 0.8, times: [0, 0.5, 1] }}
+                  >
+                    ⚡
+                  </motion.div>
                 )}
               </div>
 
