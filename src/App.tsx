@@ -13,8 +13,9 @@ import {
   TabNavigation,
   Header,
   WelcomeBackModal,
+  MilestoneCelebration,
 } from '@/components/ui';
-import { useGameLoop, useAutoSave, useOfflineTime } from '@/hooks';
+import { useGameLoop, useAutoSave, useOfflineTime, useMilestoneDetection } from '@/hooks';
 import { loadGame } from '@/services';
 
 /**
@@ -65,6 +66,11 @@ function App() {
   // Initialize auto-save system (waits for loading to complete)
   const { isSaving, triggerSave } = useAutoSave(isLoading);
 
+  // Initialize milestone detection (waits for loading to complete)
+  if (!isLoading) {
+    useMilestoneDetection();
+  }
+
   // Show loading screen while restoring save data
   if (isLoading) {
     return <LoadingScreen />;
@@ -77,6 +83,9 @@ function App() {
 
       {/* Achievement Toast Notifications */}
       <AchievementToast />
+
+      {/* Milestone Celebration */}
+      <MilestoneCelebration />
 
       {/* Header */}
       <Header
