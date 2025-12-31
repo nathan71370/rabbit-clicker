@@ -85,11 +85,11 @@ export function useAnimatedNumber(
         const acceleration = springForce - dampingForce;
 
         velocity += acceleration;
-        newValue = currentValue + velocity;
+        const springValue = currentValue + velocity;
 
-        // Apply time-based envelope to respect duration
-        // Mix spring result toward target based on progress
-        newValue = currentValue + (newValue - currentValue) * (1 - progress * 0.3);
+        // Lerp from spring result to target based on time progress
+        // At progress=0: pure spring physics, at progress=1: exact target
+        newValue = springValue + (target - springValue) * progress;
 
         // Force completion when duration elapsed
         if (progress >= 1) {
