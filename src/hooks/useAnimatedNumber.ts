@@ -52,15 +52,9 @@ export function useAnimatedNumber(
 
   const [displayValue, setDisplayValue] = useState(target);
   const animationRef = useRef<number | null>(null);
-  const velocityRef = useRef(0);
   const startTimeRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    // If target hasn't changed, no need to animate
-    if (displayValue === target) {
-      return;
-    }
-
     // Cancel any ongoing animation
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
@@ -68,6 +62,10 @@ export function useAnimatedNumber(
 
     startTimeRef.current = undefined;
     const startValue = displayValue;
+
+    // Track current value and velocity locally within animation loop
+    let currentValue = displayValue;
+    let velocity = 0;
 
     const animate = (timestamp: number) => {
       if (startTimeRef.current === undefined) {
@@ -80,24 +78,35 @@ export function useAnimatedNumber(
       let newValue: number;
 
       if (useSpring) {
-        // Spring physics animation
-        const delta = target - displayValue;
+        // Spring physics animation with duration enforcement
+        const delta = target - currentValue;
         const springForce = delta * (stiffness / 1000);
-        const dampingForce = velocityRef.current * (damping / 1000);
+        const dampingForce = velocity * (damping / 1000);
         const acceleration = springForce - dampingForce;
 
-        velocityRef.current += acceleration;
-        newValue = displayValue + velocityRef.current;
+        velocity += acceleration;
+        newValue = currentValue + velocity;
 
-        // Stop when close enough to target with low velocity
-        if (Math.abs(delta) < 0.01 && Math.abs(velocityRef.current) < 0.01) {
+        // Apply time-based envelope to respect duration
+        // Mix spring result toward target based on progress
+        newValue = currentValue + (newValue - currentValue) * (1 - progress * 0.3);
+
+        // Force completion when duration elapsed
+        if (progress >= 1) {
           newValue = target;
-          velocityRef.current = 0;
+          velocity = 0;
+        } else if (Math.abs(delta) < 0.01 && Math.abs(velocity) < 0.01) {
+          // Stop when close enough to target with low velocity
+          newValue = target;
+          velocity = 0;
         }
+
+        currentValue = newValue;
       } else {
         // Easing function (ease-out cubic)
         const easeOut = 1 - Math.pow(1 - progress, 3);
         newValue = startValue + (target - startValue) * easeOut;
+        currentValue = newValue;
       }
 
       setDisplayValue(newValue);
@@ -115,7 +124,7 @@ export function useAnimatedNumber(
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [target, displayValue, duration, useSpring, stiffness, damping]);
+  }, [target, duration, useSpring, stiffness, damping]);
 
   return Math.round(displayValue);
 }
