@@ -25,7 +25,12 @@
       "Bash(git restore:*)",
       "mcp__github__pull_request_read",
       "mcp__github__add_issue_comment",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git rebase:*)",
+      "Bash(gh pr view:*)"
     ],
     "deny": [],
     "ask": []
