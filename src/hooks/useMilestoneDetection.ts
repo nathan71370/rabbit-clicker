@@ -18,16 +18,30 @@ export function useMilestoneDetection() {
   // Track previous values to detect increases
   const prevLifetimeCarrots = useRef(lifetimeCarrots);
   const prevPrestigeCount = useRef(prestigeCount);
+  const isInitialized = useRef(false);
 
   useEffect(() => {
+    // Initialize refs on first render, don't trigger celebrations
+    if (!isInitialized.current) {
+      prevLifetimeCarrots.current = lifetimeCarrots;
+      prevPrestigeCount.current = prestigeCount;
+      isInitialized.current = true;
+      return;
+    }
+
     // Check carrot milestones when lifetime carrots increase
     if (lifetimeCarrots > prevLifetimeCarrots.current) {
       checkCarrotMilestone(lifetimeCarrots);
       prevLifetimeCarrots.current = lifetimeCarrots;
     }
-  }, [lifetimeCarrots, checkCarrotMilestone]);
+  }, [lifetimeCarrots, checkCarrotMilestone, prestigeCount]);
 
   useEffect(() => {
+    // Skip initial render
+    if (!isInitialized.current) {
+      return;
+    }
+
     // Check prestige milestones when prestige count increases
     if (prestigeCount > prevPrestigeCount.current) {
       checkPrestigeMilestone(prestigeCount);

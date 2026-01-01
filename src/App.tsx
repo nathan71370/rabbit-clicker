@@ -66,10 +66,8 @@ function App() {
   // Initialize auto-save system (waits for loading to complete)
   const { isSaving, triggerSave } = useAutoSave(isLoading);
 
-  // Initialize milestone detection (waits for loading to complete)
-  if (!isLoading) {
-    useMilestoneDetection();
-  }
+  // Initialize milestone detection (active after loading completes)
+  useMilestoneDetection();
 
   // Show loading screen while restoring save data
   if (isLoading) {
