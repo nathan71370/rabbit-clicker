@@ -45,8 +45,8 @@ export function WelcomeBackModal({ earnings, onClose }: WelcomeBackModalProps) {
   const efficiency = 50; // Current offline efficiency
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-scale-in">
+    <div className="fixed inset-0 bg-white z-50 flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border-4 border-gray-800 animate-scale-in">
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white p-6">
           <div className="flex items-center justify-center gap-3 mb-2">

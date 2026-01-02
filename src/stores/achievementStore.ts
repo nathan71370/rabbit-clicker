@@ -265,10 +265,8 @@ export const useAchievementStore = create<AchievementState>()(
               currentValue = state.getProgress(achievement.id);
           }
 
-          // Update progress (this will auto-unlock if target is met)
-          if (currentValue > 0) {
-            state.updateProgress(achievement.id, currentValue);
-          }
+          // Always update progress to ensure display is current
+          state.updateProgress(achievement.id, currentValue);
         });
       },
 

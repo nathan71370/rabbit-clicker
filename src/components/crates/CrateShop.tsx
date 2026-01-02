@@ -230,10 +230,10 @@ export function CrateShop() {
                   <button
                     onClick={() => handlePurchase(crate)}
                     disabled={!affordable || isOpening}
-                    className={`px-6 py-3 rounded-xl font-bold text-white shadow-md transition-all ${
+                    className={`btn-primary text-sm font-bold px-6 py-3 rounded-xl shadow-md transition-all duration-200 ${
                       affordable && !isOpening
-                        ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 hover:shadow-lg hover:scale-105'
-                        : 'bg-gray-300 cursor-not-allowed'
+                        ? 'hover:shadow-lg hover:scale-105'
+                        : 'opacity-40 cursor-not-allowed'
                     }`}
                   >
                     {isOpening ? 'OPENING...' : 'OPEN CRATE'}

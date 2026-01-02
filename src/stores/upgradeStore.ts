@@ -217,7 +217,12 @@ export const useUpgradeStore = create<UpgradeState>()(
        * @returns Number of buildings owned (0 if none)
        */
       getBuildingCount: (buildingId: string) => {
-        return get().buildings.get(buildingId) || 0;
+        const buildings = get().buildings;
+        // Ensure buildings is a Map (could be an object during hydration)
+        const buildingsMap = buildings instanceof Map
+          ? buildings
+          : new Map(Object.entries(buildings || {}).map(([k, v]) => [k, Number(v) || 0]));
+        return buildingsMap.get(buildingId) || 0;
       },
 
       /**
@@ -226,7 +231,11 @@ export const useUpgradeStore = create<UpgradeState>()(
        */
       getTotalBuildingCount: () => {
         const state = get();
-        return Array.from(state.buildings.values()).reduce((sum, count) => sum + count, 0);
+        // Ensure buildings is a Map (could be an object during hydration)
+        const buildingsMap = state.buildings instanceof Map
+          ? state.buildings
+          : new Map(Object.entries(state.buildings || {}).map(([k, v]) => [k, Number(v) || 0]));
+        return Array.from(buildingsMap.values()).reduce((sum, count) => sum + count, 0);
       },
 
       /**
@@ -266,7 +275,12 @@ export const useUpgradeStore = create<UpgradeState>()(
         }
 
         // Update building count
-        const newBuildings = new Map(state.buildings);
+        // Ensure buildings is a Map (could be an object during hydration)
+        const buildingsMap = state.buildings instanceof Map
+          ? state.buildings
+          : new Map(Object.entries(state.buildings || {}).map(([k, v]) => [k, Number(v) || 0]));
+
+        const newBuildings = new Map(buildingsMap);
         newBuildings.set(buildingId, currentCount + 1);
 
         set({
@@ -321,10 +335,21 @@ export const useUpgradeStore = create<UpgradeState>()(
           productionMultiplier?: number;
         };
 
+        // Safely convert buildings to Map, handling edge cases
+        let buildingsMap = new Map<string, number>();
+        if (persisted.buildings && typeof persisted.buildings === 'object') {
+          try {
+            buildingsMap = new Map(Object.entries(persisted.buildings).map(([k, v]) => [k, Number(v) || 0]));
+          } catch (e) {
+            console.error('Failed to restore buildings from localStorage:', e);
+            buildingsMap = new Map();
+          }
+        }
+
         return {
           ...currentState,
           purchasedUpgrades: new Set(persisted.purchasedUpgrades || []),
-          buildings: new Map(Object.entries(persisted.buildings || {})),
+          buildings: buildingsMap,
           clickMultiplier: persisted.clickMultiplier ?? currentState.clickMultiplier,
           productionMultiplier:
             persisted.productionMultiplier ?? currentState.productionMultiplier,

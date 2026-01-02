@@ -109,8 +109,8 @@ export function AchievementList({ onClose }: AchievementListProps) {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: '#FFF4E6' }}>
+      <div className="bg-white rounded-3xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col border-4 border-gray-800">
         {/* Header */}
         <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 flex items-center justify-between">
           <div>

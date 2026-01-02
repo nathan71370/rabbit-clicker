@@ -1,13 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { exportSave, importSave } from '@/services';
+import { useGameStore } from '@/stores/gameStore';
+import { useUpgradeStore } from '@/stores/upgradeStore';
+import { useRabbitStore } from '@/stores/rabbitStore';
+import { useCrateStore } from '@/stores/crateStore';
+import { useAchievementStore } from '@/stores/achievementStore';
+import { usePrestigeStore } from '@/stores/prestigeStore';
+import { useMilestoneStore } from '@/stores/milestoneStore';
 
 interface SettingsProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const SAVE_KEY = 'rabbit-clicker-save';
 
 /**
  * Settings Component
@@ -83,15 +88,86 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
   };
 
   /**
-   * Reset progress (clear localStorage)
+   * Reset progress (clear localStorage and reset all stores)
    */
   const handleReset = () => {
     try {
-      localStorage.removeItem(SAVE_KEY);
-      showNotification('Progress reset successfully!', 'success');
-      setShowResetConfirm(false);
-      // Reload page to start fresh
-      setTimeout(() => window.location.reload(), 1000);
+      console.log('Starting reset...');
+
+      // STEP 1: Reset all Zustand stores to their initial state IN MEMORY
+      // This prevents them from auto-saving the old data back to localStorage
+
+      // Reset game store
+      const gameInitialState = (useGameStore as any).getInitialState?.() || {
+        carrots: 0,
+        goldenCarrots: 0,
+        carrotsPerSecond: 0,
+        clickPower: 1,
+        lifetimeCarrots: 0,
+        totalClicks: 0,
+        lastSaveTime: Date.now(),
+        lastPlayTime: Date.now(),
+        gameSessionStartTime: Date.now(),
+      };
+      useGameStore.setState(gameInitialState);
+
+      // Reset upgrade store
+      useUpgradeStore.setState({
+        purchasedUpgrades: new Set(),
+        buildings: new Map(),
+        clickMultiplier: 1,
+        productionMultiplier: 1,
+      });
+
+      // Reset rabbit store
+      useRabbitStore.setState({
+        ownedRabbits: new Map(),
+        activeTeam: [],
+        maxTeamSize: 3,
+        rabbitXP: 0,
+      });
+
+      // Reset crate store
+      useCrateStore.setState({
+        cratesSinceEpic: 0,
+        cratesSinceLegendary: 0,
+        cratesSinceMythical: 0,
+        epicPityThreshold: 10,
+        legendaryPityThreshold: 50,
+        mythicalPityThreshold: 100,
+        recentDrops: [],
+      });
+
+      // Reset achievement store
+      useAchievementStore.setState({
+        unlockedAchievements: new Set(),
+        achievementProgress: new Map(),
+        unlockTimestamps: new Map(),
+        lastCheckTime: Date.now(),
+      });
+
+      // Reset prestige store
+      usePrestigeStore.setState({
+        goldenSeeds: 0,
+        prestigeCount: 0,
+        totalLifetimeCarrots: 0,
+      });
+
+      // Reset milestone store
+      useMilestoneStore.setState({
+        completedMilestones: new Set(),
+        activeCelebration: null,
+      });
+
+      console.log('All stores reset in memory');
+
+      // STEP 2: Clear localStorage
+      localStorage.clear();
+      sessionStorage.clear();
+      console.log('localStorage cleared');
+
+      // STEP 3: Reload page immediately
+      window.location.href = window.location.origin + window.location.pathname;
     } catch (error) {
       console.error('Reset failed:', error);
       showNotification('Failed to reset progress', 'error');
@@ -132,27 +208,25 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          />
-
-          {/* Modal */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: '#FFF4E6' }}
+          onClick={onClose}
+        >
           <motion.div
             ref={modalRef}
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ scale: 0.9, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.9, y: 20 }}
             role="dialog"
             aria-labelledby="settings-title"
             aria-modal="true"
             tabIndex={-1}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-2xl z-50 w-full max-w-md p-6"
+            className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 border-4 border-gray-800"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
@@ -254,7 +328,7 @@ export function Settings({ isOpen, onClose }: SettingsProps) {
               )}
             </div>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );

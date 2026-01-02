@@ -22,7 +22,7 @@ const PRESTIGE_MILESTONE_REWARDS: Record<number, number> = {
  * Minimum carrots required to unlock prestige
  * From GAME_DESIGN.md: 1 billion lifetime carrots
  */
-export const PRESTIGE_UNLOCK_THRESHOLD = 1_000_000_000;
+export const PRESTIGE_UNLOCK_THRESHOLD = 1000000000;
 
 /**
  * Result of a prestige operation

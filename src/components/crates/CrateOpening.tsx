@@ -121,7 +121,8 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 flex items-center justify-center z-50 p-4"
+      style={{ backgroundColor: '#FFF4E6' }}
       role="dialog"
       aria-modal="true"
       aria-label="Crate opening animation"
@@ -419,7 +420,7 @@ export function CrateOpening({ crate, rabbit, isDuplicate, xpAmount, onComplete 
                 {stage === 'complete' && (
                   <motion.button
                     onClick={onComplete}
-                    className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-lg"
+                    className="w-full btn-primary font-bold py-3 px-6 rounded-lg transition-all shadow-lg"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.9 }}

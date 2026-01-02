@@ -215,8 +215,8 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
     name: 'Carrot Fertilizer',
     description: 'Premium fertilizer that boosts all carrot production by 25%.',
     type: 'cps_multiplier',
-    baseCost: 5000,
-    currentCost: 5000,
+    baseCost: 10000,
+    currentCost: 10000,
     effect: 1.25, // 1.25× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
@@ -228,11 +228,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'growth_hormone',
     name: 'Growth Hormone',
-    description: 'Experimental growth hormone that increases all production by 50%.',
+    description: 'Experimental growth hormone that increases all production by 25%.',
     type: 'cps_multiplier',
-    baseCost: 25000,
-    currentCost: 25000,
-    effect: 1.5, // 1.5× multiplier
+    baseCost: 100000,
+    currentCost: 100000,
+    effect: 1.25, // 1.25× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -243,11 +243,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'genetic_engineering',
     name: 'Genetic Engineering',
-    description: 'Genetically modified carrots that double all production.',
+    description: 'Genetically modified carrots that increase all production by 50%.',
     type: 'cps_multiplier',
-    baseCost: 100000,
-    currentCost: 100000,
-    effect: 2.0, // 2× multiplier
+    baseCost: 1000000,
+    currentCost: 1000000,
+    effect: 1.5, // 1.5× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -258,11 +258,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'super_carrots',
     name: 'Super Carrots',
-    description: 'Ultra-enhanced super carrots that multiply all production by 2.5×.',
+    description: 'Ultra-enhanced super carrots that double all production.',
     type: 'cps_multiplier',
-    baseCost: 500000,
-    currentCost: 500000,
-    effect: 2.5, // 2.5× multiplier
+    baseCost: 10000000,
+    currentCost: 10000000,
+    effect: 2.0, // 2× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -273,11 +273,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'quantum_growth',
     name: 'Quantum Growth',
-    description: 'Quantum mechanics applied to agriculture. Multiplies all production by 5×.',
+    description: 'Quantum mechanics applied to agriculture. Multiplies all production by 2×.',
     type: 'cps_multiplier',
-    baseCost: 1000000,
-    currentCost: 1000000,
-    effect: 5.0, // 5× multiplier
+    baseCost: 100000000,
+    currentCost: 100000000,
+    effect: 2.0, // 2× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -288,11 +288,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'molecular_enhancement',
     name: 'Molecular Enhancement',
-    description: 'Rearrange molecules for perfect carrots. Multiplies all production by 10×.',
+    description: 'Rearrange molecules for perfect carrots. Multiplies all production by 3×.',
     type: 'cps_multiplier',
-    baseCost: 10000000,
-    currentCost: 10000000,
-    effect: 10.0, // 10× multiplier
+    baseCost: 1000000000,
+    currentCost: 1000000000,
+    effect: 3.0, // 3× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -303,11 +303,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'temporal_acceleration',
     name: 'Temporal Acceleration',
-    description: 'Bend time itself to accelerate growth. Multiplies all production by 25×.',
+    description: 'Bend time itself to accelerate growth. Multiplies all production by 5×.',
     type: 'cps_multiplier',
-    baseCost: 100000000,
-    currentCost: 100000000,
-    effect: 25.0, // 25× multiplier
+    baseCost: 10000000000,
+    currentCost: 10000000000,
+    effect: 5.0, // 5× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -318,11 +318,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'reality_warping',
     name: 'Reality Warping',
-    description: 'Warp reality to create carrots from nothing. Multiplies all production by 50×.',
+    description: 'Warp reality to create carrots from nothing. Multiplies all production by 10×.',
     type: 'cps_multiplier',
-    baseCost: 1000000000,
-    currentCost: 1000000000,
-    effect: 50.0, // 50× multiplier
+    baseCost: 100000000000,
+    currentCost: 100000000000,
+    effect: 10.0, // 10× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -333,11 +333,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'dimensional_farming',
     name: 'Dimensional Farming',
-    description: 'Farm carrots across infinite dimensions. Multiplies all production by 100×.',
+    description: 'Farm carrots across infinite dimensions. Multiplies all production by 20×.',
     type: 'cps_multiplier',
-    baseCost: 10000000000,
-    currentCost: 10000000000,
-    effect: 100.0, // 100× multiplier
+    baseCost: 1000000000000,
+    currentCost: 1000000000000,
+    effect: 20.0, // 20× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
@@ -348,11 +348,11 @@ export const CPS_MULTIPLIER_UPGRADES: Upgrade[] = [
   {
     id: 'omnipotent_harvest',
     name: 'Omnipotent Harvest',
-    description: 'Ascend to godhood and harvest carrots from the very fabric of existence. Multiplies all production by 500×.',
+    description: 'Ascend to godhood and harvest carrots from the very fabric of existence. Multiplies all production by 50×.',
     type: 'cps_multiplier',
-    baseCost: 100000000000,
-    currentCost: 100000000000,
-    effect: 500.0, // 500× multiplier
+    baseCost: 10000000000000,
+    currentCost: 10000000000000,
+    effect: 50.0, // 50× multiplier
     maxPurchases: 1,
     purchaseCount: 0,
     costScaling: 1.0,
