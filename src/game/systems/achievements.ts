@@ -64,8 +64,8 @@ function checkProductionAchievements(
     { id: 'carrot_god', target: 1000000000000 },
   ];
 
-  carrotAchievements.forEach(({ id, target }) => {
-    if (!achievementState.isUnlocked(id) && lifetimeCarrots >= target) {
+  carrotAchievements.forEach(({ id }) => {
+    if (!achievementState.isUnlocked(id)) {
       achievementState.updateProgress(id, lifetimeCarrots);
     }
   });
@@ -77,8 +77,8 @@ function checkProductionAchievements(
     { id: 'production_legend', target: 1000000 },
   ];
 
-  cpsAchievements.forEach(({ id, target }) => {
-    if (!achievementState.isUnlocked(id) && carrotsPerSecond >= target) {
+  cpsAchievements.forEach(({ id }) => {
+    if (!achievementState.isUnlocked(id)) {
       achievementState.updateProgress(id, carrotsPerSecond);
     }
   });
@@ -102,8 +102,8 @@ function checkClickingAchievements(
     { id: 'click_god', target: 1000000 },
   ];
 
-  clickAchievements.forEach(({ id, target }) => {
-    if (!achievementState.isUnlocked(id) && totalClicks >= target) {
+  clickAchievements.forEach(({ id }) => {
+    if (!achievementState.isUnlocked(id)) {
       achievementState.updateProgress(id, totalClicks);
     }
   });
@@ -128,8 +128,8 @@ function checkCollectionAchievements(
     { id: 'master_collector', target: 30 },
   ];
 
-  collectionAchievements.forEach(({ id, target }) => {
-    if (!achievementState.isUnlocked(id) && uniqueRabbitsCount >= target) {
+  collectionAchievements.forEach(({ id }) => {
+    if (!achievementState.isUnlocked(id)) {
       achievementState.updateProgress(id, uniqueRabbitsCount);
     }
   });
@@ -138,7 +138,7 @@ function checkCollectionAchievements(
   const rareRabbits = getRareRabbits();
   const ownedRareCount = rareRabbits.filter((rabbit) => ownedRabbits.has(rabbit.id)).length;
 
-  if (!achievementState.isUnlocked('rare_breeder') && ownedRareCount >= 5) {
+  if (!achievementState.isUnlocked('rare_breeder')) {
     achievementState.updateProgress('rare_breeder', ownedRareCount);
   }
 
@@ -147,7 +147,7 @@ function checkCollectionAchievements(
   const ownedLegendaryCount = legendaryRabbits.filter((rabbit) => ownedRabbits.has(rabbit.id))
     .length;
 
-  if (!achievementState.isUnlocked('legendary_hunter') && ownedLegendaryCount >= 1) {
+  if (!achievementState.isUnlocked('legendary_hunter')) {
     achievementState.updateProgress('legendary_hunter', ownedLegendaryCount);
   }
 
@@ -155,7 +155,7 @@ function checkCollectionAchievements(
   const epicRabbits = getEpicRabbits();
   const ownedEpicCount = epicRabbits.filter((rabbit) => ownedRabbits.has(rabbit.id)).length;
 
-  if (!achievementState.isUnlocked('epic_collector') && ownedEpicCount >= 2) {
+  if (!achievementState.isUnlocked('epic_collector')) {
     achievementState.updateProgress('epic_collector', ownedEpicCount);
   }
 }
@@ -194,7 +194,7 @@ function checkSpecialAchievements(
   // Building count achievement
   const totalBuildings = upgradeState.getTotalBuildingCount();
 
-  if (!achievementState.isUnlocked('building_empire') && totalBuildings >= 100) {
+  if (!achievementState.isUnlocked('building_empire')) {
     achievementState.updateProgress('building_empire', totalBuildings);
   }
 
@@ -203,7 +203,7 @@ function checkSpecialAchievements(
   const rabbits = Array.from(rabbitState.ownedRabbits.values());
   const maxRabbitLevel = rabbits.reduce((max, rabbit) => Math.max(max, rabbit.level), 0);
 
-  if (!achievementState.isUnlocked('max_level') && maxRabbitLevel >= 100) {
+  if (!achievementState.isUnlocked('max_level')) {
     achievementState.updateProgress('max_level', maxRabbitLevel);
   }
 

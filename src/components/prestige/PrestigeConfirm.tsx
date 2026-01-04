@@ -57,8 +57,8 @@ export function PrestigeConfirm({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden animate-scale-in">
+    <div className="fixed inset-0 bg-white z-50 flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden border-4 border-gray-800 animate-scale-in">
         {/* Dramatic Warning Header */}
         <div className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white p-6">
           <div className="flex items-center justify-center gap-3 mb-3">

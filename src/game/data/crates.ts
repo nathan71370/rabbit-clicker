@@ -8,7 +8,7 @@ import type { Rarity } from '@/types/rabbit';
 
 /**
  * Basic Crate
- * Cost: 1,000 carrots
+ * Cost: 5 Golden Carrots
  * Drop rates: 60% Common, 30% Uncommon, 10% Rare
  */
 export const BASIC_CRATE: Crate = {
@@ -17,7 +17,7 @@ export const BASIC_CRATE: Crate = {
   type: 'basic' as CrateType,
   description: 'A simple crate containing common rabbits. Great for starting your collection!',
   cost: {
-    carrots: 1000,
+    goldenCarrots: 5,
   },
   icon: '📦',
   dropRates: {
@@ -29,12 +29,12 @@ export const BASIC_CRATE: Crate = {
     mythical: 0,      // 0%
   } as Record<Rarity, number>,
   isAvailable: true,
-  features: ['Guaranteed rabbit', 'Budget-friendly'],
+  features: ['Guaranteed rabbit', 'Entry level'],
 };
 
 /**
  * Silver Crate
- * Cost: 5,000 carrots
+ * Cost: 25 Golden Carrots
  * Drop rates: 40% Common, 35% Uncommon, 20% Rare, 5% Epic
  */
 export const SILVER_CRATE: Crate = {
@@ -43,7 +43,7 @@ export const SILVER_CRATE: Crate = {
   type: 'silver' as CrateType,
   description: 'A premium crate with better odds. Increased chance for rare rabbits!',
   cost: {
-    carrots: 5000,
+    goldenCarrots: 25,
   },
   icon: '🎁',
   dropRates: {
@@ -60,7 +60,7 @@ export const SILVER_CRATE: Crate = {
 
 /**
  * Gold Crate
- * Cost: 25,000 carrots
+ * Cost: 75 Golden Carrots
  * Drop rates: 0% Common, 45% Uncommon, 35% Rare, 18% Epic, 2% Legendary
  */
 export const GOLD_CRATE: Crate = {
@@ -69,7 +69,7 @@ export const GOLD_CRATE: Crate = {
   type: 'gold' as CrateType,
   description: 'The ultimate crate with the best odds! No common rabbits guaranteed!',
   cost: {
-    carrots: 25000,
+    goldenCarrots: 75,
   },
   icon: '✨',
   dropRates: {

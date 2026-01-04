@@ -85,10 +85,10 @@ export function RabbitCard({
             <button
               onClick={() => onPurchase(rabbit.id)}
               disabled={!canPurchase}
-              className={`px-5 py-2.5 rounded-lg font-bold text-white shadow-md transition-all ${
+              className={`btn-primary px-5 py-2.5 rounded-lg font-bold shadow-md transition-all ${
                 canPurchase
-                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 hover:shadow-lg active:scale-95'
-                  : 'bg-gray-300 cursor-not-allowed'
+                  ? 'hover:shadow-lg active:scale-95'
+                  : 'opacity-40 cursor-not-allowed'
               }`}
             >
               Buy

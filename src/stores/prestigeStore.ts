@@ -32,7 +32,7 @@ interface PrestigeState {
  * Prestige unlock threshold
  * Player must earn this many carrots in current run to unlock prestige
  */
-const PRESTIGE_UNLOCK_THRESHOLD = 1_000_000_000; // 1 billion
+const PRESTIGE_UNLOCK_THRESHOLD = 1000000000; // 1 billion
 
 /**
  * Golden Seed bonus per seed

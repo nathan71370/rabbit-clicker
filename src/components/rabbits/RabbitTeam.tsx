@@ -87,9 +87,9 @@ export function RabbitTeam() {
             </p>
           </div>
           <div className="text-right">
-            <div className="text-sm text-gray-600">Team CPS</div>
+            <div className="text-sm text-gray-600">Team Carrots/s</div>
             <div className="text-2xl font-bold text-carrot">
-              +{formatNumber(teamCPS)}/s
+              +{formatNumber(teamCPS)}
             </div>
           </div>
         </div>
@@ -128,18 +128,18 @@ export function RabbitTeam() {
                       <motion.button
                         onClick={() => handleSlotClick(slotIndex)}
                         disabled={isGapSlot}
-                        className={`w-full h-full min-h-[280px] border-2 border-dashed rounded-lg transition-all flex flex-col items-center justify-center gap-3 ${
+                        className={`w-full h-full min-h-[280px] border-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-4 shadow-lg ${
                           isGapSlot
-                            ? 'border-gray-200 bg-gray-100 opacity-50 cursor-not-allowed'
-                            : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400 cursor-pointer'
+                            ? 'border-gray-300 bg-gray-100 opacity-60 cursor-not-allowed'
+                            : 'border-gray-800 btn-primary cursor-pointer'
                         }`}
                         whileHover={isGapSlot ? {} : { scale: 1.02 }}
                         whileTap={isGapSlot ? {} : { scale: 0.98 }}
                         aria-disabled={isGapSlot}
                         title={isGapSlot ? 'Fill previous slots first' : 'Click to Add Rabbit'}
                       >
-                        <div className="text-6xl text-gray-300">+</div>
-                        <div className="text-gray-500 font-semibold text-sm text-center px-2">
+                        <div className={`text-7xl ${isGapSlot ? 'text-gray-400' : 'text-accent'}`}>+</div>
+                        <div className={`font-bold text-base text-center px-4 ${isGapSlot ? 'text-gray-500' : 'text-accent'}`}>
                           {isGapSlot ? 'Fill previous slots first' : 'Click to Add Rabbit'}
                         </div>
                       </motion.button>
@@ -156,22 +156,23 @@ export function RabbitTeam() {
       <AnimatePresence>
         {selectingSlot !== null && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            style={{ backgroundColor: '#FFF4E6' }}
             onClick={() => setSelectingSlot(null)}
           >
             <motion.div
               key="rabbit-selector"
-              className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto"
+              className="bg-white rounded-3xl shadow-2xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto border-4 border-gray-800"
               onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
             >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold text-gray-800">Select a Rabbit</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-3xl font-bold text-gray-800">Select a Rabbit</h3>
               <button
                 onClick={() => setSelectingSlot(null)}
-                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 text-2xl font-bold transition-all"
                 aria-label="Close"
               >
                 ×

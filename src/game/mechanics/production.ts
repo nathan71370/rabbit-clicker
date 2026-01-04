@@ -28,8 +28,13 @@ function calculateBuildingCPS(rabbitCount: number): number {
   const upgradeState = useUpgradeStore.getState();
   let totalBuildingCPS = 0;
 
+  // Ensure buildings is a Map (could be an object during hydration)
+  const buildings = upgradeState.buildings instanceof Map
+    ? upgradeState.buildings
+    : new Map(Object.entries(upgradeState.buildings || {}).map(([k, v]) => [k, Number(v) || 0]));
+
   // Iterate through all owned buildings
-  upgradeState.buildings.forEach((count, buildingId) => {
+  buildings.forEach((count, buildingId) => {
     if (count === 0) return;
 
     const buildingData = getBuildingById(buildingId);
@@ -77,8 +82,13 @@ function calculateGlobalMultiplier(): number {
   const upgradeState = useUpgradeStore.getState();
   let multiplier = 1.0;
 
+  // Ensure buildings is a Map (could be an object during hydration)
+  const buildings = upgradeState.buildings instanceof Map
+    ? upgradeState.buildings
+    : new Map(Object.entries(upgradeState.buildings || {}).map(([k, v]) => [k, Number(v) || 0]));
+
   // Iterate through all owned buildings
-  upgradeState.buildings.forEach((count, buildingId) => {
+  buildings.forEach((count, buildingId) => {
     if (count === 0) return;
 
     const buildingData = getBuildingById(buildingId);

@@ -132,10 +132,10 @@ export function BuildingCard({
           <button
             onClick={() => onPurchase(building.id)}
             disabled={!canPurchase}
-            className={`px-6 py-3 rounded-xl font-bold text-white shadow-md transition-all ${
+            className={`btn-primary px-6 py-3 rounded-xl font-bold shadow-md transition-all ${
               canPurchase
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-lg hover:scale-105'
-                : 'bg-gray-300 cursor-not-allowed'
+                ? 'hover:shadow-lg hover:scale-105'
+                : 'opacity-40 cursor-not-allowed'
             }`}
           >
             BUY

@@ -88,8 +88,8 @@ export function PrestigePanel({ onClose }: PrestigePanelProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-white z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border-4 border-gray-800">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white p-6 flex items-center justify-between">
           <div>
@@ -163,41 +163,39 @@ export function PrestigePanel({ onClose }: PrestigePanelProps) {
           </div>
 
           {/* Prestige Preview */}
-          {canDoPrestige && (
-            <div className="card border-2 border-purple-300 bg-purple-50">
-              <h3 className="text-xl font-bold text-purple-900 mb-4 flex items-center gap-2">
-                <span>⚡</span>
-                Prestige Rewards
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg">
-                  <div>
-                    <div className="text-sm text-gray-600">Golden Seeds Earned</div>
-                    <div className="text-xl font-bold text-yellow-600">
-                      +{goldenSeedsToEarn}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-600">New Total</div>
-                    <div className="text-xl font-bold text-yellow-600">{newGoldenSeeds}</div>
+          <div className="card border-2 border-purple-300 bg-purple-50">
+            <h3 className="text-xl font-bold text-purple-900 mb-4 flex items-center gap-2">
+              <span>⚡</span>
+              Prestige Rewards
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                <div>
+                  <div className="text-sm text-gray-600">Golden Seeds Earned</div>
+                  <div className="text-xl font-bold text-yellow-600">
+                    +{goldenSeedsToEarn}
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg">
-                  <div>
-                    <div className="text-sm text-gray-600">Production Multiplier</div>
-                    <div className="text-xl font-bold text-green-600">
-                      {currentMultiplier.toFixed(2)}x → {newMultiplier.toFixed(2)}x
-                    </div>
+                <div className="text-right">
+                  <div className="text-sm text-gray-600">New Total</div>
+                  <div className="text-xl font-bold text-yellow-600">{newGoldenSeeds}</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                <div>
+                  <div className="text-sm text-gray-600">Production Multiplier</div>
+                  <div className="text-xl font-bold text-green-600">
+                    {currentMultiplier.toFixed(2)}x → {newMultiplier.toFixed(2)}x
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm text-green-600 font-bold">
-                      +{((newMultiplier - currentMultiplier) * 100).toFixed(0)}% Boost!
-                    </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-green-600 font-bold">
+                    +{((newMultiplier - currentMultiplier) * 100).toFixed(0)}% Boost!
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
           {/* What You'll Keep */}
           <div className="card border-2 border-green-300 bg-green-50">

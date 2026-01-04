@@ -17,7 +17,13 @@ export function ProductionBreakdown() {
   // This ensures the component re-renders when buildings change
   const globalMultiplier = useUpgradeStore((state) => {
     let multiplier = 1.0;
-    state.buildings.forEach((count, buildingId) => {
+
+    // Ensure buildings is a Map (could be an object during hydration)
+    const buildings = state.buildings instanceof Map
+      ? state.buildings
+      : new Map(Object.entries(state.buildings || {}).map(([k, v]) => [k, Number(v) || 0]));
+
+    buildings.forEach((count, buildingId) => {
       if (count === 0) return;
       const buildingData = getBuildingById(buildingId);
       if (!buildingData) return;

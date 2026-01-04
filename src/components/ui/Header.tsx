@@ -2,7 +2,6 @@ import { useGameStore } from '@/stores/gameStore';
 import { formatNumber } from '@/utils';
 import { XPDisplay } from './XPDisplay';
 import { canPrestige } from '@/game/mechanics/prestige';
-import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 
 interface HeaderProps {
   onSettingsClick: () => void;
@@ -17,10 +16,6 @@ interface HeaderProps {
 export function Header({ onSettingsClick, onAchievementsClick, onPrestigeClick }: HeaderProps) {
   const { carrots, goldenCarrots } = useGameStore();
   const canDoPrestige = canPrestige();
-
-  // Animate number transitions for smooth updates
-  const animatedCarrots = useAnimatedNumber(Math.floor(carrots), { duration: 600 });
-  const animatedGoldenCarrots = useAnimatedNumber(Math.floor(goldenCarrots), { duration: 600 });
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-20 shadow-md border-b border-gray-100">
@@ -38,7 +33,7 @@ export function Header({ onSettingsClick, onAchievementsClick, onPrestigeClick }
           <div className="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-xl">
             <span className="text-xl" aria-hidden="true">🥕</span>
             <span className="font-bold text-gray-900 text-sm">
-              {formatNumber(animatedCarrots)}
+              {formatNumber(Math.floor(carrots))}
             </span>
           </div>
 
@@ -46,7 +41,7 @@ export function Header({ onSettingsClick, onAchievementsClick, onPrestigeClick }
           <div className="flex items-center gap-2 bg-yellow-50 px-3 py-2 rounded-xl">
             <span className="text-xl" aria-hidden="true">⭐</span>
             <span className="font-bold text-gray-900 text-sm">
-              {formatNumber(animatedGoldenCarrots)}
+              {formatNumber(Math.floor(goldenCarrots))}
             </span>
           </div>
 

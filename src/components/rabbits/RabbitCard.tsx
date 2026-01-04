@@ -154,11 +154,11 @@ export function RabbitCard({
               <span className="font-semibold">{rabbit.level}</span>
             </div>
 
-            {/* CPS Contribution */}
+            {/* Carrots/s Contribution */}
             <div className="flex justify-between items-center text-sm mb-2">
-              <span className="text-gray-600">CPS</span>
+              <span className="text-gray-600">Carrots/s</span>
               <span className="font-semibold text-carrot">
-                +{formatNumber(currentCPS)}/s
+                +{formatNumber(currentCPS)}
               </span>
             </div>
 
